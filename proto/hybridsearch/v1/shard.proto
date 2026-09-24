@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+// The contract between the C# broker and the C++ shard servers.
+//
+// Each shard owns a disjoint, contiguous slice of the collection by document ID
+// and holds both a lexical and a vector index for that slice. One Search call
+// returns both candidate lists so the broker fans out once per query.
+//
+// Document IDs on the wire are always GLOBAL MS MARCO passage IDs (the integer
+// in collection.tsv), never shard-local ordinals.
+
+package hybridsearch.v1;
+
+option csharp_namespace = "HybridSearch.Proto.V1";
+
+service Shard {
+  rpc Search(SearchRequest) returns (SearchResponse);
+  // Batch document fetch for snippets and the "why this result" panel.
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+  rpc Health(HealthRequest) returns (HealthResponse);
+}
+
+enum PruningAlgorithm {
+  PRUNING_DEFAULT = 0;     // server's configured default (block-max WAND)
+  PRUNING_EXHAUSTIVE = 1;  // term-at-a-time, every posting scored
+  PRUNING_DAAT = 2;        // document-at-a-time, no pruning
+  PRUNING_MAXSCORE = 3;
+  PRUNING_WAND = 4;
+  PRUNING_BMW = 5;
+}
+
+message LexicalParams {
+  bool enabled = 1;
+  uint32 k = 2;                      // top-k to return
+  PruningAlgorithm algorithm = 3;
+  // BM25 parameters. 0 means server default (k1=0.9, b=0.4, Anserini's default).
+  float k1 = 4;
+  float b = 5;
+  bool explain = 6;                  // return per-term contributions for each hit
+}
+
+message VectorParams {
+  bool enabled = 1;
+  uint32 k = 2;
+  repeated float query_embedding = 3; // L2-normalised, dimension must match index
+  uint32 beam_width = 4;              // L_search; 0 = server default
+  uint32 io_width = 5;                // parallel SSD reads per beam step; 0 = default
+  bool full_precision_rerank = 6;     // rerank final candidates with vectors from disk
+}
+
+message SearchRequest {
+  string query = 1;                  // raw query text; the shard runs its own analyzer
+  LexicalParams lexical = 2;
+  VectorParams vector = 3;
+  // Remaining budget in microseconds, propagated by the broker. When it expires
+  // the shard stops early and returns its best partial top-k with partial=true.
+  uint64 deadline_budget_us = 4;
+  string request_id = 5;
+}
+
+message TermContribution {
+  string term = 1;                   // analyzed term
+  float score = 2;                   // BM25 contribution of this term
+  uint32 tf = 3;
+  uint32 df = 4;
+}
+
+message Hit {
+  uint64 doc_id = 1;                 // global passage ID
+  float score = 2;
+  repeated TermContribution terms = 3; // only when explain=true (lexical)
+}
+
+message SearchStats {
+  uint64 docs_scored = 1;
+  uint64 postings_decoded = 2;
+  uint64 vector_distance_computations = 3;
+  uint64 ssd_reads = 4;              // 4 KB node reads issued by the beam search
+  uint64 lexical_us = 5;
+  uint64 vector_us = 6;
+}
+
+message SearchResponse {
+  repeated Hit lexical_hits = 1;     // sorted by score desc, ties by doc_id asc
+  repeated Hit vector_hits = 2;      // score = inner product (higher is better)
+  bool partial = 3;                  // true if the deadline cut the search short
+  SearchStats stats = 4;
+  uint32 shard_id = 5;
+  repeated string analyzed_query_terms = 6;
+}
+
+message FetchRequest {
+  repeated uint64 doc_ids = 1;
+  // If set, the shard also returns the best-matching window of the passage for
+  // these analyzed terms (see snippet selection in docs/ARCHITECTURE.md).
+  repeated string highlight_terms = 2;
+  uint32 snippet_chars = 3;          // 0 = full passage, no snippet
+}
+
+message Highlight {
+  uint32 start = 1;                  // byte offsets into `text` (UTF-8)
+  uint32 end = 2;
+}
+
+message Document {
+  uint64 doc_id = 1;
+  string text = 2;                   // full passage or chosen snippet window
+  repeated Highlight highlights = 3; // spans whose analyzed form hits a query term
+  bool is_snippet = 4;
+  uint32 doc_length = 5;             // analyzed token count
+}
+
+message FetchResponse {
+  repeated Document documents = 1;   // same order as request; missing IDs omitted
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  uint32 shard_id = 1;
+  uint64 first_doc_id = 2;           // inclusive
+  uint64 last_doc_id = 3;            // inclusive
+  uint64 num_docs = 4;
+  bool lexical_ready = 5;
+  bool vector_ready = 6;
+  uint32 vector_dim = 7;
+  string build_info = 8;
+}

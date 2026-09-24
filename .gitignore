@@ -1,0 +1,17 @@
+data/
+!data/README.md
+build*/
+.venv/
+node_modules/
+dist/
+bin/
+obj/
+*.onnx
+*.fbin
+*.pyc
+__pycache__/
+.DS_Store
+results/**/*.bin
+web/playwright-report/
+web/test-results/
+models/

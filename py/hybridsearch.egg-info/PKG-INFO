@@ -1,0 +1,30 @@
+Metadata-Version: 2.4
+Name: hybridsearch
+Version: 0.1.0
+Summary: Offline tooling for HybridSearch: data prep, evaluation, significance tests, reranker training, click simulation
+Requires-Python: <3.13,>=3.11
+Requires-Dist: numpy>=1.26
+Requires-Dist: scipy>=1.13
+Requires-Dist: pandas>=2.2
+Requires-Dist: pyarrow>=16
+Requires-Dist: duckdb>=1.1
+Requires-Dist: tqdm>=4.66
+Requires-Dist: matplotlib>=3.9
+Requires-Dist: ir-measures>=0.3.7
+Requires-Dist: pytrec-eval-terrier>=0.5.6
+Requires-Dist: torch>=2.4
+Requires-Dist: transformers>=4.44
+Requires-Dist: sentence-transformers>=3.0
+Requires-Dist: onnx>=1.16
+Requires-Dist: onnxruntime>=1.19
+Requires-Dist: faiss-cpu>=1.8
+Requires-Dist: hnswlib>=0.8
+Requires-Dist: grpcio>=1.66
+Requires-Dist: grpcio-tools>=1.66
+Requires-Dist: pyyaml>=6
+Provides-Extra: reference
+Requires-Dist: pyserini>=0.44; extra == "reference"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: pytest-timeout>=2.3; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"

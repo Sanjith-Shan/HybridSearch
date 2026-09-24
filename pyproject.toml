@@ -1,0 +1,42 @@
+[project]
+name = "hybridsearch"
+version = "0.1.0"
+description = "Offline tooling for HybridSearch: data prep, evaluation, significance tests, reranker training, click simulation"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.13",
+  "pandas>=2.2",
+  "pyarrow>=16",
+  "duckdb>=1.1",
+  "tqdm>=4.66",
+  "matplotlib>=3.9",
+  "ir-measures>=0.3.7",
+  "pytrec-eval-terrier>=0.5.6",
+  "torch>=2.4",
+  "transformers>=4.44",
+  "sentence-transformers>=3.0",
+  "onnx>=1.16",
+  "onnxruntime>=1.19",
+  "faiss-cpu>=1.8",
+  "hnswlib>=0.8",
+  "grpcio>=1.66",
+  "grpcio-tools>=1.66",
+  "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+reference = ["pyserini>=0.44"]
+dev = ["pytest>=8", "pytest-timeout>=2.3", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["py/tests"]
+pythonpath = ["py"]
+timeout = 300
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["py"]
