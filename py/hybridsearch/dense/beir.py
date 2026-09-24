@@ -31,11 +31,13 @@ RUNS = DATA / "runs" / "reference"
 
 
 def load(ds: str):
-    corpus = [json.loads(line) for line in open(BEIR / ds / "corpus.jsonl", encoding="utf-8")]
+    with open(BEIR / ds / "corpus.jsonl", encoding="utf-8") as f:
+        corpus = [json.loads(line) for line in f]
     queries = {}
-    for line in open(BEIR / ds / "queries.jsonl", encoding="utf-8"):
-        o = json.loads(line)
-        queries[str(o["_id"])] = o["text"]
+    with open(BEIR / ds / "queries.jsonl", encoding="utf-8") as f:
+        for line in f:
+            o = json.loads(line)
+            queries[str(o["_id"])] = o["text"]
     qrels: dict[str, dict[str, int]] = {}
     with open(BEIR / ds / "qrels" / "test.tsv", encoding="utf-8") as f:
         next(f)  # header

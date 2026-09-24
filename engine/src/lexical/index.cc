@@ -85,7 +85,9 @@ std::unique_ptr<LexicalIndex> LexicalIndex::open(const std::string& dir) {
   ix->build_k1_ = std::stof(meta["build_k1"]);
   ix->build_b_ = std::stof(meta["build_b"]);
   if (meta_u64(meta, "block_size") != kBlockSize) throw std::runtime_error("index block size mismatch");
-  ix->avgdl_ = st.docs_with_terms ? bm25_avgdl(st.sum_dl, st.docs_with_terms) : 1.0f;
+  ix->idf_n_ = meta.count("global_docs_with_terms") ? meta_u64(meta, "global_docs_with_terms") : st.docs_with_terms;
+  ix->idf_sum_dl_ = meta.count("global_sum_dl") ? meta_u64(meta, "global_sum_dl") : st.sum_dl;
+  ix->avgdl_ = ix->idf_n_ ? bm25_avgdl(ix->idf_sum_dl_, ix->idf_n_) : 1.0f;
 
   bool has[kNumCodecs] = {false, false};
   {
@@ -111,6 +113,12 @@ std::unique_ptr<LexicalIndex> LexicalIndex::open(const std::string& dir) {
     ix->norms_.assign(nm.begin(), nm.end());
   }
   ix->term_strings_ = read_file(dir + "/terms.bin");
+  if (meta.count("global_docs_with_terms")) {
+    std::string g = read_file(dir + "/global_df.u32");
+    if (g.size() != st.num_terms * 4) throw std::runtime_error("global_df.u32 size mismatch");
+    ix->global_df_.resize(st.num_terms);
+    std::memcpy(ix->global_df_.data(), g.data(), g.size());
+  }
 
   {
     std::string lex = read_file(dir + "/lexicon.bin");

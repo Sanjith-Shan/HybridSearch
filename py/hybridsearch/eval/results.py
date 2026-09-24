@@ -16,7 +16,7 @@ RESULTS = REPO / "results"
 def _sh(cmd: list[str]) -> str | None:
     try:
         return subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL, cwd=REPO).strip()
-    except Exception:
+    except (OSError, subprocess.CalledProcessError):
         return None
 
 

@@ -23,7 +23,7 @@ from __future__ import annotations
 import os
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
-    os.environ.setdefault(_v, "4")  # shared laptop: <= 4 threads
+    os.environ.setdefault(_v, "1")  # shared laptop: run via scripts/bg.sh, 1 thread
 
 import argparse
 import json
@@ -179,7 +179,7 @@ def main():
     ap.add_argument("--eps", type=float, default=0.05, help="fraction of sessions with a swap intervention")
     ap.add_argument("--tag", default="")
     ap.add_argument("--no-dense", action="store_true", help="BM25-only features (ablation)")
-    ap.add_argument("--train-queries", type=int, default=500, help="seeded sample of train_tune queries")
+    ap.add_argument("--train-queries", type=int, default=200, help="seeded sample of train_tune queries")
     args = ap.parse_args()
     t0 = time.time()
     rng0 = np.random.default_rng(args.seed)

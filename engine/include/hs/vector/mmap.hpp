@@ -33,7 +33,10 @@ class MappedFile {
 class MappedFbin {
  public:
   MappedFbin() = default;
-  explicit MappedFbin(const std::string& path, uint32_t max_rows = 0);
+  // Rows [row_begin, row_begin + max_rows) (max_rows = 0: to the end). Row 0 of the
+  // view is file row row_begin; used to index one document shard of a larger file.
+  explicit MappedFbin(const std::string& path, uint32_t max_rows = 0, uint32_t row_begin = 0);
+  uint32_t row_begin() const { return begin_; }
   uint32_t n() const { return n_; }
   uint32_t dim() const { return dim_; }
   const float* data() const { return rows_; }
@@ -42,7 +45,7 @@ class MappedFbin {
 
  private:
   MappedFile file_;
-  uint32_t n_ = 0, dim_ = 0;
+  uint32_t n_ = 0, dim_ = 0, begin_ = 0;
   const float* rows_ = nullptr;
 };
 

@@ -442,8 +442,8 @@ LexicalResult LexicalIndex::search(const std::vector<std::string>& raw_terms, co
       QTerm qt;
       qt.id = uint32_t(id);
       qt.text = text;
-      qt.df = terms_[id].df;
-      float idf = bm25_idf(qt.df, stats_.docs_with_terms);
+      qt.df = idf_df(uint32_t(id));
+      float idf = bm25_idf(qt.df, idf_n_);
       qt.weight = bm25_weight(opt.model, float(boost), idf, opt.k1);
       qt.ub = q.sc.bound(qt.weight, terms_[id].bound);
       qt.canon = uint32_t(q.terms.size());

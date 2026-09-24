@@ -18,7 +18,7 @@ from __future__ import annotations
 import os
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
-    os.environ.setdefault(_v, "4")  # shared laptop: <= 4 threads
+    os.environ.setdefault(_v, "1")  # shared laptop: run via scripts/bg.sh, 1 thread
 
 import argparse
 import itertools
@@ -40,6 +40,7 @@ from hybridsearch.clicks.models import ALL_MODELS, make_model  # noqa: E402
 from hybridsearch.rerank.meta import write_meta  # noqa: E402
 
 OUT = ROOT / "results/m9"
+RAW = ROOT / "data/m9"
 CELLS = ROOT / "data/cache/m9/sensitivity_cells"   # per-cell cache (keyed by every input)
 LABEL = "simulated users (click model {m}, relevance from TREC DL 2019+2020 graded qrels)"
 METHODS = ["tdi", "bi", "pi"] + [f"ab:{m}" for m in S.AB_METRICS]
@@ -292,7 +293,15 @@ def main():
     doc = {"meta": common, "n_grid": ns.tolist(),
            "rankers": {n: {"ndcg10_mean": float(ndcg[n].mean()), "source": sources[n]} for n in runs},
            "results": results, "skipped_pairs": skipped, "validation_direct": validation}
-    (OUT / "sensitivity.json").write_text(json.dumps(doc, indent=1) + "\n")
+    # raw power curves (per grid point) go to data/m9/ (gitignored); results/ keeps a summary
+    RAW.mkdir(parents=True, exist_ok=True)
+    (RAW / "sensitivity_raw.json").write_text(json.dumps(doc) + "\n")
+    summary = {k: v for k, v in doc.items() if k not in ("results", "n_grid")}
+    summary["raw_power_curves"] = "data/m9/sensitivity_raw.json (regenerate with this script)"
+    summary["results"] = [{**{k: v for k, v in r.items() if k != "methods"},
+                           "methods": {m: {k: v for k, v in x.items() if k not in ("power", "power_wrong")}
+                                       for m, x in r["methods"].items()}} for r in doc["results"]]
+    (OUT / "sensitivity.json").write_text(json.dumps(summary, separators=(",", ":")) + "\n")
     write_meta(OUT / "sensitivity.json", **common)
     (OUT / "aa.json").write_text(json.dumps(aa, indent=1) + "\n")
     write_meta(OUT / "aa.json", **common, aa_note="fresh click simulation per trial; no pool")

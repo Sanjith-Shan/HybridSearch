@@ -13,7 +13,8 @@ def test_docids_sorted_unique_and_match_collection():
     ids = read_u64bin(SUB / "docids.u64bin")
     assert ids.shape[0] == 1_000_000
     assert np.all(np.diff(ids.astype(np.int64)) > 0)
-    head = [int(line.split("\t", 1)[0]) for line, _ in zip(open(SUB / "collection.tsv"), range(1000))]
+    with open(SUB / "collection.tsv") as f:
+        head = [int(line.split("\t", 1)[0]) for line, _ in zip(f, range(1000))]
     assert head == ids[:1000].tolist()
 
 

@@ -21,7 +21,7 @@ def test_blocked_matches_single_index():
 def test_ties_broken_by_lower_id():
     X = np.ones((10, 4), dtype=np.float32) / 2
     ids = np.arange(100, 110, dtype=np.uint64)[::-1].copy()  # file order descending ids
-    S, I = exact_topk(np.ones((1, 4), dtype=np.float32), X, ids, k=5, block=3)
+    _, I = exact_topk(np.ones((1, 4), dtype=np.float32), X, ids, k=5, block=3)
     assert I[0].tolist() == [100, 101, 102, 103, 104]
 
 

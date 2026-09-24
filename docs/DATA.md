@@ -21,8 +21,8 @@ in `data/raw/manifest.json` and `data/subset/1m/manifest.json`.
 
 The msmarco tarball was downloaded as 8 parallel byte ranges (a single stream ran at
 ~1 MB/s) and concatenated before the MD5 check. The prebuilt index was streamed through
-`md5` and `tar` at once (no tarball on disk) and is deleted once every reference run
-that needs it is written (`scripts/m0_finish.sh`).
+`md5` and `tar` at once (no tarball on disk). It was deleted on 2026-09-24 (by the lead,
+to free disk) after the dev/DL19/DL20/train_tune runs were written.
 
 Commands: `scripts/data_download.sh` (download + `python -m hybridsearch.data.prepare`),
 then `scripts/data_subset.sh`.
@@ -105,7 +105,7 @@ BEIR: `data/embeddings/beir/{ds}/corpus.fbin` + `corpus.docids.txt`, `queries.te
 | Run | Produced by |
 |---|---|
 | `anserini-bm25-default.{dev,dl19,dl20,train_tune}.trec` | Pyserini 2.4.0 BM25 k1=0.9 b=0.4, top 1000, prebuilt `msmarco-v1-passage` index (`scripts/reference_bm25.sh`) |
-| `bm25.train50k.trec` | same, for `data/subset/train50k/queries.tsv` |
+| `bm25.train50k.first10k.trec` | same, for the **first 10,000** of the 50,000 train50k queries (`data/subset/train50k/queries.first10k.tsv` + `qrels.first10k.tsv`, lines 1–10,000 of `queries.tsv`). The remaining 40,000 were dropped when the machine rebooted and the prebuilt index was deleted to save disk; the full train50k BM25 run is to come from HybridSearch's own lexical engine. |
 | `anserini-bm25-default-1m.{dev,dl19,dl20,train_tune}.trec` | Pyserini BM25 over a Lucene index of the 1M subset at `data/indexes/anserini/1m` (`scripts/reference_bm25_1m.sh`) |
 | `dense-flat-1m.{dev,dl19,dl20,train_tune}.trec` | exact FAISS `IndexFlatIP` over `passages.fbin`, top 1000 (`python -m hybridsearch.dense.flat`) |
 | `dense-flat.beir-{scifact,nfcorpus,fiqa}.test.trec` | exact `IndexFlatIP` over the BEIR corpus embeddings |

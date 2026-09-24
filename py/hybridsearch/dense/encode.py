@@ -38,8 +38,8 @@ DIM = 768
 PASSAGE_MAX_LEN = 512
 QUERY_MAX_LEN = 64
 CHUNK = 20_000
-TOKEN_BUDGET = 32_768  # padded tokens per batch
-MAX_BATCH = 256
+TOKEN_BUDGET = 32_768  # padded tokens per batch (override: --token-budget)
+MAX_BATCH = 256  # (override: --max-batch)
 
 OUT = DATA / "embeddings" / "1m"
 LOCK = DATA / "locks" / "mps"
@@ -103,7 +103,7 @@ def hardware() -> dict:
     def sh(cmd):
         try:
             return subprocess.check_output(cmd, text=True).strip()
-        except Exception:
+        except (OSError, subprocess.CalledProcessError):
             return None
 
     return {
@@ -115,6 +115,25 @@ def hardware() -> dict:
     }
 
 
+def _lock_owner_dead() -> bool:
+    """True only if the lock's owner file names one of *our* encoder pids that no longer
+    exists (e.g. after a reboot). Locks held by other tools are never broken."""
+    try:
+        owner = (LOCK / "owner").read_text()
+    except OSError:
+        return False
+    if not owner.startswith("dense-encode pid="):
+        return False
+    pid = int(owner.split("pid=")[1].split()[0])
+    try:
+        os.kill(pid, 0)
+        return False
+    except ProcessLookupError:
+        return True
+    except PermissionError:
+        return False
+
+
 def acquire_lock(timeout_s: float = 6 * 3600) -> None:
     LOCK.parent.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -124,6 +143,14 @@ def acquire_lock(timeout_s: float = 6 * 3600) -> None:
             (LOCK / "owner").write_text(f"dense-encode pid={os.getpid()} started={time.strftime('%Y-%m-%dT%H:%M:%S')}\n")
             return
         except FileExistsError:
+            if _lock_owner_dead():
+                print(f"removing stale {LOCK} ({(LOCK / 'owner').read_text().strip()})", flush=True)
+                (LOCK / "owner").unlink(missing_ok=True)
+                try:
+                    os.rmdir(LOCK)
+                except OSError:
+                    pass
+                continue
             if time.time() - t0 > timeout_s:
                 raise SystemExit(f"{LOCK} held for > {timeout_s}s")
             time.sleep(30)
@@ -178,16 +205,16 @@ def encode_passages(enc: Encoder) -> dict:
     mm = np.memmap(partial, dtype="<f4", mode="r+", offset=8, shape=(n, DIM))
 
     # read texts; verify order == docids.u64bin
+    # Keep only texts of unfinished chunks in RAM (placeholders elsewhere).
+    nchunks = (n + CHUNK - 1) // CHUNK
     texts: list[str] = []
     with open(DATA / "subset" / "1m" / "collection.tsv", encoding="utf-8") as f:
         for i, line in enumerate(f):
             pid, text = line.rstrip("\n").split("\t", 1)
             if int(pid) != int(ids[i]):
                 raise SystemExit(f"collection row {i} pid {pid} != docids {ids[i]}")
-            texts.append(text)
+            texts.append("" if (i // CHUNK) in done else text)
     assert len(texts) == n
-
-    nchunks = (n + CHUNK - 1) // CHUNK
     enc_seconds = 0.0
     enc_rows = 0
     for c in range(nchunks):
@@ -197,6 +224,7 @@ def encode_passages(enc: Encoder) -> dict:
         t = time.time()
         mm[s:e] = enc.encode_passages(texts[s:e])
         mm.flush()
+        texts[s:e] = [""] * (e - s)
         dt = time.time() - t
         enc_seconds += dt
         enc_rows += e - s
@@ -232,18 +260,22 @@ def main(argv=None) -> int:
     ap.add_argument("what", choices=["queries", "passages", "all"])
     ap.add_argument("--device", default=None)
     ap.add_argument("--threads", type=int, default=4, help="CPU threads for torch (shared machine)")
+    ap.add_argument("--token-budget", type=int, default=32_768, help="max padded tokens per batch (RAM bound)")
+    ap.add_argument("--max-batch", type=int, default=256)
+    ap.add_argument("--sets", nargs="+", default=None, help="query sets to (re)encode; default all")
     args = ap.parse_args(argv)
+    globals()["TOKEN_BUDGET"], globals()["MAX_BATCH"] = args.token_budget, args.max_batch
     t0 = time.time()
     torch.set_num_threads(args.threads)
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(143))  # so `finally` releases the lock
     acquire_lock()
     try:
         enc = Encoder(args.device)
-        meta = {"model": MODEL, "device": enc.device, "dtype": "float32", "pooling": "cls", "normalize": True,
+        meta = {"token_budget": args.token_budget, "max_batch": args.max_batch, "threads": args.threads, "model": MODEL, "device": enc.device, "dtype": "float32", "pooling": "cls", "normalize": True,
                 "query_prefix": QUERY_PREFIX, "passage_max_len": PASSAGE_MAX_LEN, "query_max_len": QUERY_MAX_LEN,
                 "hardware": hardware(), "command": " ".join(sys.argv), "started": time.strftime("%Y-%m-%dT%H:%M:%S")}
         if args.what in ("queries", "all"):
-            meta["queries"] = encode_queries(enc)
+            meta["queries"] = encode_queries(enc, args.sets)
         if args.what in ("passages", "all"):
             meta["passages"] = encode_passages(enc)
         meta["finished"] = time.strftime("%Y-%m-%dT%H:%M:%S")

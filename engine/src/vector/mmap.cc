@@ -51,14 +51,17 @@ void MappedFile::drop(size_t offset, size_t len) const {
   if (end > start) ::madvise(data_ + start, end - start, MADV_DONTNEED);
 }
 
-MappedFbin::MappedFbin(const std::string& path, uint32_t max_rows) : file_(path) {
+MappedFbin::MappedFbin(const std::string& path, uint32_t max_rows, uint32_t row_begin)
+    : file_(path), begin_(row_begin) {
   if (file_.size() < 8) throw std::runtime_error("truncated fbin " + path);
   const uint32_t* h = reinterpret_cast<const uint32_t*>(file_.data());
   n_ = h[0];
   dim_ = h[1];
   if (file_.size() < 8 + size_t(n_) * dim_ * 4) throw std::runtime_error("truncated fbin " + path);
+  if (row_begin > n_) throw std::runtime_error("row_begin beyond end of " + path);
+  n_ -= row_begin;
   if (max_rows && max_rows < n_) n_ = max_rows;
-  rows_ = reinterpret_cast<const float*>(file_.data() + 8);
+  rows_ = reinterpret_cast<const float*>(file_.data() + 8) + size_t(row_begin) * dim_;
 }
 
 }  // namespace hs::vector

@@ -1,5 +1,6 @@
 // Build the DiskANN-style SSD index.
-//   hs_vec_disk_build --base passages.fbin [--max-n N] --out dir [--docids docids.u64bin]
+//   hs_vec_disk_build --base passages.fbin [--row-begin B] [--max-n N] --out dir [--docids docids.u64bin]
+//   (rows [B, B+N) of the file: one document shard; docids are sliced the same way)
 //                     [--R 64] [--L 100] [--alpha 1.2] [--pq-M 96] [--pq-sample 200000]
 //                     [--partitions P | --ram-gb G] [--overlap 2] [--seed S] [--threads T]
 //                     [--min-free-gb 3] [--graph saved_vamana.graph  (reuse; single partition)]
@@ -19,7 +20,7 @@ using namespace hs::vector;
 
 int main(int argc, char** argv) try {
   tool::Args a(argc, argv);
-  MappedFbin base(a.str("base"), uint32_t(a.num("max-n", 0)));
+  MappedFbin base(a.str("base"), uint32_t(a.num("max-n", 0)), uint32_t(a.num("row-begin", 0)));
   DiskBuildParams p;
   p.vamana.R = uint32_t(a.num("R", 64));
   p.vamana.L = uint32_t(a.num("L", 100));
@@ -55,8 +56,9 @@ int main(int argc, char** argv) try {
   }
   std::vector<uint64_t> docids;
   if (a.has("docids")) {
-    docids = hs::read_u64bin(a.str("docids"));
-    docids.resize(base.n());
+    auto all = hs::read_u64bin(a.str("docids"));
+    if (size_t(base.row_begin()) + base.n() > all.size()) throw std::runtime_error("docids shorter than rows");
+    docids.assign(all.begin() + base.row_begin(), all.begin() + base.row_begin() + base.n());
   }
   DiskBuildStats st;
   build_disk_index(base.data(), base.n(), base.dim(), out, p, &st, a.has("docids") ? &docids : nullptr);

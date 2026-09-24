@@ -12,7 +12,7 @@ using namespace hs::vector;
 
 int main(int argc, char** argv) try {
   tool::Args a(argc, argv);
-  MappedFbin base(a.str("base"), uint32_t(a.num("max-base", 0)));
+  MappedFbin base(a.str("base"), uint32_t(a.num("max-base", 0)), uint32_t(a.num("row-begin", 0)));
   auto qs = hs::read_fbin(a.str("queries"), uint32_t(a.num("max-queries", 0)));
   if (qs.dim != base.dim()) throw std::runtime_error("dimension mismatch");
   uint32_t k = uint32_t(a.num("k", 100));

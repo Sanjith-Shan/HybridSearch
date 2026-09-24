@@ -1,0 +1,21 @@
+{
+  "lucene": {
+    "pairs_in_both": 6969251,
+    "pairs_only_ours": 5347,
+    "pairs_only_anserini": 5347,
+    "within_1e-4": 6963054,
+    "mismatches_where_anserini_score_is_tie_perturbed": 6153,
+    "frac_within_1e-4": 0.999110808320722,
+    "max_abs_diff": 0.0004
+  },
+  "textbook": {
+    "pairs_in_both": 6921096,
+    "pairs_only_ours": 53502,
+    "pairs_only_anserini": 53502,
+    "within_1e-4": 4644799,
+    "mismatches_where_anserini_score_is_tie_perturbed": 861292,
+    "frac_within_1e-4": 0.671107437319176,
+    "max_abs_diff": 0.4697
+  },
+  "note": "Anserini scores are rounded to 1e-4 and then lowered by 1e-6 per position in a tie run (ScoreTiesAdjusterReranker); textbook scores are divided by k1+1=1.9 before comparing."
+}

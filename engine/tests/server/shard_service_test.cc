@@ -20,7 +20,7 @@
 #include "hs/vector/vamana.hpp"
 
 namespace fs = std::filesystem;
-namespace pb = hybridsearch::v1;
+namespace v1 = hybridsearch::v1;
 using namespace hs::server;
 
 namespace {
@@ -90,7 +90,7 @@ Fixture& fixture() {
 struct Running {
   std::unique_ptr<ShardService> service;
   std::unique_ptr<grpc::Server> server;
-  std::unique_ptr<pb::Shard::Stub> stub;
+  std::unique_ptr<v1::Shard::Stub> stub;
 
   explicit Running(std::shared_ptr<Chaos> chaos = nullptr, bool with_vector = true) {
     auto& f = fixture();
@@ -108,14 +108,14 @@ struct Running {
     b.AddListeningPort("127.0.0.1:0", grpc::InsecureServerCredentials(), &port);
     b.RegisterService(service.get());
     server = b.BuildAndStart();
-    stub = pb::Shard::NewStub(grpc::CreateChannel("127.0.0.1:" + std::to_string(port),
+    stub = v1::Shard::NewStub(grpc::CreateChannel("127.0.0.1:" + std::to_string(port),
                                                   grpc::InsecureChannelCredentials()));
   }
   ~Running() { server->Shutdown(); }
 };
 
-pb::SearchRequest lexical_request(const std::string& q, uint32_t k = 10) {
-  pb::SearchRequest r;
+v1::SearchRequest lexical_request(const std::string& q, uint32_t k = 10) {
+  v1::SearchRequest r;
   r.set_query(q);
   r.mutable_lexical()->set_enabled(true);
   r.mutable_lexical()->set_k(k);
@@ -129,10 +129,10 @@ TEST(ShardServer, LexicalMatchesLibraryWithGlobalIds) {
   auto& f = fixture();
   auto lex = hs::lexical::LexicalIndex::open((f.dir / "lex").string());
   for (const char* q : {"capital of peru", "inca empire gold", "pacific ocean fishing port", "nazca"}) {
-    for (auto algo : {pb::PRUNING_EXHAUSTIVE, pb::PRUNING_MAXSCORE, pb::PRUNING_WAND, pb::PRUNING_BMW}) {
+    for (auto algo : {v1::PRUNING_EXHAUSTIVE, v1::PRUNING_MAXSCORE, v1::PRUNING_WAND, v1::PRUNING_BMW}) {
       auto req = lexical_request(q, 20);
       req.mutable_lexical()->set_algorithm(algo);
-      pb::SearchResponse resp;
+      v1::SearchResponse resp;
       grpc::ClientContext ctx;
       ASSERT_TRUE(s.stub->Search(&ctx, req, &resp).ok());
 
@@ -158,7 +158,7 @@ TEST(ShardServer, ExplainReturnsPerTermContributionsThatSumToScore) {
   Running s;
   auto req = lexical_request("capital peru lima", 5);
   req.mutable_lexical()->set_explain(true);
-  pb::SearchResponse resp;
+  v1::SearchResponse resp;
   grpc::ClientContext ctx;
   ASSERT_TRUE(s.stub->Search(&ctx, req, &resp).ok());
   ASSERT_GT(resp.lexical_hits_size(), 0);
@@ -179,13 +179,13 @@ TEST(ShardServer, VectorMatchesLibraryAndRunsAlongsideLexical) {
   auto& f = fixture();
   auto idx = hs::vector::VamanaIndex::load((f.dir / "g.graph").string(), (f.dir / "v.fbin").string());
   for (uint32_t qi : {0u, 17u, 399u}) {
-    pb::SearchRequest req = lexical_request("river andes", 10);
+    v1::SearchRequest req = lexical_request("river andes", 10);
     auto* v = req.mutable_vector();
     v->set_enabled(true);
     v->set_k(10);
     v->set_beam_width(64);
     for (uint32_t j = 0; j < kDim; ++j) v->add_query_embedding(f.vecs[qi * kDim + j]);
-    pb::SearchResponse resp;
+    v1::SearchResponse resp;
     grpc::ClientContext ctx;
     ASSERT_TRUE(s.stub->Search(&ctx, req, &resp).ok());
 
@@ -206,11 +206,11 @@ TEST(ShardServer, VectorMatchesLibraryAndRunsAlongsideLexical) {
 
 TEST(ShardServer, RejectsWrongEmbeddingDimension) {
   Running s;
-  pb::SearchRequest req;
+  v1::SearchRequest req;
   req.set_query("x");
   req.mutable_vector()->set_enabled(true);
   req.mutable_vector()->add_query_embedding(1.0f);
-  pb::SearchResponse resp;
+  v1::SearchResponse resp;
   grpc::ClientContext ctx;
   EXPECT_EQ(s.stub->Search(&ctx, req, &resp).error_code(), grpc::StatusCode::INVALID_ARGUMENT);
 }
@@ -218,13 +218,13 @@ TEST(ShardServer, RejectsWrongEmbeddingDimension) {
 TEST(ShardServer, FetchReturnsSnippetsWithHighlightsAndOmitsForeignIds) {
   Running s;
   auto& f = fixture();
-  pb::FetchRequest req;
+  v1::FetchRequest req;
   req.add_doc_ids(f.ids[0]);
   req.add_doc_ids(123);  // not in this shard
   req.add_doc_ids(f.ids[50]);
   req.add_highlight_terms("capit");  // analyzed form of "Capital's"
   req.set_snippet_chars(60);
-  pb::FetchResponse resp;
+  v1::FetchResponse resp;
   grpc::ClientContext ctx;
   ASSERT_TRUE(s.stub->Fetch(&ctx, req, &resp).ok());
   ASSERT_EQ(resp.documents_size(), 2);
@@ -236,14 +236,16 @@ TEST(ShardServer, FetchReturnsSnippetsWithHighlightsAndOmitsForeignIds) {
     ASSERT_GT(d.highlights_size(), 0);
     for (const auto& h : d.highlights()) {
       ASSERT_LE(h.end(), d.text().size());
-      EXPECT_EQ(d.text().substr(h.start(), h.end() - h.start()).rfind("Capital", 0), 0u)
-          << d.text().substr(h.start(), h.end() - h.start());
+      // Every highlighted span analyzes to the query term: "Capital's" and "capital" both stem to "capit".
+      std::string span = d.text().substr(h.start(), h.end() - h.start());
+      for (auto& c : span) c = char(std::tolower(static_cast<unsigned char>(c)));
+      EXPECT_EQ(span.rfind("capital", 0), 0u) << span;
     }
   }
 
-  pb::FetchRequest full;
+  v1::FetchRequest full;
   full.add_doc_ids(f.ids[7]);
-  pb::FetchResponse fresp;
+  v1::FetchResponse fresp;
   grpc::ClientContext ctx2;
   ASSERT_TRUE(s.stub->Fetch(&ctx2, full, &fresp).ok());
   ASSERT_EQ(fresp.documents_size(), 1);
@@ -253,9 +255,9 @@ TEST(ShardServer, FetchReturnsSnippetsWithHighlightsAndOmitsForeignIds) {
 
 TEST(ShardServer, HealthReportsSliceAndIndexes) {
   Running s;
-  pb::HealthResponse resp;
+  v1::HealthResponse resp;
   grpc::ClientContext ctx;
-  ASSERT_TRUE(s.stub->Health(&ctx, pb::HealthRequest(), &resp).ok());
+  ASSERT_TRUE(s.stub->Health(&ctx, v1::HealthRequest(), &resp).ok());
   EXPECT_EQ(resp.shard_id(), 3u);
   EXPECT_EQ(resp.first_doc_id(), fixture().ids.front());
   EXPECT_EQ(resp.last_doc_id(), fixture().ids.back());
@@ -270,7 +272,7 @@ TEST(ShardServer, LexicalOnlyShardIgnoresVectorRequest) {
   auto req = lexical_request("peru");
   req.mutable_vector()->set_enabled(true);
   req.mutable_vector()->add_query_embedding(1.0f);
-  pb::SearchResponse resp;
+  v1::SearchResponse resp;
   grpc::ClientContext ctx;
   ASSERT_TRUE(s.stub->Search(&ctx, req, &resp).ok());
   EXPECT_EQ(resp.vector_hits_size(), 0);
@@ -297,7 +299,7 @@ TEST(ShardServer, ChaosFailRateAndRecoveryAtRuntime) {
   auto chaos = std::make_shared<Chaos>(cf.path());
   Running s(chaos);
   auto search = [&] {
-    pb::SearchResponse resp;
+    v1::SearchResponse resp;
     grpc::ClientContext ctx;
     return s.stub->Search(&ctx, lexical_request("peru"), &resp).error_code();
   };
@@ -315,7 +317,7 @@ TEST(ShardServer, ChaosLatencyIsAddedAndBlackholeHoldsToDeadline) {
   Running s(chaos);
   cf.write("latency_ms=80\n");
   auto t0 = std::chrono::steady_clock::now();
-  pb::SearchResponse resp;
+  v1::SearchResponse resp;
   grpc::ClientContext ctx;
   ASSERT_TRUE(s.stub->Search(&ctx, lexical_request("peru"), &resp).ok());
   EXPECT_GE(std::chrono::steady_clock::now() - t0, std::chrono::milliseconds(80));
@@ -338,7 +340,7 @@ TEST(ShardServer, GrpcDeadlineTightensTheBudget) {
   cf.write("latency_ms=150\n");
   grpc::ClientContext ctx;
   ctx.set_deadline(std::chrono::system_clock::now() + std::chrono::milliseconds(100));
-  pb::SearchResponse resp;
+  v1::SearchResponse resp;
   EXPECT_EQ(s.stub->Search(&ctx, lexical_request("peru"), &resp).error_code(), grpc::StatusCode::DEADLINE_EXCEEDED);
 }
 

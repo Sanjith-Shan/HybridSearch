@@ -39,11 +39,11 @@ Mirrors the broker (`docs/ARCHITECTURE.md`, Experiments), implemented in Python 
 
 * **Enrolment:** `bucket = xxhash64(salt + sessionId) mod 10000`; enrolled iff
   `bucket < allocation * 10000`.
-* **Arm:** a second, independent hash, `xxhash64(salt + "|arm|" + sessionId) mod 2`
-  (1 = treatment). Independence matters: using the same hash for enrolment and arm
-  would put all low buckets in one arm whenever allocation < 1.
-  *The exact key of the second hash must match the broker's C#; this is the Python
-  side's definition and the broker should use the same one.*
+* **Arm:** a second, independent hash of the same bytes: `xxhash64(salt + sessionId,
+  seed = 0x5EEDA5B100000001) mod 2` (0 = control), exactly as the broker's
+  `ExperimentAssigner`. Independence matters: using the same hash for enrolment and arm
+  would put all low buckets in one arm whenever allocation < 1, and raising the
+  allocation later would move enrolled sessions between arms.
 * Deterministic and sticky per session; a new salt re-randomises everyone (use it for
   every new experiment so carry-over effects from a previous experiment do not line up
   with the new split).
@@ -140,3 +140,36 @@ of queries (the impressions here are drawn uniformly over 97 DL topics; real tra
 Zipfian). The three user profiles and three model families are there to show how much
 the answer depends on the assumptions. Where the conclusion changes across them, the
 honest summary is "it depends on the user model".
+
+## 7. Learning from clicks: counterfactual LTR design
+
+Clicks are biased toward whatever the production ranker put on top (position bias), so
+"clicked = relevant" teaches a new ranker to copy the old one. The standard fix is
+inverse propensity scoring (IPS): weight each click by 1/η_r, the probability the user
+examined rank r (Joachims, Swaminathan & Schnabel, WSDM 2017).
+
+**Setup** (`scripts/m9_ltr.py`, `py/hybridsearch/ltr/`):
+
+* Logging ranker: Anserini BM25 (full collection). It shows its top 20; simulated users
+  click under PBM (navigational profile, η_r = 1/r).
+* Features per candidate: BM25 z-score and reciprocal rank, BGE-base inner product
+  z-score and reciprocal rank *within the 20 candidates*, log passage length, and
+  query-length interactions. The BGE vectors for the candidates were encoded by M9 code
+  on CPU (`ltr/dense_feature.py`, project encoder convention), because no dense run over
+  the collection existed when this ran. Said so in every result file.
+* Model: linear, listwise softmax cross-entropy, L2 λ = 1e-3 fixed a priori (not tuned).
+* **Query split, never mixed:** training clicks come from a seeded sample of 200 MS MARCO
+  `train_tune` queries (sparse labels: label 1 → DL grade 2, unjudged → 0).
+  Evaluation is on the 97 TREC DL 2019+2020 topics with their graded qrels (nDCG@10 of
+  the reranked top 20). No evaluation topic is used for training or for any choice.
+* Estimators: naive (click count), IPS with the true η, IPS with η estimated from
+  (a) swap(1,k) interventions in 5% of sessions, (b) RandTop-10 shuffles in 5% of
+  sessions, (c) intervention harvesting from two production rankers sharing traffic
+  (BM25 order and BGE order of the same candidates; Agarwal et al., WSDM 2019), no
+  deliberate randomisation. Raw per-rank ratios are smoothed by a click-weighted
+  monotone (isotonic) fit, see `docs/BUG_LOG.md` for why.
+* Baselines: logging ranker, an oracle trained on the true grades, a skyline trained on
+  α(grade) (the click-probability labels IPS converges to), and the candidate-set upper
+  bound (perfect reordering of the 20 candidates).
+* Also: propensity misestimation (IPS with η_r = (1/r)^p for p = 0 … 2 when the truth is
+  p = 1) and weight clipping (τ = 1.5 … ∞).

@@ -50,6 +50,10 @@ if(HS_SERVER_SOURCES)
     if(HS_SERVER_TESTS)
       add_executable(test_server ${HS_SERVER_TESTS})
       target_link_libraries(test_server PRIVATE hs_server GTest::gtest_main)
+      # gRPC's include dir (/opt/homebrew/include) also holds Homebrew's GoogleTest,
+      # whose headers do not match the vendored library we link: vendored first.
+      target_include_directories(test_server BEFORE PRIVATE
+        ${googletest_SOURCE_DIR}/googletest/include ${googletest_SOURCE_DIR}/googlemock/include)
       gtest_discover_tests(test_server DISCOVERY_TIMEOUT 60)
     endif()
   endif()

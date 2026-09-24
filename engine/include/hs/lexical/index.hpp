@@ -15,6 +15,7 @@
 //   postings.vbyte     postings, VByte codec     (either or both, see codec.hpp)
 //   postings.bp128     postings, BP128 codec
 //   docstore.bin/.idx  zstd-compressed passage text (docstore.hpp)
+//   global_df.u32      (shards only) collection-wide df per term, used for idf
 
 #include <array>
 #include <cstdint>
@@ -117,7 +118,14 @@ class LexicalIndex {
   // Term lookup; returns -1 if absent.
   int64_t term_id(std::string_view term) const;
   std::string_view term_string(uint32_t id) const;
-  uint32_t df(uint32_t id) const;
+  uint32_t df(uint32_t id) const;  // postings in THIS index
+
+  // Statistics BM25 uses. Equal to the local ones, except in a shard built with global
+  // statistics (BuildOptions::global_stats_dir), where they are the full collection's.
+  uint64_t idf_n() const { return idf_n_; }
+  uint64_t idf_sum_dl() const { return idf_sum_dl_; }
+  uint32_t idf_df(uint32_t id) const { return global_df_.empty() ? terms_[id].df : global_df_[id]; }
+  bool has_global_stats() const { return !global_df_.empty(); }
 
   // Decode every posting of a term (tests, benchmarks).
   void postings(uint32_t id, Codec c, std::vector<uint32_t>& docs, std::vector<uint32_t>& tfs) const;
@@ -158,6 +166,8 @@ class LexicalIndex {
   IndexStats stats_;
   float avgdl_ = 1;
   float build_k1_ = kDefaultK1, build_b_ = kDefaultB;
+  uint64_t idf_n_ = 0, idf_sum_dl_ = 0;
+  std::vector<uint32_t> global_df_;
   std::vector<uint64_t> docids_;
   bool docids_sorted_ = true;
   std::vector<uint32_t> doclen_;

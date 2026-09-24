@@ -16,7 +16,7 @@ using namespace hs::vector;
 
 int main(int argc, char** argv) try {
   tool::Args a(argc, argv);
-  auto base = std::make_shared<MappedFbin>(a.str("base"), uint32_t(a.num("max-n", 0)));
+  auto base = std::make_shared<MappedFbin>(a.str("base"), uint32_t(a.num("max-n", 0)), uint32_t(a.num("row-begin", 0)));
   auto ix = VamanaIndex::load(a.str("graph"), base->data(), base->n(), base->dim());
   auto qs = hs::read_fbin(a.str("queries"), uint32_t(a.num("max-queries", 0)));
   GroundTruth gt = read_groundtruth(a.str("gt"));

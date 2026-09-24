@@ -32,12 +32,17 @@ def bucket(salt: str, session_id: str, buckets: int = 10_000) -> int:
     return xxhash.xxh64_intdigest((salt + session_id).encode("utf-8")) % buckets
 
 
+ARM_SEED = 0x5EED_A5B1_0000_0001  # broker ExperimentAssigner.ArmSeed
+
+
 def assign(salt: str, session_id: str, allocation: float) -> str | None:
-    """None (not enrolled) | "control" | "treatment". The arm uses a second hash with a
-    different key (``salt + "|arm|" + sessionId``) so enrolment and arm are independent."""
-    if bucket(salt, session_id) >= allocation * 10_000:
+    """None (not enrolled) | "control" | "treatment". Mirrors the broker's
+    ``ExperimentAssigner`` exactly: enrolled iff bucket < round(allocation * 10000); arm =
+    xxhash64 of the same UTF-8 bytes with seed ``ARM_SEED``, mod 2 (0 = control), so
+    enrolment and arm are independent."""
+    if bucket(salt, session_id) >= round(allocation * 10_000):
         return None
-    arm = xxhash.xxh64_intdigest((salt + "|arm|" + session_id).encode("utf-8")) % 2
+    arm = xxhash.xxh64_intdigest((salt + session_id).encode("utf-8"), seed=ARM_SEED) % 2
     return "treatment" if arm else "control"
 
 

@@ -14,7 +14,7 @@ using namespace hs::vector;
 
 int main(int argc, char** argv) try {
   tool::Args a(argc, argv);
-  MappedFbin base(a.str("base"), uint32_t(a.num("max-n", 0)));
+  MappedFbin base(a.str("base"), uint32_t(a.num("max-n", 0)), uint32_t(a.num("row-begin", 0)));
   VamanaBuildParams p;
   p.R = uint32_t(a.num("R", 64));
   p.L = uint32_t(a.num("L", 100));

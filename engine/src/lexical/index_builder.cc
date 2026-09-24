@@ -25,6 +25,21 @@
 
 namespace hs::lexical {
 
+uint64_t count_lines(const std::string& path) {
+  std::FILE* f = std::fopen(path.c_str(), "rb");
+  if (!f) throw std::runtime_error("cannot open " + path);
+  std::vector<char> b(1 << 22);
+  uint64_t n = 0;
+  size_t got;
+  char last = '\n';
+  while ((got = std::fread(b.data(), 1, b.size(), f)) > 0) {
+    n += uint64_t(std::count(b.data(), b.data() + got, '\n'));
+    last = b[got - 1];
+  }
+  std::fclose(f);
+  return n + (last != '\n');
+}
+
 uint64_t free_disk_bytes(const std::string& path) {
   struct statvfs s {};
   if (statvfs(path.c_str(), &s) != 0) return 0;
@@ -266,6 +281,26 @@ BuildReport build_index(const BuildOptions& opt) {
 
   std::FILE* in = std::fopen(opt.input_tsv.c_str(), "rb");
   if (!in) throw std::runtime_error("cannot open " + opt.input_tsv);
+  if (opt.skip_docs) {
+    std::vector<char> b(1 << 22);
+    uint64_t seen = 0, off = 0;
+    bool done = false;
+    while (!done) {
+      size_t got = std::fread(b.data(), 1, b.size(), in);
+      if (got == 0) break;
+      for (size_t i = 0; i < got; ++i)
+        if (b[i] == '\n' && ++seen == opt.skip_docs) {
+          off += i + 1;
+          done = true;
+          break;
+        }
+      if (!done) off += got;
+    }
+    if (!done) throw std::runtime_error("skip_docs beyond end of input");
+    std::fseek(in, long(off), SEEK_SET);
+  }
+  std::unique_ptr<LexicalIndex> global;
+  if (!opt.global_stats_dir.empty()) global = LexicalIndex::open(opt.global_stats_dir);
 
   Vocab vocab;
   std::vector<uint64_t> pids;
@@ -437,7 +472,10 @@ BuildReport build_index(const BuildOptions& opt) {
   rep.num_docs = num_docs;
   rep.docs_with_terms = with_terms;
   rep.sum_dl = sum_dl;
-  const float avgdl = with_terms ? bm25_avgdl(sum_dl, with_terms) : 1.0f;
+  // Scoring statistics: the global ones when building a shard.
+  const uint64_t score_n = global ? global->idf_n() : with_terms;
+  const uint64_t score_sum_dl = global ? global->idf_sum_dl() : sum_dl;
+  const float avgdl = score_n ? bm25_avgdl(score_sum_dl, score_n) : 1.0f;
   std::vector<uint8_t> norms(num_docs);
   for (size_t i = 0; i < num_docs; ++i) norms[i] = smallfloat::int_to_byte4(dls[i]);
   Bm25Norms bn[2];
@@ -591,6 +629,19 @@ BuildReport build_index(const BuildOptions& opt) {
   std::error_code ec;
   if (opt.tmp_dir.empty()) fs::remove(tmp, ec);
 
+  if (global) {
+    std::vector<uint32_t> gdf(V);
+    for (uint32_t oi = 0; oi < V; ++oi) {
+      int64_t g = global->term_id(vocab.str(order[oi]));
+      if (g < 0)
+        throw std::runtime_error("global stats index lacks term '" + std::string(vocab.str(order[oi])) +
+                                 "': it must cover this shard's documents");
+      gdf[oi] = global->idf_df(uint32_t(g));
+    }
+    Writer w(opt.out_dir + "/global_df.u32");
+    w.write(gdf.data(), gdf.size() * 4);
+    w.close();
+  }
   write_u64bin(opt.out_dir + "/docids.u64bin", pids);
   {
     Writer w(opt.out_dir + "/doclen.u32");
@@ -615,6 +666,10 @@ BuildReport build_index(const BuildOptions& opt) {
                  (unsigned long long)num_docs, (unsigned long long)with_terms, (unsigned long long)sum_dl, V,
                  (unsigned long long)num_postings, (unsigned long long)num_blocks, codecs.c_str(), kBlockSize,
                  double(kDefaultK1), double(kDefaultB), double(avgdl), avg_bits, opt.input_tsv.c_str());
+    if (global)
+      std::fprintf(f, "global_docs_with_terms=%llu\nglobal_sum_dl=%llu\nglobal_stats_from=%s\nshard=%s\n",
+                   (unsigned long long)score_n, (unsigned long long)score_sum_dl, opt.global_stats_dir.c_str(),
+                   opt.shard_label.c_str());
     std::fclose(f);
   }
   rep.num_terms = V;
