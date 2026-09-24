@@ -1,0 +1,14 @@
+{
+  "queryLog": "data/raw/msmarco/queries.train.tsv",
+  "totalQueries": 808731,
+  "distinctNormalizedQueries": 808647,
+  "trieNodes": 1194583,
+  "trieArrayBytes": 80463393,
+  "topK": 10,
+  "spellerVocabulary": 46507,
+  "readAndNormalizeMs": 12777.9,
+  "trieBuildMs": 9656.9,
+  "spellerBuildMs": 1626.7,
+  "managedHeapDeltaBytes": 92293096,
+  "note": "single run, not repeated; wall-clock on a shared dev laptop"
+}

@@ -1,0 +1,1033 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 10 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+Unable to find .sln or .csproj file. Will use current directory /Users/sanjithshanmugavel/Documents/HybridSearch to search for project file. If you don't use .sln file on purpose it should not be a problem.
+// start dotnet  restore --nodeReuse:false /p:UseSharedCompilation=false /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/" /p:OutDir="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0/" /p:OutputPath="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0/" /p:PublishDir="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/publish/" in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1
+// command took 19.13 sec and exited with 0
+// start dotnet  build -c Release --no-restore --nodeReuse:false /p:UseSharedCompilation=false /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/" /p:OutDir="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0/" /p:OutputPath="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0/" /p:PublishDir="/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/publish/" --output "/Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0/" in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1
+// command took 79.98 sec and exited with 0
+// ***** Done, took 00:01:45 (105.52 sec)   *****
+// Found 6 benchmarks:
+//   FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+//   FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+//   FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+//   FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+//   FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+//   FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+
+// **************************
+// Benchmark: FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 111 112 --benchmarkName "HybridSearch.Broker.Bench.FusionBench.Rrf(Depth: 100)" --job ShortRun --benchmarkId 0 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 770042.00 ns, 770.0420 us/op
+WorkloadJitting  1: 1 op, 170301667.00 ns, 170.3017 ms/op
+
+WorkloadPilot    1: 2 op, 450500.00 ns, 225.2500 us/op
+WorkloadPilot    2: 3 op, 808042.00 ns, 269.3473 us/op
+WorkloadPilot    3: 4 op, 617417.00 ns, 154.3543 us/op
+WorkloadPilot    4: 5 op, 653959.00 ns, 130.7918 us/op
+WorkloadPilot    5: 6 op, 21872166.00 ns, 3.6454 ms/op
+WorkloadPilot    6: 7 op, 621208.00 ns, 88.7440 us/op
+WorkloadPilot    7: 8 op, 1145542.00 ns, 143.1928 us/op
+WorkloadPilot    8: 9 op, 1581000.00 ns, 175.6667 us/op
+WorkloadPilot    9: 10 op, 2025667.00 ns, 202.5667 us/op
+WorkloadPilot   10: 11 op, 1488417.00 ns, 135.3106 us/op
+WorkloadPilot   11: 12 op, 2177375.00 ns, 181.4479 us/op
+WorkloadPilot   12: 13 op, 1846833.00 ns, 142.0641 us/op
+WorkloadPilot   13: 14 op, 3329917.00 ns, 237.8512 us/op
+WorkloadPilot   14: 15 op, 2264500.00 ns, 150.9667 us/op
+WorkloadPilot   15: 16 op, 2529708.00 ns, 158.1068 us/op
+WorkloadPilot   16: 32 op, 4643791.00 ns, 145.1185 us/op
+WorkloadPilot   17: 64 op, 8671917.00 ns, 135.4987 us/op
+WorkloadPilot   18: 128 op, 277603625.00 ns, 2.1688 ms/op
+WorkloadPilot   19: 256 op, 12075583.00 ns, 47.1702 us/op
+WorkloadPilot   20: 512 op, 18882667.00 ns, 36.8802 us/op
+WorkloadPilot   21: 1024 op, 225220750.00 ns, 219.9421 us/op
+WorkloadPilot   22: 2048 op, 30972292.00 ns, 15.1232 us/op
+WorkloadPilot   23: 4096 op, 63919500.00 ns, 15.6053 us/op
+WorkloadPilot   24: 8192 op, 569358375.00 ns, 69.5018 us/op
+
+WorkloadWarmup   1: 8192 op, 597018917.00 ns, 72.8783 us/op
+WorkloadWarmup   2: 8192 op, 697560833.00 ns, 85.1515 us/op
+WorkloadWarmup   3: 8192 op, 315195167.00 ns, 38.4760 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 8192 op, 823747500.00 ns, 100.5551 us/op
+WorkloadActual   2: 8192 op, 491005375.00 ns, 59.9372 us/op
+WorkloadActual   3: 8192 op, 479048208.00 ns, 58.4776 us/op
+
+// AfterActualRun
+WorkloadResult   1: 8192 op, 823747500.00 ns, 100.5551 us/op
+WorkloadResult   2: 8192 op, 491005375.00 ns, 59.9372 us/op
+WorkloadResult   3: 8192 op, 479048208.00 ns, 58.4776 us/op
+// GC:  19 0 0 159907840 8192
+// Threading:  0 0 8192
+
+// AfterAll
+// Benchmark Process 66695 has exited with code 0.
+
+Mean = 72.990 μs, StdErr = 13.789 μs (18.89%), N = 3, StdDev = 23.883 μs
+Min = 58.478 μs, Q1 = 59.207 μs, Median = 59.937 μs, Q3 = 80.246 μs, Max = 100.555 μs
+IQR = 21.039 μs, LowerFence = 27.649 μs, UpperFence = 111.804 μs
+ConfidenceInterval = [-362.730 μs; 508.710 μs] (CI 99.9%), Margin = 435.720 μs (596.96% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 9 (90.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:15 (0h 1m from now) **
+// **************************
+// Benchmark: FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 111 112 --benchmarkName "HybridSearch.Broker.Bench.FusionBench.WeightedMinMax(Depth: 100)" --job ShortRun --benchmarkId 1 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 12676167.00 ns, 12.6762 ms/op
+WorkloadJitting  1: 1 op, 15009250.00 ns, 15.0093 ms/op
+
+OverheadJitting  2: 16 op, 964167.00 ns, 60.2604 us/op
+WorkloadJitting  2: 16 op, 4379500.00 ns, 273.7188 us/op
+
+WorkloadPilot    1: 16 op, 2705334.00 ns, 169.0834 us/op
+WorkloadPilot    2: 32 op, 8083791.00 ns, 252.6185 us/op
+WorkloadPilot    3: 64 op, 25121083.00 ns, 392.5169 us/op
+WorkloadPilot    4: 128 op, 372765125.00 ns, 2.9122 ms/op
+WorkloadPilot    5: 256 op, 292725083.00 ns, 1.1435 ms/op
+WorkloadPilot    6: 512 op, 220478417.00 ns, 430.6219 us/op
+WorkloadPilot    7: 1024 op, 40254209.00 ns, 39.3108 us/op
+WorkloadPilot    8: 2048 op, 373837667.00 ns, 182.5379 us/op
+WorkloadPilot    9: 4096 op, 379720916.00 ns, 92.7053 us/op
+WorkloadPilot   10: 8192 op, 1064355833.00 ns, 129.9262 us/op
+
+OverheadWarmup   1: 8192 op, 36333.00 ns, 4.4352 ns/op
+OverheadWarmup   2: 8192 op, 23167.00 ns, 2.8280 ns/op
+OverheadWarmup   3: 8192 op, 44834.00 ns, 5.4729 ns/op
+OverheadWarmup   4: 8192 op, 21542.00 ns, 2.6296 ns/op
+OverheadWarmup   5: 8192 op, 61375.00 ns, 7.4921 ns/op
+OverheadWarmup   6: 8192 op, 41500.00 ns, 5.0659 ns/op
+
+OverheadActual   1: 8192 op, 106958.00 ns, 13.0564 ns/op
+OverheadActual   2: 8192 op, 87917.00 ns, 10.7321 ns/op
+OverheadActual   3: 8192 op, 25750.00 ns, 3.1433 ns/op
+OverheadActual   4: 8192 op, 33875.00 ns, 4.1351 ns/op
+OverheadActual   5: 8192 op, 23083.00 ns, 2.8177 ns/op
+OverheadActual   6: 8192 op, 32542.00 ns, 3.9724 ns/op
+OverheadActual   7: 8192 op, 33125.00 ns, 4.0436 ns/op
+OverheadActual   8: 8192 op, 108459.00 ns, 13.2396 ns/op
+OverheadActual   9: 8192 op, 34917.00 ns, 4.2623 ns/op
+OverheadActual  10: 8192 op, 22083.00 ns, 2.6957 ns/op
+OverheadActual  11: 8192 op, 23125.00 ns, 2.8229 ns/op
+OverheadActual  12: 8192 op, 57500.00 ns, 7.0190 ns/op
+OverheadActual  13: 8192 op, 22916.00 ns, 2.7974 ns/op
+OverheadActual  14: 8192 op, 22416.00 ns, 2.7363 ns/op
+OverheadActual  15: 8192 op, 35083.00 ns, 4.2826 ns/op
+OverheadActual  16: 8192 op, 33292.00 ns, 4.0640 ns/op
+OverheadActual  17: 8192 op, 22208.00 ns, 2.7109 ns/op
+OverheadActual  18: 8192 op, 22208.00 ns, 2.7109 ns/op
+OverheadActual  19: 8192 op, 27166.00 ns, 3.3162 ns/op
+OverheadActual  20: 8192 op, 33500.00 ns, 4.0894 ns/op
+
+WorkloadWarmup   1: 8192 op, 1113736167.00 ns, 135.9541 us/op
+WorkloadWarmup   2: 8192 op, 972274458.00 ns, 118.6858 us/op
+WorkloadWarmup   3: 8192 op, 801233625.00 ns, 97.8068 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 8192 op, 894995042.00 ns, 109.2523 us/op
+WorkloadActual   2: 8192 op, 454727167.00 ns, 55.5087 us/op
+WorkloadActual   3: 8192 op, 755914084.00 ns, 92.2747 us/op
+
+// AfterActualRun
+WorkloadResult   1: 8192 op, 894962208.50 ns, 109.2483 us/op
+WorkloadResult   2: 8192 op, 454694333.50 ns, 55.5047 us/op
+WorkloadResult   3: 8192 op, 755881250.50 ns, 92.2707 us/op
+// GC:  28 0 0 236191744 8192
+// Threading:  0 0 8192
+
+// AfterAll
+// Benchmark Process 66878 has exited with code 0.
+
+Mean = 85.675 μs, StdErr = 15.861 μs (18.51%), N = 3, StdDev = 27.472 μs
+Min = 55.505 μs, Q1 = 73.888 μs, Median = 92.271 μs, Q3 = 100.759 μs, Max = 109.248 μs
+IQR = 26.872 μs, LowerFence = 33.580 μs, UpperFence = 141.067 μs
+ConfidenceInterval = [-415.522 μs; 586.871 μs] (CI 99.9%), Margin = 501.197 μs (585.00% of Mean)
+Skewness = -0.23, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 8 (80.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:15 (0h 1m from now) **
+// **************************
+// Benchmark: FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 113 114 --benchmarkName "HybridSearch.Broker.Bench.FusionBench.WeightedZScore(Depth: 100)" --job ShortRun --benchmarkId 2 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 374708.00 ns, 374.7080 us/op
+WorkloadJitting  1: 1 op, 15099834.00 ns, 15.0998 ms/op
+
+OverheadJitting  2: 16 op, 871958.00 ns, 54.4974 us/op
+WorkloadJitting  2: 16 op, 4164792.00 ns, 260.2995 us/op
+
+WorkloadPilot    1: 16 op, 3421000.00 ns, 213.8125 us/op
+WorkloadPilot    2: 32 op, 7391667.00 ns, 230.9896 us/op
+WorkloadPilot    3: 64 op, 497257666.00 ns, 7.7697 ms/op
+WorkloadPilot    4: 128 op, 15388667.00 ns, 120.2240 us/op
+WorkloadPilot    5: 256 op, 277720541.00 ns, 1.0848 ms/op
+WorkloadPilot    6: 512 op, 40021083.00 ns, 78.1662 us/op
+WorkloadPilot    7: 1024 op, 288431750.00 ns, 281.6716 us/op
+WorkloadPilot    8: 2048 op, 210504542.00 ns, 102.7854 us/op
+WorkloadPilot    9: 4096 op, 106735292.00 ns, 26.0584 us/op
+WorkloadPilot   10: 8192 op, 961235125.00 ns, 117.3383 us/op
+
+OverheadWarmup   1: 8192 op, 36625.00 ns, 4.4708 ns/op
+OverheadWarmup   2: 8192 op, 22209.00 ns, 2.7111 ns/op
+OverheadWarmup   3: 8192 op, 35167.00 ns, 4.2928 ns/op
+OverheadWarmup   4: 8192 op, 34625.00 ns, 4.2267 ns/op
+OverheadWarmup   5: 8192 op, 23625.00 ns, 2.8839 ns/op
+OverheadWarmup   6: 8192 op, 22250.00 ns, 2.7161 ns/op
+OverheadWarmup   7: 8192 op, 22917.00 ns, 2.7975 ns/op
+OverheadWarmup   8: 8192 op, 117666.00 ns, 14.3635 ns/op
+OverheadWarmup   9: 8192 op, 98834.00 ns, 12.0647 ns/op
+
+OverheadActual   1: 8192 op, 45417.00 ns, 5.5441 ns/op
+OverheadActual   2: 8192 op, 34833.00 ns, 4.2521 ns/op
+OverheadActual   3: 8192 op, 23083.00 ns, 2.8177 ns/op
+OverheadActual   4: 8192 op, 33458.00 ns, 4.0842 ns/op
+OverheadActual   5: 8192 op, 66334.00 ns, 8.0974 ns/op
+OverheadActual   6: 8192 op, 38292.00 ns, 4.6743 ns/op
+OverheadActual   7: 8192 op, 22875.00 ns, 2.7924 ns/op
+OverheadActual   8: 8192 op, 26125.00 ns, 3.1891 ns/op
+OverheadActual   9: 8192 op, 91250.00 ns, 11.1389 ns/op
+OverheadActual  10: 8192 op, 621083.00 ns, 75.8158 ns/op
+OverheadActual  11: 8192 op, 22666.00 ns, 2.7668 ns/op
+OverheadActual  12: 8192 op, 33375.00 ns, 4.0741 ns/op
+OverheadActual  13: 8192 op, 33833.00 ns, 4.1300 ns/op
+OverheadActual  14: 8192 op, 34167.00 ns, 4.1708 ns/op
+OverheadActual  15: 8192 op, 190750.00 ns, 23.2849 ns/op
+OverheadActual  16: 8192 op, 40958.00 ns, 4.9998 ns/op
+OverheadActual  17: 8192 op, 22542.00 ns, 2.7517 ns/op
+OverheadActual  18: 8192 op, 33708.00 ns, 4.1147 ns/op
+OverheadActual  19: 8192 op, 22791.00 ns, 2.7821 ns/op
+OverheadActual  20: 8192 op, 34416.00 ns, 4.2012 ns/op
+
+WorkloadWarmup   1: 8192 op, 502797000.00 ns, 61.3766 us/op
+WorkloadWarmup   2: 8192 op, 906482000.00 ns, 110.6545 us/op
+WorkloadWarmup   3: 8192 op, 535625042.00 ns, 65.3839 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 8192 op, 995327292.00 ns, 121.4999 us/op
+WorkloadActual   2: 8192 op, 1001997541.00 ns, 122.3142 us/op
+WorkloadActual   3: 8192 op, 1106056000.00 ns, 135.0166 us/op
+
+// AfterActualRun
+WorkloadResult   1: 8192 op, 995293292.00 ns, 121.4958 us/op
+WorkloadResult   2: 8192 op, 1001963541.00 ns, 122.3100 us/op
+WorkloadResult   3: 8192 op, 1106022000.00 ns, 135.0125 us/op
+// GC:  28 0 0 236191744 8192
+// Threading:  0 0 8192
+
+// AfterAll
+// Benchmark Process 67249 has exited with code 0.
+
+Mean = 126.273 μs, StdErr = 4.376 μs (3.47%), N = 3, StdDev = 7.580 μs
+Min = 121.496 μs, Q1 = 121.903 μs, Median = 122.310 μs, Q3 = 128.661 μs, Max = 135.012 μs
+IQR = 6.758 μs, LowerFence = 111.765 μs, UpperFence = 138.799 μs
+ConfidenceInterval = [-12.010 μs; 264.556 μs] (CI 99.9%), Margin = 138.283 μs (109.51% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 7 (70.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:15 (0h 1m from now) **
+// **************************
+// Benchmark: FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 113 114 --benchmarkName "HybridSearch.Broker.Bench.FusionBench.Rrf(Depth: 1000)" --job ShortRun --benchmarkId 3 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 30891167.00 ns, 30.8912 ms/op
+WorkloadJitting  1: 1 op, 10758500.00 ns, 10.7585 ms/op
+
+OverheadJitting  2: 16 op, 753083.00 ns, 47.0677 us/op
+WorkloadJitting  2: 16 op, 47100416.00 ns, 2.9438 ms/op
+
+WorkloadPilot    1: 16 op, 157155292.00 ns, 9.8222 ms/op
+WorkloadPilot    2: 32 op, 188198792.00 ns, 5.8812 ms/op
+WorkloadPilot    3: 64 op, 439230084.00 ns, 6.8630 ms/op
+WorkloadPilot    4: 128 op, 259053875.00 ns, 2.0239 ms/op
+WorkloadPilot    5: 256 op, 169050792.00 ns, 660.3547 us/op
+WorkloadPilot    6: 512 op, 264924041.00 ns, 517.4298 us/op
+WorkloadPilot    7: 1024 op, 528622208.00 ns, 516.2326 us/op
+
+OverheadWarmup   1: 1024 op, 9542.00 ns, 9.3184 ns/op
+OverheadWarmup   2: 1024 op, 6750.00 ns, 6.5918 ns/op
+OverheadWarmup   3: 1024 op, 6542.00 ns, 6.3887 ns/op
+OverheadWarmup   4: 1024 op, 8084.00 ns, 7.8945 ns/op
+OverheadWarmup   5: 1024 op, 5666.00 ns, 5.5332 ns/op
+OverheadWarmup   6: 1024 op, 5791.00 ns, 5.6553 ns/op
+OverheadWarmup   7: 1024 op, 6209.00 ns, 6.0635 ns/op
+OverheadWarmup   8: 1024 op, 6583.00 ns, 6.4287 ns/op
+OverheadWarmup   9: 1024 op, 5542.00 ns, 5.4121 ns/op
+
+OverheadActual   1: 1024 op, 5708.00 ns, 5.5742 ns/op
+OverheadActual   2: 1024 op, 3916.00 ns, 3.8242 ns/op
+OverheadActual   3: 1024 op, 90000.00 ns, 87.8906 ns/op
+OverheadActual   4: 1024 op, 3875.00 ns, 3.7842 ns/op
+OverheadActual   5: 1024 op, 5083.00 ns, 4.9639 ns/op
+OverheadActual   6: 1024 op, 3416.00 ns, 3.3359 ns/op
+OverheadActual   7: 1024 op, 5458.00 ns, 5.3301 ns/op
+OverheadActual   8: 1024 op, 15334.00 ns, 14.9746 ns/op
+OverheadActual   9: 1024 op, 4209.00 ns, 4.1104 ns/op
+OverheadActual  10: 1024 op, 6458.00 ns, 6.3066 ns/op
+OverheadActual  11: 1024 op, 5417.00 ns, 5.2900 ns/op
+OverheadActual  12: 1024 op, 3917.00 ns, 3.8252 ns/op
+OverheadActual  13: 1024 op, 3375.00 ns, 3.2959 ns/op
+OverheadActual  14: 1024 op, 3208.00 ns, 3.1328 ns/op
+OverheadActual  15: 1024 op, 5834.00 ns, 5.6973 ns/op
+OverheadActual  16: 1024 op, 5958.00 ns, 5.8184 ns/op
+OverheadActual  17: 1024 op, 5958.00 ns, 5.8184 ns/op
+OverheadActual  18: 1024 op, 32792.00 ns, 32.0234 ns/op
+OverheadActual  19: 1024 op, 5541.00 ns, 5.4111 ns/op
+OverheadActual  20: 1024 op, 46417.00 ns, 45.3291 ns/op
+
+WorkloadWarmup   1: 1024 op, 880681792.00 ns, 860.0408 us/op
+WorkloadWarmup   2: 1024 op, 887311000.00 ns, 866.5146 us/op
+WorkloadWarmup   3: 1024 op, 730736291.00 ns, 713.6097 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 1024 op, 975403833.00 ns, 952.5428 us/op
+WorkloadActual   2: 1024 op, 961510625.00 ns, 938.9752 us/op
+WorkloadActual   3: 1024 op, 564046667.00 ns, 550.8268 us/op
+
+// AfterActualRun
+WorkloadResult   1: 1024 op, 975398333.50 ns, 952.5374 us/op
+WorkloadResult   2: 1024 op, 961505125.50 ns, 938.9698 us/op
+WorkloadResult   3: 1024 op, 564041167.50 ns, 550.8215 us/op
+// GC:  23 4 0 199548928 1024
+// Threading:  0 0 1024
+
+// AfterAll
+// Benchmark Process 67413 has exited with code 0.
+
+Mean = 814.110 μs, StdErr = 131.702 μs (16.18%), N = 3, StdDev = 228.115 μs
+Min = 550.821 μs, Q1 = 744.896 μs, Median = 938.970 μs, Q3 = 945.754 μs, Max = 952.537 μs
+IQR = 200.858 μs, LowerFence = 443.609 μs, UpperFence = 1,247.041 μs
+ConfidenceInterval = [-3,347.559 μs; 4,975.778 μs] (CI 99.9%), Margin = 4,161.669 μs (511.19% of Mean)
+Skewness = -0.38, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 6 (60.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:15 (0h 1m from now) **
+// **************************
+// Benchmark: FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 113 114 --benchmarkName "HybridSearch.Broker.Bench.FusionBench.WeightedMinMax(Depth: 1000)" --job ShortRun --benchmarkId 4 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 346500.00 ns, 346.5000 us/op
+WorkloadJitting  1: 1 op, 120548875.00 ns, 120.5489 ms/op
+
+WorkloadPilot    1: 2 op, 5463542.00 ns, 2.7318 ms/op
+WorkloadPilot    2: 3 op, 16976709.00 ns, 5.6589 ms/op
+WorkloadPilot    3: 4 op, 149098500.00 ns, 37.2746 ms/op
+WorkloadPilot    4: 5 op, 72652792.00 ns, 14.5306 ms/op
+WorkloadPilot    5: 6 op, 8747333.00 ns, 1.4579 ms/op
+WorkloadPilot    6: 7 op, 4216792.00 ns, 602.3989 us/op
+WorkloadPilot    7: 8 op, 5241042.00 ns, 655.1303 us/op
+WorkloadPilot    8: 9 op, 17051375.00 ns, 1.8946 ms/op
+WorkloadPilot    9: 10 op, 126456375.00 ns, 12.6456 ms/op
+WorkloadPilot   10: 11 op, 7909416.00 ns, 719.0378 us/op
+WorkloadPilot   11: 12 op, 7572791.00 ns, 631.0659 us/op
+WorkloadPilot   12: 13 op, 9470875.00 ns, 728.5288 us/op
+WorkloadPilot   13: 14 op, 8954667.00 ns, 639.6191 us/op
+WorkloadPilot   14: 15 op, 9350334.00 ns, 623.3556 us/op
+WorkloadPilot   15: 16 op, 7388583.00 ns, 461.7864 us/op
+WorkloadPilot   16: 32 op, 23771208.00 ns, 742.8503 us/op
+WorkloadPilot   17: 64 op, 84917459.00 ns, 1.3268 ms/op
+WorkloadPilot   18: 128 op, 30712625.00 ns, 239.9424 us/op
+WorkloadPilot   19: 256 op, 121600708.00 ns, 475.0028 us/op
+WorkloadPilot   20: 512 op, 57435667.00 ns, 112.1790 us/op
+WorkloadPilot   21: 1024 op, 94467125.00 ns, 92.2531 us/op
+WorkloadPilot   22: 2048 op, 177467042.00 ns, 86.6538 us/op
+WorkloadPilot   23: 4096 op, 363816959.00 ns, 88.8225 us/op
+WorkloadPilot   24: 8192 op, 3883842584.00 ns, 474.1019 us/op
+
+WorkloadWarmup   1: 8192 op, 10355814541.00 ns, 1.2641 ms/op
+WorkloadWarmup   2: 8192 op, 10163347083.00 ns, 1.2406 ms/op
+WorkloadWarmup   3: 8192 op, 3177126250.00 ns, 387.8328 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 8192 op, 2783223959.00 ns, 339.7490 us/op
+WorkloadActual   2: 8192 op, 7984461292.00 ns, 974.6657 us/op
+WorkloadActual   3: 8192 op, 11094423458.00 ns, 1.3543 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 8192 op, 2783223959.00 ns, 339.7490 us/op
+WorkloadResult   2: 8192 op, 7984461292.00 ns, 974.6657 us/op
+WorkloadResult   3: 8192 op, 11094423458.00 ns, 1.3543 ms/op
+// GC:  277 69 0 2330722304 8192
+// Threading:  0 0 8192
+
+// AfterAll
+// Benchmark Process 67700 has exited with code 0.
+
+Mean = 889.571 μs, StdErr = 295.950 μs (33.27%), N = 3, StdDev = 512.600 μs
+Min = 339.749 μs, Q1 = 657.207 μs, Median = 974.666 μs, Q3 = 1,164.483 μs, Max = 1,354.300 μs
+IQR = 507.275 μs, LowerFence = -103.706 μs, UpperFence = 1,925.396 μs
+ConfidenceInterval = [-8,462.166 μs; 10,241.309 μs] (CI 99.9%), Margin = 9,351.738 μs (1051.26% of Mean)
+Skewness = -0.16, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 5 (50.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:17 (0h 1m from now) **
+// **************************
+// Benchmark: FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 113 114 --benchmarkName "HybridSearch.Broker.Bench.FusionBench.WeightedZScore(Depth: 1000)" --job ShortRun --benchmarkId 5 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 221666.00 ns, 221.6660 us/op
+WorkloadJitting  1: 1 op, 407231125.00 ns, 407.2311 ms/op
+
+OverheadJitting  2: 1 op, 2250.00 ns, 2.2500 us/op
+WorkloadJitting  2: 1 op, 2307709.00 ns, 2.3077 ms/op
+
+OverheadJitting  3: 16 op, 826667.00 ns, 51.6667 us/op
+WorkloadJitting  3: 16 op, 142130958.00 ns, 8.8832 ms/op
+
+WorkloadPilot    1: 16 op, 66551042.00 ns, 4.1594 ms/op
+WorkloadPilot    2: 32 op, 554136541.00 ns, 17.3168 ms/op
+
+OverheadWarmup   1: 32 op, 3584.00 ns, 112.0000 ns/op
+OverheadWarmup   2: 32 op, 3083.00 ns, 96.3438 ns/op
+OverheadWarmup   3: 32 op, 3334.00 ns, 104.1875 ns/op
+OverheadWarmup   4: 32 op, 24417.00 ns, 763.0313 ns/op
+OverheadWarmup   5: 32 op, 1791.00 ns, 55.9688 ns/op
+OverheadWarmup   6: 32 op, 1375.00 ns, 42.9688 ns/op
+OverheadWarmup   7: 32 op, 1042.00 ns, 32.5625 ns/op
+OverheadWarmup   8: 32 op, 1417.00 ns, 44.2813 ns/op
+OverheadWarmup   9: 32 op, 1625.00 ns, 50.7813 ns/op
+OverheadWarmup  10: 32 op, 917.00 ns, 28.6563 ns/op
+
+OverheadActual   1: 32 op, 2416.00 ns, 75.5000 ns/op
+OverheadActual   2: 32 op, 1667.00 ns, 52.0938 ns/op
+OverheadActual   3: 32 op, 1541.00 ns, 48.1563 ns/op
+OverheadActual   4: 32 op, 2209.00 ns, 69.0313 ns/op
+OverheadActual   5: 32 op, 1458.00 ns, 45.5625 ns/op
+OverheadActual   6: 32 op, 584.00 ns, 18.2500 ns/op
+OverheadActual   7: 32 op, 458.00 ns, 14.3125 ns/op
+OverheadActual   8: 32 op, 1000.00 ns, 31.2500 ns/op
+OverheadActual   9: 32 op, 375.00 ns, 11.7188 ns/op
+OverheadActual  10: 32 op, 584.00 ns, 18.2500 ns/op
+OverheadActual  11: 32 op, 750.00 ns, 23.4375 ns/op
+OverheadActual  12: 32 op, 834.00 ns, 26.0625 ns/op
+OverheadActual  13: 32 op, 417.00 ns, 13.0313 ns/op
+OverheadActual  14: 32 op, 2083.00 ns, 65.0938 ns/op
+OverheadActual  15: 32 op, 1083.00 ns, 33.8438 ns/op
+OverheadActual  16: 32 op, 917.00 ns, 28.6563 ns/op
+OverheadActual  17: 32 op, 1209.00 ns, 37.7813 ns/op
+OverheadActual  18: 32 op, 1417.00 ns, 44.2813 ns/op
+OverheadActual  19: 32 op, 750.00 ns, 23.4375 ns/op
+OverheadActual  20: 32 op, 1042.00 ns, 32.5625 ns/op
+
+WorkloadWarmup   1: 32 op, 36472292.00 ns, 1.1398 ms/op
+WorkloadWarmup   2: 32 op, 393971500.00 ns, 12.3116 ms/op
+WorkloadWarmup   3: 32 op, 46769083.00 ns, 1.4615 ms/op
+
+// BeforeActualRun
+WorkloadActual   1: 32 op, 198726250.00 ns, 6.2102 ms/op
+WorkloadActual   2: 32 op, 31231917.00 ns, 975.9974 us/op
+WorkloadActual   3: 32 op, 492355750.00 ns, 15.3861 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 32 op, 198725229.00 ns, 6.2102 ms/op
+WorkloadResult   2: 32 op, 31230896.00 ns, 975.9655 us/op
+WorkloadResult   3: 32 op, 492354729.00 ns, 15.3861 ms/op
+// GC:  1 0 0 9108480 32
+// Threading:  0 0 32
+
+// AfterAll
+// Benchmark Process 68760 has exited with code 0.
+
+Mean = 7.524 ms, StdErr = 4.211 ms (55.97%), N = 3, StdDev = 7.294 ms
+Min = 0.976 ms, Q1 = 3.593 ms, Median = 6.210 ms, Q3 = 10.798 ms, Max = 15.386 ms
+IQR = 7.205 ms, LowerFence = -7.215 ms, UpperFence = 21.606 ms
+ConfidenceInterval = [-125.552 ms; 140.600 ms] (CI 99.9%), Margin = 133.076 ms (1768.67% of Mean)
+Skewness = 0.17, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 4 (40.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:17 (0h 1m from now) **
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  results/broker/bdn/results/HybridSearch.Broker.Bench.FusionBench-report.csv
+  results/broker/bdn/results/HybridSearch.Broker.Bench.FusionBench-report-github.md
+  results/broker/bdn/results/HybridSearch.Broker.Bench.FusionBench-report.html
+
+// * Detailed results *
+FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 72.990 μs, StdErr = 13.789 μs (18.89%), N = 3, StdDev = 23.883 μs
+Min = 58.478 μs, Q1 = 59.207 μs, Median = 59.937 μs, Q3 = 80.246 μs, Max = 100.555 μs
+IQR = 21.039 μs, LowerFence = 27.649 μs, UpperFence = 111.804 μs
+ConfidenceInterval = [-362.730 μs; 508.710 μs] (CI 99.9%), Margin = 435.720 μs (596.96% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[57.782 μs ; 101.251 μs) | @@@
+---------------------------------------------------
+
+FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 85.675 μs, StdErr = 15.861 μs (18.51%), N = 3, StdDev = 27.472 μs
+Min = 55.505 μs, Q1 = 73.888 μs, Median = 92.271 μs, Q3 = 100.759 μs, Max = 109.248 μs
+IQR = 26.872 μs, LowerFence = 33.580 μs, UpperFence = 141.067 μs
+ConfidenceInterval = [-415.522 μs; 586.871 μs] (CI 99.9%), Margin = 501.197 μs (585.00% of Mean)
+Skewness = -0.23, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[30.504 μs ;  75.759 μs) | @
+[75.759 μs ; 134.249 μs) | @@
+---------------------------------------------------
+
+FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 126.273 μs, StdErr = 4.376 μs (3.47%), N = 3, StdDev = 7.580 μs
+Min = 121.496 μs, Q1 = 121.903 μs, Median = 122.310 μs, Q3 = 128.661 μs, Max = 135.012 μs
+IQR = 6.758 μs, LowerFence = 111.765 μs, UpperFence = 138.799 μs
+ConfidenceInterval = [-12.010 μs; 264.556 μs] (CI 99.9%), Margin = 138.283 μs (109.51% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[121.356 μs ; 135.152 μs) | @@@
+---------------------------------------------------
+
+FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 814.110 μs, StdErr = 131.702 μs (16.18%), N = 3, StdDev = 228.115 μs
+Min = 550.821 μs, Q1 = 744.896 μs, Median = 938.970 μs, Q3 = 945.754 μs, Max = 952.537 μs
+IQR = 200.858 μs, LowerFence = 443.609 μs, UpperFence = 1,247.041 μs
+ConfidenceInterval = [-3,347.559 μs; 4,975.778 μs] (CI 99.9%), Margin = 4,161.669 μs (511.19% of Mean)
+Skewness = -0.38, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[544.086 μs ; 959.273 μs) | @@@
+---------------------------------------------------
+
+FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 889.571 μs, StdErr = 295.950 μs (33.27%), N = 3, StdDev = 512.600 μs
+Min = 339.749 μs, Q1 = 657.207 μs, Median = 974.666 μs, Q3 = 1,164.483 μs, Max = 1,354.300 μs
+IQR = 507.275 μs, LowerFence = -103.706 μs, UpperFence = 1,925.396 μs
+ConfidenceInterval = [-8,462.166 μs; 10,241.309 μs] (CI 99.9%), Margin = 9,351.738 μs (1051.26% of Mean)
+Skewness = -0.16, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[339.749 μs ;   697.998 μs) | @
+[697.998 μs ; 1,630.968 μs) | @@
+---------------------------------------------------
+
+FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 7.524 ms, StdErr = 4.211 ms (55.97%), N = 3, StdDev = 7.294 ms
+Min = 0.976 ms, Q1 = 3.593 ms, Median = 6.210 ms, Q3 = 10.798 ms, Max = 15.386 ms
+IQR = 7.205 ms, LowerFence = -7.215 ms, UpperFence = 21.606 ms
+ConfidenceInterval = [-125.552 ms; 140.600 ms] (CI 99.9%), Margin = 133.076 ms (1768.67% of Mean)
+Skewness = 0.17, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[ 0.976 ms ; 10.231 ms) | @@
+[10.231 ms ; 22.024 ms) | @
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.5.1 (25F80) [Darwin 25.5.0]
+Apple M3 Pro, 1 CPU, 12 logical and 12 physical cores
+.NET SDK 10.0.401
+  [Host]   : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+
+| Method         | Depth | Mean        | Error         | StdDev       | Gen0    | Gen1   | Allocated |
+|--------------- |------ |------------:|--------------:|-------------:|--------:|-------:|----------:|
+| Rrf            | 100   |    72.99 μs |     435.72 μs |    23.883 μs |  2.3193 |      - |  19.06 KB |
+| WeightedMinMax | 100   |    85.67 μs |     501.20 μs |    27.472 μs |  3.4180 |      - |  28.16 KB |
+| WeightedZScore | 100   |   126.27 μs |     138.28 μs |     7.580 μs |  3.4180 |      - |  28.16 KB |
+| Rrf            | 1000  |   814.11 μs |   4,161.67 μs |   228.115 μs | 22.4609 | 3.9063 |  190.3 KB |
+| WeightedMinMax | 1000  |   889.57 μs |   9,351.74 μs |   512.600 μs | 33.8135 | 8.4229 | 277.84 KB |
+| WeightedZScore | 1000  | 7,524.07 μs | 133,076.24 μs | 7,294.358 μs | 31.2500 |      - | 277.97 KB |
+
+// * Warnings *
+MinIterationTime
+  FusionBench.WeightedZScore: ShortRun -> The minimum observed iteration time is 31.232ms which is very small. It's recommended to increase it to at least 100ms using more operations.
+
+// * Legends *
+  Depth     : Value of the 'Depth' parameter
+  Mean      : Arithmetic mean of all measurements
+  Error     : Half of 99.9% confidence interval
+  StdDev    : Standard deviation of all measurements
+  Gen0      : GC Generation 0 collects per 1000 operations
+  Gen1      : GC Generation 1 collects per 1000 operations
+  Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  1 μs      : 1 Microsecond (0.000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:01:52 (112.59 sec), executed benchmarks: 6
+
+// Found 2 benchmarks:
+//   InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=10]
+//   InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=100]
+
+// **************************
+// Benchmark: InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=10]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 139 144 --benchmarkName "HybridSearch.Broker.Bench.InterleaveBench.TeamDraft(K: 10)" --job ShortRun --benchmarkId 6 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 314583.00 ns, 314.5830 us/op
+WorkloadJitting  1: 1 op, 10950833.00 ns, 10.9508 ms/op
+
+OverheadJitting  2: 16 op, 1471958.00 ns, 91.9974 us/op
+WorkloadJitting  2: 16 op, 577667.00 ns, 36.1042 us/op
+
+WorkloadPilot    1: 16 op, 50833.00 ns, 3.1771 us/op
+WorkloadPilot    2: 32 op, 80334.00 ns, 2.5104 us/op
+WorkloadPilot    3: 64 op, 184625.00 ns, 2.8848 us/op
+WorkloadPilot    4: 128 op, 618333.00 ns, 4.8307 us/op
+WorkloadPilot    5: 256 op, 1042958.00 ns, 4.0741 us/op
+WorkloadPilot    6: 512 op, 5436041.00 ns, 10.6173 us/op
+WorkloadPilot    7: 1024 op, 6173000.00 ns, 6.0283 us/op
+WorkloadPilot    8: 2048 op, 12790125.00 ns, 6.2452 us/op
+WorkloadPilot    9: 4096 op, 62180541.00 ns, 15.1808 us/op
+WorkloadPilot   10: 8192 op, 553060167.00 ns, 67.5122 us/op
+
+OverheadWarmup   1: 8192 op, 37042.00 ns, 4.5217 ns/op
+OverheadWarmup   2: 8192 op, 33208.00 ns, 4.0537 ns/op
+OverheadWarmup   3: 8192 op, 23125.00 ns, 2.8229 ns/op
+OverheadWarmup   4: 8192 op, 32958.00 ns, 4.0232 ns/op
+OverheadWarmup   5: 8192 op, 22667.00 ns, 2.7670 ns/op
+OverheadWarmup   6: 8192 op, 37333.00 ns, 4.5573 ns/op
+OverheadWarmup   7: 8192 op, 47209.00 ns, 5.7628 ns/op
+OverheadWarmup   8: 8192 op, 22333.00 ns, 2.7262 ns/op
+
+OverheadActual   1: 8192 op, 36000.00 ns, 4.3945 ns/op
+OverheadActual   2: 8192 op, 34292.00 ns, 4.1860 ns/op
+OverheadActual   3: 8192 op, 33958.00 ns, 4.1453 ns/op
+OverheadActual   4: 8192 op, 55042.00 ns, 6.7190 ns/op
+OverheadActual   5: 8192 op, 23292.00 ns, 2.8433 ns/op
+OverheadActual   6: 8192 op, 121417.00 ns, 14.8214 ns/op
+OverheadActual   7: 8192 op, 23500.00 ns, 2.8687 ns/op
+OverheadActual   8: 8192 op, 46667.00 ns, 5.6967 ns/op
+OverheadActual   9: 8192 op, 144167.00 ns, 17.5985 ns/op
+OverheadActual  10: 8192 op, 33125.00 ns, 4.0436 ns/op
+OverheadActual  11: 8192 op, 23417.00 ns, 2.8585 ns/op
+OverheadActual  12: 8192 op, 33625.00 ns, 4.1046 ns/op
+OverheadActual  13: 8192 op, 32625.00 ns, 3.9825 ns/op
+OverheadActual  14: 8192 op, 33084.00 ns, 4.0386 ns/op
+OverheadActual  15: 8192 op, 32500.00 ns, 3.9673 ns/op
+OverheadActual  16: 8192 op, 23583.00 ns, 2.8788 ns/op
+OverheadActual  17: 8192 op, 35083.00 ns, 4.2826 ns/op
+OverheadActual  18: 8192 op, 33750.00 ns, 4.1199 ns/op
+OverheadActual  19: 8192 op, 22958.00 ns, 2.8025 ns/op
+OverheadActual  20: 8192 op, 52917.00 ns, 6.4596 ns/op
+
+WorkloadWarmup   1: 8192 op, 481970000.00 ns, 58.8342 us/op
+WorkloadWarmup   2: 8192 op, 323441833.00 ns, 39.4826 us/op
+WorkloadWarmup   3: 8192 op, 570192000.00 ns, 69.6035 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 8192 op, 241265666.00 ns, 29.4514 us/op
+WorkloadActual   2: 8192 op, 174266042.00 ns, 21.2727 us/op
+WorkloadActual   3: 8192 op, 2814375.00 ns, 343.5516 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 8192 op, 241231978.50 ns, 29.4473 us/op
+WorkloadResult   2: 8192 op, 174232354.50 ns, 21.2686 us/op
+WorkloadResult   3: 8192 op, 2780687.50 ns, 339.4394 ns/op
+// GC:  0 0 0 7471104 8192
+// Threading:  0 0 8192
+
+// AfterAll
+// Benchmark Process 68841 has exited with code 0.
+
+Mean = 17.018 μs, StdErr = 8.667 μs (50.93%), N = 3, StdDev = 15.012 μs
+Min = 0.339 μs, Q1 = 10.804 μs, Median = 21.269 μs, Q3 = 25.358 μs, Max = 29.447 μs
+IQR = 14.554 μs, LowerFence = -11.027 μs, UpperFence = 47.189 μs
+ConfidenceInterval = [-256.859 μs; 290.896 μs] (CI 99.9%), Margin = 273.877 μs (1609.30% of Mean)
+Skewness = -0.26, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 3 (30.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:17 (0h 0m from now) **
+// **************************
+// Benchmark: InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=100]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 139 144 --benchmarkName "HybridSearch.Broker.Bench.InterleaveBench.TeamDraft(K: 100)" --job ShortRun --benchmarkId 7 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 476667.00 ns, 476.6670 us/op
+WorkloadJitting  1: 1 op, 4143042.00 ns, 4.1430 ms/op
+
+OverheadJitting  2: 16 op, 961958.00 ns, 60.1224 us/op
+WorkloadJitting  2: 16 op, 1243250.00 ns, 77.7031 us/op
+
+WorkloadPilot    1: 16 op, 595791.00 ns, 37.2369 us/op
+WorkloadPilot    2: 32 op, 1415834.00 ns, 44.2448 us/op
+WorkloadPilot    3: 64 op, 2511750.00 ns, 39.2461 us/op
+WorkloadPilot    4: 128 op, 14310500.00 ns, 111.8008 us/op
+WorkloadPilot    5: 256 op, 18752125.00 ns, 73.2505 us/op
+WorkloadPilot    6: 512 op, 453931084.00 ns, 886.5841 us/op
+WorkloadPilot    7: 1024 op, 537269000.00 ns, 524.6768 us/op
+
+OverheadWarmup   1: 1024 op, 9959.00 ns, 9.7256 ns/op
+OverheadWarmup   2: 1024 op, 7208.00 ns, 7.0391 ns/op
+OverheadWarmup   3: 1024 op, 5000.00 ns, 4.8828 ns/op
+OverheadWarmup   4: 1024 op, 5958.00 ns, 5.8184 ns/op
+OverheadWarmup   5: 1024 op, 6000.00 ns, 5.8594 ns/op
+OverheadWarmup   6: 1024 op, 4000.00 ns, 3.9063 ns/op
+OverheadWarmup   7: 1024 op, 3709.00 ns, 3.6221 ns/op
+OverheadWarmup   8: 1024 op, 3292.00 ns, 3.2148 ns/op
+OverheadWarmup   9: 1024 op, 7208.00 ns, 7.0391 ns/op
+OverheadWarmup  10: 1024 op, 6167.00 ns, 6.0225 ns/op
+
+OverheadActual   1: 1024 op, 5583.00 ns, 5.4521 ns/op
+OverheadActual   2: 1024 op, 3833.00 ns, 3.7432 ns/op
+OverheadActual   3: 1024 op, 4083.00 ns, 3.9873 ns/op
+OverheadActual   4: 1024 op, 5209.00 ns, 5.0869 ns/op
+OverheadActual   5: 1024 op, 4917.00 ns, 4.8018 ns/op
+OverheadActual   6: 1024 op, 6459.00 ns, 6.3076 ns/op
+OverheadActual   7: 1024 op, 6166.00 ns, 6.0215 ns/op
+OverheadActual   8: 1024 op, 4583.00 ns, 4.4756 ns/op
+OverheadActual   9: 1024 op, 6709.00 ns, 6.5518 ns/op
+OverheadActual  10: 1024 op, 4083.00 ns, 3.9873 ns/op
+OverheadActual  11: 1024 op, 3292.00 ns, 3.2148 ns/op
+OverheadActual  12: 1024 op, 3333.00 ns, 3.2549 ns/op
+OverheadActual  13: 1024 op, 3625.00 ns, 3.5400 ns/op
+OverheadActual  14: 1024 op, 7125.00 ns, 6.9580 ns/op
+OverheadActual  15: 1024 op, 6625.00 ns, 6.4697 ns/op
+OverheadActual  16: 1024 op, 1634458.00 ns, 1.5962 us/op
+OverheadActual  17: 1024 op, 4875.00 ns, 4.7607 ns/op
+OverheadActual  18: 1024 op, 9875.00 ns, 9.6436 ns/op
+OverheadActual  19: 1024 op, 4166.00 ns, 4.0684 ns/op
+OverheadActual  20: 1024 op, 4875.00 ns, 4.7607 ns/op
+
+WorkloadWarmup   1: 1024 op, 28564791.00 ns, 27.8953 us/op
+WorkloadWarmup   2: 1024 op, 3967875.00 ns, 3.8749 us/op
+WorkloadWarmup   3: 1024 op, 7035417.00 ns, 6.8705 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 1024 op, 11230708.00 ns, 10.9675 us/op
+WorkloadActual   2: 1024 op, 6200167.00 ns, 6.0549 us/op
+WorkloadActual   3: 1024 op, 234220500.00 ns, 228.7310 us/op
+
+// AfterActualRun
+WorkloadResult   1: 1024 op, 11225812.00 ns, 10.9627 us/op
+WorkloadResult   2: 1024 op, 6195271.00 ns, 6.0501 us/op
+WorkloadResult   3: 1024 op, 234215604.00 ns, 228.7262 us/op
+// GC:  1 0 0 9183232 1024
+// Threading:  0 0 1024
+
+// AfterAll
+// Benchmark Process 68893 has exited with code 0.
+
+Mean = 81.913 μs, StdErr = 73.420 μs (89.63%), N = 3, StdDev = 127.168 μs
+Min = 6.050 μs, Q1 = 8.506 μs, Median = 10.963 μs, Q3 = 119.844 μs, Max = 228.726 μs
+IQR = 111.338 μs, LowerFence = -158.501 μs, UpperFence = 286.852 μs
+ConfidenceInterval = [-2,238.099 μs; 2,401.925 μs] (CI 99.9%), Margin = 2,320.012 μs (2832.29% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 2 (20.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:16 (0h 0m from now) **
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  results/broker/bdn/results/HybridSearch.Broker.Bench.InterleaveBench-report.csv
+  results/broker/bdn/results/HybridSearch.Broker.Bench.InterleaveBench-report-github.md
+  results/broker/bdn/results/HybridSearch.Broker.Bench.InterleaveBench-report.html
+
+// * Detailed results *
+InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=10]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 17.018 μs, StdErr = 8.667 μs (50.93%), N = 3, StdDev = 15.012 μs
+Min = 0.339 μs, Q1 = 10.804 μs, Median = 21.269 μs, Q3 = 25.358 μs, Max = 29.447 μs
+IQR = 14.554 μs, LowerFence = -11.027 μs, UpperFence = 47.189 μs
+ConfidenceInterval = [-256.859 μs; 290.896 μs] (CI 99.9%), Margin = 273.877 μs (1609.30% of Mean)
+Skewness = -0.26, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[ 0.339 μs ; 11.696 μs) | @
+[11.696 μs ; 43.109 μs) | @@
+---------------------------------------------------
+
+InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=100]
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 81.913 μs, StdErr = 73.420 μs (89.63%), N = 3, StdDev = 127.168 μs
+Min = 6.050 μs, Q1 = 8.506 μs, Median = 10.963 μs, Q3 = 119.844 μs, Max = 228.726 μs
+IQR = 111.338 μs, LowerFence = -158.501 μs, UpperFence = 286.852 μs
+ConfidenceInterval = [-2,238.099 μs; 2,401.925 μs] (CI 99.9%), Margin = 2,320.012 μs (2832.29% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[1.661 μs ; 233.115 μs) | @@@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.5.1 (25F80) [Darwin 25.5.0]
+Apple M3 Pro, 1 CPU, 12 logical and 12 physical cores
+.NET SDK 10.0.401
+  [Host]   : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+
+| Method    | K   | Mean     | Error       | StdDev    | Median   | Gen0   | Allocated |
+|---------- |---- |---------:|------------:|----------:|---------:|-------:|----------:|
+| TeamDraft | 10  | 17.02 μs |   273.88 μs |  15.01 μs | 21.27 μs |      - |     912 B |
+| TeamDraft | 100 | 81.91 μs | 2,320.01 μs | 127.17 μs | 10.96 μs | 0.9766 |    8968 B |
+
+// * Warnings *
+MinIterationTime
+  InterleaveBench.TeamDraft: ShortRun -> The minimum observed iteration time is 2.814ms which is very small. It's recommended to increase it to at least 100ms using more operations.
+  InterleaveBench.TeamDraft: ShortRun -> The minimum observed iteration time is 6.2ms which is very small. It's recommended to increase it to at least 100ms using more operations.
+
+// * Legends *
+  K         : Value of the 'K' parameter
+  Mean      : Arithmetic mean of all measurements
+  Error     : Half of 99.9% confidence interval
+  StdDev    : Standard deviation of all measurements
+  Median    : Value separating the higher half of all measurements (50th percentile)
+  Gen0      : GC Generation 0 collects per 1000 operations
+  Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  1 μs      : 1 Microsecond (0.000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:00:10 (10.82 sec), executed benchmarks: 2
+
+// Found 2 benchmarks:
+//   SuggestBench.Lookup_k8: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   SuggestBench.NormalizeAndLookup_k8: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+// **************************
+// Benchmark: SuggestBench.Lookup_k8: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 139 144 --benchmarkName HybridSearch.Broker.Bench.SuggestBench.Lookup_k8 --job ShortRun --benchmarkId 8 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 10000 op, 179708.00 ns, 17.9708 ns/op
+WorkloadJitting  1: 10000 op, 126429167.00 ns, 12.6429 us/op
+
+WorkloadPilot    1: 20000 op, 361257042.00 ns, 18.0629 us/op
+WorkloadPilot    2: 30000 op, 343601791.00 ns, 11.4534 us/op
+WorkloadPilot    3: 40000 op, 724323416.00 ns, 18.1081 us/op
+
+WorkloadWarmup   1: 40000 op, 834640458.00 ns, 20.8660 us/op
+WorkloadWarmup   2: 40000 op, 733109334.00 ns, 18.3277 us/op
+WorkloadWarmup   3: 40000 op, 641270667.00 ns, 16.0318 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 40000 op, 576569084.00 ns, 14.4142 us/op
+WorkloadActual   2: 40000 op, 1177222375.00 ns, 29.4306 us/op
+WorkloadActual   3: 40000 op, 936469167.00 ns, 23.4117 us/op
+
+// AfterActualRun
+WorkloadResult   1: 40000 op, 576569084.00 ns, 14.4142 us/op
+WorkloadResult   2: 40000 op, 1177222375.00 ns, 29.4306 us/op
+WorkloadResult   3: 40000 op, 936469167.00 ns, 23.4117 us/op
+// GC:  2 0 0 22296096 40000
+// Threading:  0 0 40000
+
+// AfterAll
+// Benchmark Process 68943 has exited with code 0.
+
+Mean = 22.419 μs, StdErr = 4.363 μs (19.46%), N = 3, StdDev = 7.557 μs
+Min = 14.414 μs, Q1 = 18.913 μs, Median = 23.412 μs, Q3 = 26.421 μs, Max = 29.431 μs
+IQR = 7.508 μs, LowerFence = 7.651 μs, UpperFence = 37.683 μs
+ConfidenceInterval = [-115.453 μs; 160.291 μs] (CI 99.9%), Margin = 137.872 μs (614.98% of Mean)
+Skewness = -0.13, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 1 (10.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:17 (0h 0m from now) **
+// **************************
+// Benchmark: SuggestBench.NormalizeAndLookup_k8: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet HybridSearch.Broker.Bench-ShortRun-1.dll --anonymousPipes 139 144 --benchmarkName HybridSearch.Broker.Bench.SuggestBench.NormalizeAndLookup_k8 --job ShortRun --benchmarkId 9 in /Users/sanjithshanmugavel/Documents/HybridSearch/broker/HybridSearch.Broker.Bench/bin/Release/net10.0/HybridSearch.Broker.Bench-ShortRun-1/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.8
+// Runtime=.NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+// GC=Concurrent Workstation
+// HardwareIntrinsics=ArmBase+AdvSimd,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 10000 op, 349917.00 ns, 34.9917 ns/op
+WorkloadJitting  1: 10000 op, 390040625.00 ns, 39.0041 us/op
+
+OverheadJitting  2: 10000 op, 2125.00 ns, 0.2125 ns/op
+WorkloadJitting  2: 10000 op, 146839083.00 ns, 14.6839 us/op
+
+WorkloadPilot    1: 20000 op, 280539542.00 ns, 14.0270 us/op
+WorkloadPilot    2: 30000 op, 590760208.00 ns, 19.6920 us/op
+
+WorkloadWarmup   1: 30000 op, 759914208.00 ns, 25.3305 us/op
+WorkloadWarmup   2: 30000 op, 530552375.00 ns, 17.6851 us/op
+WorkloadWarmup   3: 30000 op, 386288167.00 ns, 12.8763 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 30000 op, 760007459.00 ns, 25.3336 us/op
+WorkloadActual   2: 30000 op, 465372667.00 ns, 15.5124 us/op
+WorkloadActual   3: 30000 op, 872815625.00 ns, 29.0939 us/op
+
+// AfterActualRun
+WorkloadResult   1: 30000 op, 760007459.00 ns, 25.3336 us/op
+WorkloadResult   2: 30000 op, 465372667.00 ns, 15.5124 us/op
+WorkloadResult   3: 30000 op, 872815625.00 ns, 29.0939 us/op
+// GC:  2 0 0 22022544 30000
+// Threading:  0 0 30000
+
+// AfterAll
+// Benchmark Process 69439 has exited with code 0.
+
+Mean = 23.313 μs, StdErr = 4.049 μs (17.37%), N = 3, StdDev = 7.012 μs
+Min = 15.512 μs, Q1 = 20.423 μs, Median = 25.334 μs, Q3 = 27.214 μs, Max = 29.094 μs
+IQR = 6.791 μs, LowerFence = 10.237 μs, UpperFence = 37.400 μs
+ConfidenceInterval = [-104.621 μs; 151.247 μs] (CI 99.9%), Margin = 127.934 μs (548.76% of Mean)
+Skewness = -0.26, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 0 (0.0 %) benchmark(s) to run. Estimated finish 2026-09-23 18:17 (0h 0m from now) **
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  results/broker/bdn/results/HybridSearch.Broker.Bench.SuggestBench-report.csv
+  results/broker/bdn/results/HybridSearch.Broker.Bench.SuggestBench-report-github.md
+  results/broker/bdn/results/HybridSearch.Broker.Bench.SuggestBench-report.html
+
+// * Detailed results *
+SuggestBench.Lookup_k8: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 22.419 μs, StdErr = 4.363 μs (19.46%), N = 3, StdDev = 7.557 μs
+Min = 14.414 μs, Q1 = 18.913 μs, Median = 23.412 μs, Q3 = 26.421 μs, Max = 29.431 μs
+IQR = 7.508 μs, LowerFence = 7.651 μs, UpperFence = 37.683 μs
+ConfidenceInterval = [-115.453 μs; 160.291 μs] (CI 99.9%), Margin = 137.872 μs (614.98% of Mean)
+Skewness = -0.13, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[ 7.537 μs ; 19.544 μs) | @
+[19.544 μs ; 33.299 μs) | @@
+---------------------------------------------------
+
+SuggestBench.NormalizeAndLookup_k8: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a; GC = Concurrent Workstation
+Mean = 23.313 μs, StdErr = 4.049 μs (17.37%), N = 3, StdDev = 7.012 μs
+Min = 15.512 μs, Q1 = 20.423 μs, Median = 25.334 μs, Q3 = 27.214 μs, Max = 29.094 μs
+IQR = 6.791 μs, LowerFence = 10.237 μs, UpperFence = 37.400 μs
+ConfidenceInterval = [-104.621 μs; 151.247 μs] (CI 99.9%), Margin = 127.934 μs (548.76% of Mean)
+Skewness = -0.26, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[ 9.131 μs ; 20.832 μs) | @
+[20.832 μs ; 35.475 μs) | @@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.5.1 (25F80) [Darwin 25.5.0]
+Apple M3 Pro, 1 CPU, 12 logical and 12 physical cores
+.NET SDK 10.0.401
+  [Host]   : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+
+| Method                | Mean     | Error     | StdDev   | Gen0   | Allocated |
+|---------------------- |---------:|----------:|---------:|-------:|----------:|
+| Lookup_k8             | 22.42 μs | 137.87 μs | 7.557 μs | 0.0500 |     557 B |
+| NormalizeAndLookup_k8 | 23.31 μs | 127.93 μs | 7.012 μs | 0.0667 |     734 B |
+
+// * Legends *
+  Mean      : Arithmetic mean of all measurements
+  Error     : Half of 99.9% confidence interval
+  StdDev    : Standard deviation of all measurements
+  Gen0      : GC Generation 0 collects per 1000 operations
+  Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  1 μs      : 1 Microsecond (0.000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:01:15 (75.01 sec), executed benchmarks: 2
+
+Global total time: 00:05:10 (310.56 sec), executed benchmarks: 10
+// * Artifacts cleanup *
+Artifacts cleanup is finished

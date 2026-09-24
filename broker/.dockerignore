@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+**/BenchmarkDotNet.Artifacts/
+HybridSearch.Broker.Tests/
+HybridSearch.Broker.Bench/
+HybridSearch.FakeShard/

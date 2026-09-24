@@ -223,6 +223,51 @@ Assignment: `bucket = xxhash64(salt + sessionId) mod 10000`, enrolled if
 `bucket < allocation*10000`; A/B arm from a second, independent hash. Deterministic and
 sticky per session. Interleaving uses **team-draft interleaving** (Radlinski et al. 2008).
 
+Broker specifics (broker/README.md has the rationale):
+- The arm hash is `xxhash64(salt + sessionId, seed = 0x5EED_A5B1_0000_0001) mod 2` (0 = control).
+  A session is in at most one running experiment: the first in file order that enrolls it.
+  Optional experiment fields: `"status": "running" | "paused"`, `"description"`, and for
+  `"kind": "aa"` a `"method": "ab" | "interleave"` (A/A always uses `control` for both arms).
+- Interleaving: team A = control, team B = treatment. The interleaving seed is
+  `xxhash64(salt ␟ sessionId ␟ query)`, so a reload shows the same page. `team` is set on results
+  only for event logging.
+- Event log: JSON Lines, one file per UTC hour, `data/events/events-yyyyMMdd-HH.jsonl` (not
+  parquet). Besides validated UI events, the broker writes its own `"kind": "served"` record for
+  every search that carries a `sessionId` (request id, experiment, variant, and the served doc ids,
+  ranks and teams). Credit is attributed from the served record, not from the team the client echoes.
+- Events may carry optional `"simulated": true` and `"clickModel": "pbm" | "cascade" | "dbn" | …`.
+  Results report `simulated` if any attributed click was simulated.
+
+`GET /api/experiments`:
+
+```jsonc
+{ "experiments": [ { "id", "kind", "status", "allocation", "control", "treatment", "description"? } ] }
+```
+
+`GET /api/experiments/{id}/results` (unit of analysis: query impression; bootstrap resamples
+sessions, the randomisation unit):
+
+```jsonc
+{
+  "id": "hybrid-vs-lexical", "kind": "interleave", "simulated": false, "confidenceLevel": 0.95,
+  "updatedAt": "2026-09-23T20:10:11Z",
+  "variants": [                                  // A/B, A/A: "control", "treatment"; interleaving: one "interleaved"
+    { "name": "control", "sessions": 120, "queries": 480,
+      "metrics": { "ctr": { "value", "ciLow", "ciHigh" }, "clicksAt1": {…}, "abandonment": {…}, "mrrFirstClick": {…} } }
+  ],
+  "interleaving": {                              // null unless the experiment interleaves
+    "wins": 40, "losses": 25, "ties": 5,         // wins = impressions where treatment's team got more clicks
+    "deltaPreference": { "value", "ciLow", "ciHigh" },   // (wins − losses) / (wins + losses + ties)
+    "pValue": 0.08                               // two-sided exact sign test, ties excluded
+  }
+  // additive fields: "queries", "clickEvents", "clickModels", "differences" (treatment − control, A/B),
+  // "srm" (sample-ratio-mismatch chi-square), "interleaving.noClicks", "note"
+}
+```
+Metric definitions: `ctr` = distinct clicked results per impression; `clicksAt1` = share of
+impressions with a click at rank 1; `abandonment` = share of impressions with no click;
+`mrrFirstClick` = mean 1/rank of the highest clicked result (0 if none).
+
 ### Operations
 
 - `GET /healthz` (liveness), `GET /readyz` (≥1 shard healthy per slice), `GET /metrics` (Prometheus).

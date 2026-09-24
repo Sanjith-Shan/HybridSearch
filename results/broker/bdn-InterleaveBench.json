@@ -1,0 +1,21 @@
+{
+  "reports": [
+    {
+      "benchmark": "InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=10]",
+      "meanNs": 17018.433451334637,
+      "medianNs": 21268.59796142578,
+      "stdDevNs": 15012.137508580785,
+      "p95Ns": 28629.39649658203,
+      "allocatedBytesPerOp": 912
+    },
+    {
+      "benchmark": "InterleaveBench.TeamDraft: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [K=100]",
+      "meanNs": 81912.98404947917,
+      "medianNs": 10962.70703125,
+      "stdDevNs": 127167.67848841792,
+      "p95Ns": 206949.82890624998,
+      "allocatedBytesPerOp": 8968
+    }
+  ],
+  "bdnReportDir": "results/broker/bdn/results"
+}

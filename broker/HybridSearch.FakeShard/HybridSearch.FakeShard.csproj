@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>HybridSearch.FakeShard</RootNamespace>
+    <StartupObject>HybridSearch.FakeShard.FakeShardProgram</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore.Server" Version="2.84.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../HybridSearch.Contracts/HybridSearch.Contracts.csproj" />
+  </ItemGroup>
+</Project>

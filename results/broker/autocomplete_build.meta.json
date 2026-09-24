@@ -1,0 +1,14 @@
+{
+  "label": "dev-signal-only",
+  "cpu": "Apple M3 Pro",
+  "logicalCores": 12,
+  "os": "macOS 26.5.1",
+  "dotnet": ".NET 10.0.12",
+  "arch": "Arm64",
+  "threadsPinned": false,
+  "loadAverageAtStart": "95.75 77.84 60.97",
+  "loadAverageAtEnd": "83.05 76.35 60.93",
+  "dateUtc": "2026-09-24T01:09:50.2460670\u002B00:00",
+  "gitSha": "c32dba11a82da32ad8a7c8d2dcda3d853b01e2f7",
+  "command": "dotnet run -c Release --project broker/HybridSearch.Broker.Bench -- trie-stats"
+}

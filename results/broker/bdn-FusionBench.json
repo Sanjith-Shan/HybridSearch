@@ -1,0 +1,53 @@
+{
+  "reports": [
+    {
+      "benchmark": "FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]",
+      "meanNs": 72989.95292154948,
+      "medianNs": 59937.17956542969,
+      "stdDevNs": 23883.283461011004,
+      "p95Ns": 96493.32122802733,
+      "allocatedBytesPerOp": 19520
+    },
+    {
+      "benchmark": "FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]",
+      "meanNs": 85674.55210367839,
+      "medianNs": 92270.66046142578,
+      "stdDevNs": 27472.27904416297,
+      "p95Ns": 107550.55086669922,
+      "allocatedBytesPerOp": 28832
+    },
+    {
+      "benchmark": "FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=100]",
+      "meanNs": 126272.73897298177,
+      "medianNs": 122310.00256347656,
+      "stdDevNs": 7579.754180153227,
+      "p95Ns": 133742.20631103514,
+      "allocatedBytesPerOp": 28832
+    },
+    {
+      "benchmark": "FusionBench.Rrf: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]",
+      "meanNs": 814109.5789388021,
+      "medianNs": 938969.8491210938,
+      "stdDevNs": 228115.09800052518,
+      "p95Ns": 951180.6764648437,
+      "allocatedBytesPerOp": 194872
+    },
+    {
+      "benchmark": "FusionBench.WeightedMinMax: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]",
+      "meanNs": 889571.4806722006,
+      "medianNs": 974665.6850585938,
+      "stdDevNs": 512600.2912848433,
+      "p95Ns": 1316336.333178711,
+      "allocatedBytesPerOp": 284512
+    },
+    {
+      "benchmark": "FusionBench.WeightedZScore: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Depth=1000]",
+      "meanNs": 7524071.395833333,
+      "medianNs": 6210163.40625,
+      "stdDevNs": 7294357.660638209,
+      "p95Ns": 14468493.09375,
+      "allocatedBytesPerOp": 284640
+    }
+  ],
+  "bdnReportDir": "results/broker/bdn/results"
+}

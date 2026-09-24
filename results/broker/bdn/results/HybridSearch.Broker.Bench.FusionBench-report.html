@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>HybridSearch.Broker.Bench.FusionBench-20260923-181412</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.5.1 (25F80) [Darwin 25.5.0]
+Apple M3 Pro, 1 CPU, 12 logical and 12 physical cores
+.NET SDK 10.0.401
+  [Host]   : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 10.0.12 (10.0.12, 10.0.1226.42308), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method  </th><th>Depth</th><th>Mean </th><th>Error  </th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>Rrf</td><td>100</td><td>72.99 &mu;s</td><td>435.72 &mu;s</td><td>23.883 &mu;s</td><td>2.3193</td><td>-</td><td>19.06 KB</td>
+</tr><tr><td>WeightedMinMax</td><td>100</td><td>85.67 &mu;s</td><td>501.20 &mu;s</td><td>27.472 &mu;s</td><td>3.4180</td><td>-</td><td>28.16 KB</td>
+</tr><tr><td>WeightedZScore</td><td>100</td><td>126.27 &mu;s</td><td>138.28 &mu;s</td><td>7.580 &mu;s</td><td>3.4180</td><td>-</td><td>28.16 KB</td>
+</tr><tr><td>Rrf</td><td>1000</td><td>814.11 &mu;s</td><td>4,161.67 &mu;s</td><td>228.115 &mu;s</td><td>22.4609</td><td>3.9063</td><td>190.3 KB</td>
+</tr><tr><td>WeightedMinMax</td><td>1000</td><td>889.57 &mu;s</td><td>9,351.74 &mu;s</td><td>512.600 &mu;s</td><td>33.8135</td><td>8.4229</td><td>277.84 KB</td>
+</tr><tr><td>WeightedZScore</td><td>1000</td><td>7,524.07 &mu;s</td><td>133,076.24 &mu;s</td><td>7,294.358 &mu;s</td><td>31.2500</td><td>-</td><td>277.97 KB</td>
+</tr></tbody></table>
+</body>
+</html>

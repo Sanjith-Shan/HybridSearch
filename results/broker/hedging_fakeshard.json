@@ -1,0 +1,62 @@
+{
+  "description": "Open-loop hedging experiment: 1 slice x 2 FakeShard replicas (in-process, loopback gRPC), injected latency 5ms \u002B U[0,5)ms, 2 % of requests \u002B200ms. Latency from scheduled send time. Synthetic shard latency: measures the hedging mechanism, not the engine.",
+  "ratePerSecond": 100,
+  "measuredSecondsPerConfig": 30,
+  "warmupSeconds": 5,
+  "rows": [
+    {
+      "config": "no-hedging",
+      "hedgingEnabled": false,
+      "budgetRatio": 0,
+      "requests": 3000,
+      "failures": 0,
+      "p50Ms": 15.83,
+      "p90Ms": 40.94,
+      "p95Ms": 87.29,
+      "p99Ms": 221.78,
+      "p999Ms": 311.64,
+      "maxMs": 369.73,
+      "primaries": 3000,
+      "hedgesSent": 0,
+      "extraLoadRatioBrokerCounted": 0,
+      "shardCallsObserved": 3000,
+      "extraLoadRatioShardObserved": 0
+    },
+    {
+      "config": "hedge-p95-budget-5pct",
+      "hedgingEnabled": true,
+      "budgetRatio": 0.05,
+      "requests": 3000,
+      "failures": 0,
+      "p50Ms": 14.04,
+      "p90Ms": 49.08,
+      "p95Ms": 221.15,
+      "p99Ms": 819.36,
+      "p999Ms": 950.41,
+      "maxMs": 960.49,
+      "primaries": 3000,
+      "hedgesSent": 94,
+      "extraLoadRatioBrokerCounted": 0.0313,
+      "shardCallsObserved": 3087,
+      "extraLoadRatioShardObserved": 0.029
+    },
+    {
+      "config": "hedge-p95-budget-10pct",
+      "hedgingEnabled": true,
+      "budgetRatio": 0.1,
+      "requests": 3000,
+      "failures": 0,
+      "p50Ms": 15.83,
+      "p90Ms": 37.52,
+      "p95Ms": 53.37,
+      "p99Ms": 118.83,
+      "p999Ms": 218.68,
+      "maxMs": 240.06,
+      "primaries": 3000,
+      "hedgesSent": 154,
+      "extraLoadRatioBrokerCounted": 0.0513,
+      "shardCallsObserved": 3126,
+      "extraLoadRatioShardObserved": 0.042
+    }
+  ]
+}
