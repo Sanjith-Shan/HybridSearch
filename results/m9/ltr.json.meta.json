@@ -1,7 +1,7 @@
 {
-  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/m9/ltr_learning_curve_bm25only.png",
-  "date": "2026-09-24T16:49:07-07:00",
-  "command": "python scripts/m9_ltr.py --no-dense --tag _bm25only",
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/m9/ltr.json",
+  "date": "2026-09-24T16:49:13-07:00",
+  "command": "python scripts/m9_ltr.py",
   "hardware": {
     "cpu": "Apple M3 Pro",
     "logical_cores": 12,
@@ -9,9 +9,9 @@
     "python": "3.12.7",
     "pinned_threads": false,
     "loadavg_1_5_15": [
-      54.85,
-      51.82,
-      55.59
+      57.35,
+      52.39,
+      55.77
     ],
     "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
     "mem_bytes": 19327352832
@@ -34,8 +34,16 @@
       "/Users/sanjithshanmugavel/Documents/HybridSearch/data/runs/reference/anserini-bm25-default.dl19.trec",
       "/Users/sanjithshanmugavel/Documents/HybridSearch/data/runs/reference/anserini-bm25-default.dl20.trec"
     ],
-    "dense": false,
+    "dense": "candidate-only: BGE-base-en-v1.5 inner product for each BM25 top-20 candidate, encoded by M9 on CPU (hybridsearch.dense.encode convention); dense_z / dense_rr are z-score and reciprocal rank within the 20 candidates, not within a dense run",
     "train_query_sample": "200 of 2000 train_tune queries, seed 20260923",
+    "dense_encode": {
+      "device": "cpu",
+      "threads": 4,
+      "model": "BAAI/bge-base-en-v1.5",
+      "encoded_queries_now": 0,
+      "encoded_passages_now": 3958,
+      "encode_seconds": 1179.1
+    },
     "world": "full collection (Anserini BM25 top-20 candidates)",
     "qrels_eval": {
       "dl19": {

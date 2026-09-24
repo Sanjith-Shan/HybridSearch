@@ -126,7 +126,8 @@ struct Batch {
   std::string error;
 };
 
-Batch analyze_chunk(const std::shared_ptr<std::string>& chunk, uint64_t first_line, bool docstore, int level) {
+Batch analyze_chunk(const std::shared_ptr<std::string>& chunk, uint64_t first_line, bool docstore, int level,
+                    uint32_t mod_n, uint32_t mod_i) {
   thread_local Analyzer analyzer;
   Batch b;
   std::vector<std::string> toks;
@@ -162,6 +163,7 @@ Batch analyze_chunk(const std::shared_ptr<std::string>& chunk, uint64_t first_li
       }
       pid = pid * 10 + uint64_t(c - '0');
     }
+    if (mod_n && pid % mod_n != mod_i) continue;  // hash (mod) partitioning: not this shard's doc
     std::string_view text = line.substr(tab + 1);
     toks.clear();
     analyzer.analyze(text, toks);
@@ -440,7 +442,8 @@ BuildReport build_index(const BuildOptions& opt) {
       if (chunk->empty()) continue;
       uint64_t first = lines_read;
       lines_read += n_lines;
-      inflight.push_back(std::async(std::launch::async, analyze_chunk, chunk, first, opt.docstore, opt.zstd_level));
+      inflight.push_back(std::async(std::launch::async, analyze_chunk, chunk, first, opt.docstore, opt.zstd_level,
+                                        opt.mod_n, opt.mod_i));
     }
     if (inflight.empty()) break;
     consume(inflight.front().get());

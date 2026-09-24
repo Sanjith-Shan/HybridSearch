@@ -27,50 +27,50 @@ services:
   shard0a: &s0
     <<: *shard
     container_name: hs-shard0a
-    command: ["--port", "50051", "--shard-id", "0", "--lexical", "/data/indexes/lexical/1m-4shards/shard0",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard0",
+    command: ["--port", "50051", "--shard-id", "0", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard0",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard0",
               "--chaos-file", "/chaos/shard0a", "--otlp", "http://otel-collector:4318"]
   shard0b:
     <<: *s0
     container_name: hs-shard0b
-    command: ["--port", "50051", "--shard-id", "0", "--lexical", "/data/indexes/lexical/1m-4shards/shard0",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard0",
+    command: ["--port", "50051", "--shard-id", "0", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard0",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard0",
               "--chaos-file", "/chaos/shard0b", "--otlp", "http://otel-collector:4318"]
   shard1a: &s1
     <<: *shard
     container_name: hs-shard1a
-    command: ["--port", "50051", "--shard-id", "1", "--lexical", "/data/indexes/lexical/1m-4shards/shard1",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard1",
+    command: ["--port", "50051", "--shard-id", "1", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard1",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard1",
               "--chaos-file", "/chaos/shard1a", "--otlp", "http://otel-collector:4318"]
   shard1b:
     <<: *s1
     container_name: hs-shard1b
-    command: ["--port", "50051", "--shard-id", "1", "--lexical", "/data/indexes/lexical/1m-4shards/shard1",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard1",
+    command: ["--port", "50051", "--shard-id", "1", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard1",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard1",
               "--chaos-file", "/chaos/shard1b", "--otlp", "http://otel-collector:4318"]
   shard2a: &s2
     <<: *shard
     container_name: hs-shard2a
-    command: ["--port", "50051", "--shard-id", "2", "--lexical", "/data/indexes/lexical/1m-4shards/shard2",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard2",
+    command: ["--port", "50051", "--shard-id", "2", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard2",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard2",
               "--chaos-file", "/chaos/shard2a", "--otlp", "http://otel-collector:4318"]
   shard2b:
     <<: *s2
     container_name: hs-shard2b
-    command: ["--port", "50051", "--shard-id", "2", "--lexical", "/data/indexes/lexical/1m-4shards/shard2",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard2",
+    command: ["--port", "50051", "--shard-id", "2", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard2",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard2",
               "--chaos-file", "/chaos/shard2b", "--otlp", "http://otel-collector:4318"]
   shard3a: &s3
     <<: *shard
     container_name: hs-shard3a
-    command: ["--port", "50051", "--shard-id", "3", "--lexical", "/data/indexes/lexical/1m-4shards/shard3",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard3",
+    command: ["--port", "50051", "--shard-id", "3", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard3",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard3",
               "--chaos-file", "/chaos/shard3a", "--otlp", "http://otel-collector:4318"]
   shard3b:
     <<: *s3
     container_name: hs-shard3b
-    command: ["--port", "50051", "--shard-id", "3", "--lexical", "/data/indexes/lexical/1m-4shards/shard3",
-              "--vector-disk", "/data/indexes/vector/1m-4shards/shard3",
+    command: ["--port", "50051", "--shard-id", "3", "--lexical", "/data/indexes/lexical/1m-4shards-mod/shard3",
+              "--vector-disk", "/data/indexes/vector/1m-4shards-mod/shard3",
               "--chaos-file", "/chaos/shard3b", "--otlp", "http://otel-collector:4318"]
 
   broker:
@@ -83,6 +83,7 @@ services:
       - ../data:/data
     environment:
       - Broker__DataRoot=/data
+      - Broker__Topology__Partitioning=modulo
       - Broker__Topology__Slices__0__Id=0
       - Broker__Topology__Slices__0__Replicas__0=http://shard0a:50051
       - Broker__Topology__Slices__0__Replicas__1=http://shard0b:50051

@@ -28,6 +28,9 @@ struct BuildOptions {
   // from this (full-collection) index instead of the documents being built, so a shard scores
   // exactly like the single index. Stored in meta.txt (global_*) and global_df.u32.
   std::string global_stats_dir;
+  // Mod (hash) partitioning: keep only documents whose global passage id % mod_n == mod_i.
+  // Applied after skip_docs/max_docs; 0 = off.
+  uint32_t mod_n = 0, mod_i = 0;
   std::string shard_label;  // e.g. "2/4", recorded in meta.txt
   double min_free_gb = 3.0;  // refuse to start (or continue) below this much free disk
   bool verbose = true;

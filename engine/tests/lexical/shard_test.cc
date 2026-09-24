@@ -50,7 +50,8 @@ bool same(const std::vector<GHit>& a, const std::vector<GHit>& b) {
   return true;
 }
 
-std::vector<std::unique_ptr<LexicalIndex>> build_shards(uint32_t n, bool global, const std::string& tag) {
+std::vector<std::unique_ptr<LexicalIndex>> build_shards(uint32_t n, bool global, const std::string& tag,
+                                                        bool mod = false) {
   const auto& full = testing::corpus_index();
   const std::string input = testing::data_dir() + "/corpus.tsv";
   const uint64_t lines = count_lines(input);
@@ -59,8 +60,13 @@ std::vector<std::unique_ptr<LexicalIndex>> build_shards(uint32_t n, bool global,
     BuildOptions o;
     o.input_tsv = input;
     o.out_dir = testing::temp_dir("shard_" + tag + std::to_string(n) + "_" + std::to_string(i));
-    o.skip_docs = lines * i / n;
-    o.max_docs = lines * (i + 1) / n - o.skip_docs;
+    if (mod) {
+      o.mod_n = n;
+      o.mod_i = i;
+    } else {
+      o.skip_docs = lines * i / n;
+      o.max_docs = lines * (i + 1) / n - o.skip_docs;
+    }
     if (global) o.global_stats_dir = full.dir();
     o.codecs = {Codec::BP128};
     o.threads = 2;
@@ -79,12 +85,15 @@ std::vector<std::vector<std::string>> corpus_queries(const Analyzer& an) {
   return qs;
 }
 
-TEST(Sharding, GlobalStatsMergedTopKEqualsSingleIndex) {
+void check_global_equality(bool mod) {
   const auto& full = testing::corpus_index();
   const auto qs = corpus_queries(full.analyzer());
   uint64_t checks = 0;
   for (uint32_t n : {2u, 3u, 4u}) {
-    auto shards = build_shards(n, true, "g");
+    auto shards = build_shards(n, true, mod ? "gm" : "g", mod);
+    if (mod)
+      for (uint32_t i = 0; i < n; ++i)
+        for (uint32_t o = 0; o < shards[i]->num_docs(); ++o) ASSERT_EQ(shards[i]->global_id(o) % n, i);
     uint64_t docs = 0;
     for (const auto& s : shards) {
       EXPECT_TRUE(s->has_global_stats());
@@ -109,6 +118,9 @@ TEST(Sharding, GlobalStatsMergedTopKEqualsSingleIndex) {
   EXPECT_GT(checks, 25000u);
 }
 
+TEST(Sharding, GlobalStatsMergedTopKEqualsSingleIndex) { check_global_equality(false); }
+TEST(Sharding, ModPartitionGlobalStatsMergedTopKEqualsSingleIndex) { check_global_equality(true); }
+
 TEST(Sharding, ShardLocalStatsDoNotMatch) {
   // Control: without global statistics the merged ranking drifts, so the gate above has teeth.
   const auto& full = testing::corpus_index();
@@ -127,10 +139,10 @@ TEST(Sharding, ShardLocalStatsDoNotMatch) {
   EXPECT_GT(differ, nonempty / 2);
 }
 
-TEST(Sharding, RealData1mFourShards) {
+void check_real_shards(const char* env_var, const std::string& sub) {
   const std::string repo = std::string(HS_TEST_DATA_DIR) + "/../../..";
-  const char* env = std::getenv("HS_LEX_SHARDS");
-  const std::string base = env && *env ? env : repo + "/data/indexes/lexical/1m-4shards";
+  const char* env = std::getenv(env_var);
+  const std::string base = env && *env ? env : repo + "/data/indexes/lexical/" + sub;
   const std::string single_dir = repo + "/data/indexes/lexical/1m";
   const std::string qpath = repo + "/data/raw/msmarco/queries.dev.small.tsv";
   if (!std::filesystem::exists(base + "/shard0/meta.txt") || !std::filesystem::exists(single_dir + "/meta.txt") ||
@@ -155,9 +167,12 @@ TEST(Sharding, RealData1mFourShards) {
       ++checks;
     }
   }
-  std::printf("[shards] %zu shards, %zu queries, %llu comparisons, %llu mismatches\n", shards.size(), lines.size(),
-              (unsigned long long)checks, (unsigned long long)bad);
+  std::printf("[shards] %s: %zu shards, %zu queries, %llu comparisons, %llu mismatches\n", sub.c_str(), shards.size(),
+              lines.size(), (unsigned long long)checks, (unsigned long long)bad);
 }
+
+TEST(Sharding, RealData1mFourShards) { check_real_shards("HS_LEX_SHARDS", "1m-4shards"); }
+TEST(Sharding, RealData1mFourShardsMod) { check_real_shards("HS_LEX_SHARDS_MOD", "1m-4shards-mod"); }
 
 }  // namespace
 }  // namespace hs::lexical

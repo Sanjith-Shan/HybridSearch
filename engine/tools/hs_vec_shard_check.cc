@@ -52,34 +52,42 @@ int main(int argc, char** argv) try {
   oo.direct_io = a.opt("mode", "warm") == "cold";
   oo.cache_nodes = uint32_t(a.num("cache", 0));
   std::vector<std::unique_ptr<DiskIndex>> shards;
-  std::vector<uint32_t> begin;
+  std::vector<std::vector<uint32_t>> rows_of;  // shard ordinal -> global row
   for (auto& d : dirs) {
     shards.push_back(DiskIndex::open(d, oo));
-    // Row slice of this shard in the global file: docids are sorted by global id.
-    uint64_t first = shards.back()->global_id(0);
-    auto it = std::lower_bound(docids.begin(), docids.end(), first);
-    if (it == docids.end() || *it != first) throw std::runtime_error("shard docids not in global docids: " + d);
-    begin.push_back(uint32_t(it - docids.begin()));
-    for (uint32_t i = 0; i < shards.back()->size(); i += 9973)
-      if (shards.back()->global_id(i) != docids[begin.back() + i]) throw std::runtime_error("shard not a contiguous slice: " + d);
+    // Map every shard ordinal to its global row (docids.u64bin is sorted by global id).
+    std::vector<uint32_t> rws(shards.back()->size());
+    for (uint32_t i = 0; i < rws.size(); ++i) {
+      uint64_t pid = shards.back()->global_id(i);
+      auto it = std::lower_bound(docids.begin(), docids.end(), pid);
+      if (it == docids.end() || *it != pid) throw std::runtime_error("shard docid not in global docids: " + d);
+      rws[i] = uint32_t(it - docids.begin());
+    }
+    rows_of.push_back(std::move(rws));
   }
   uint64_t rows = 0;
-  for (auto& s : shards) rows += s->size();
-  std::printf("{\"shards\": %zu, \"rows\": %llu, \"global_rows\": %zu, \"slices\": [", shards.size(),
-              (unsigned long long)rows, docids.size());
-  for (size_t i = 0; i < shards.size(); ++i)
-    std::printf("%s[%u, %u)", i ? ", " : "", begin[i], begin[i] + shards[i]->size());
-  std::printf("]}\n");
-
+  {  // Partition check: every global row in exactly one shard.
+    std::vector<uint8_t> seen(docids.size(), 0);
+    uint64_t dup = 0;
+    for (auto& r : rows_of)
+      for (uint32_t g : r) dup += seen[g]++ ? 1 : 0;
+    for (auto& s : shards) rows += s->size();
+    std::printf("{\"shards\": %zu, \"rows\": %llu, \"global_rows\": %zu, \"duplicate_rows\": %llu, \"missing_rows\": %llu}\n",
+                shards.size(), (unsigned long long)rows, docids.size(), (unsigned long long)dup,
+                (unsigned long long)(docids.size() - (rows - dup)));
+  }
   if (!a.has("no-exact")) {
     std::vector<std::vector<Hit>> merged(qs.n);
+    MappedFbin all(a.str("base"));
     for (size_t s = 0; s < shards.size(); ++s) {
-      MappedFbin slice(a.str("base"), shards[s]->size(), begin[s]);
-      auto hits = exact_topk(slice.data(), slice.n(), qs.data.data(), qs.n, slice.dim(), k);
+      std::vector<float> vec(size_t(rows_of[s].size()) * all.dim());
+      for (size_t i = 0; i < rows_of[s].size(); ++i)
+        std::copy(all.row(rows_of[s][i]), all.row(rows_of[s][i]) + all.dim(), vec.begin() + i * all.dim());
+      auto hits = exact_topk(vec.data(), uint32_t(rows_of[s].size()), qs.data.data(), qs.n, all.dim(), k);
       for (uint32_t q = 0; q < qs.n; ++q)
         for (uint32_t j = 0; j < k; ++j) {
           const auto& h = hits[size_t(q) * k + j];
-          merged[q].push_back({docids[begin[s] + h.doc], h.score});
+          merged[q].push_back({shards[s]->global_id(h.doc), h.score});
         }
     }
     uint32_t identical = 0, set_equal = 0;

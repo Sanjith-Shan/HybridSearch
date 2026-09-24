@@ -130,6 +130,7 @@ public sealed class ShardTopology : IDisposable
 {
     public ShardTopology(TopologyOptions topology, HedgingOptions hedging)
     {
+        _modulo = string.Equals(topology.Partitioning, "modulo", StringComparison.OrdinalIgnoreCase);
         var slices = new List<SliceState>();
         var ids = new HashSet<int>();
         foreach (var s in topology.Slices)
@@ -145,9 +146,19 @@ public sealed class ShardTopology : IDisposable
 
     public bool IsReady => Slices.Count > 0 && Slices.All(s => s.IsReady);
 
-    /// <summary>The slice whose reported doc range contains <paramref name="docId"/>, or null if unknown.</summary>
-    public SliceState? SliceForDoc(ulong docId) =>
-        Slices.FirstOrDefault(s => s.Range is { } r && docId >= r.First && docId <= r.Last);
+    /// <summary>The slice that owns <paramref name="docId"/>, or null if unknown.</summary>
+    public SliceState? SliceForDoc(ulong docId)
+    {
+        if (_modulo)
+        {
+            // Slice ids are 0..n-1 by convention; look the slice up by id, not position.
+            int id = (int)(docId % (ulong)Slices.Count);
+            return Slices.FirstOrDefault(s => s.Id == id);
+        }
+        return Slices.FirstOrDefault(s => s.Range is { } r && docId >= r.First && docId <= r.Last);
+    }
+
+    private readonly bool _modulo;
 
     public void Dispose()
     {

@@ -11,8 +11,19 @@
 set -euo pipefail
 here="$(cd "$(dirname "$0")/.." && pwd)"
 dir="${HS_CLUSTER_DIR:-$here/data/cluster}"
-lex_root="$here/data/indexes/lexical/1m-4shards"
-vec_root="$here/data/indexes/vector/1m-4shards"
+# HS_PARTITION=mod (default): shard i holds docs with id % 4 == i.
+# HS_PARTITION=range: shard i holds the i-th contiguous ID range (kept for comparison;
+# see docs/BUG_LOG.md 2026-09-24 for why range partitioning is wrong on MS MARCO).
+partition="${HS_PARTITION:-mod}"
+if [ "$partition" = mod ]; then
+  lex_root="$here/data/indexes/lexical/1m-4shards-mod"
+  vec_root="$here/data/indexes/vector/1m-4shards-mod"
+  broker_partitioning=modulo
+else
+  lex_root="$here/data/indexes/lexical/1m-4shards"
+  vec_root="$here/data/indexes/vector/1m-4shards"
+  broker_partitioning=range
+fi
 broker_port="${HS_BROKER_PORT:-8080}"
 base_port=50051
 
@@ -62,13 +73,13 @@ reranker="models/reranker"
 [ -f "$here/data/models/reranker/model.onnx" ] || reranker="models/reranker-public"
 (cd "$here/broker" && DOTNET_ROOT="$HOME/.dotnet" exec "$HOME/.dotnet/dotnet" run --project HybridSearch.Broker \
   -c Release --no-launch-profile --urls "http://127.0.0.1:$broker_port" -- "${broker_args[@]}" \
-  --Broker:Models:RerankerDir="$reranker" --Broker:Hedging:Enabled="$hedge" --Broker:Otel:Exporter=none) \
+  --Broker:Models:RerankerDir="$reranker" --Broker:Hedging:Enabled="$hedge" --Broker:Topology:Partitioning="$broker_partitioning" --Broker:Otel:Exporter=none) \
   >"$dir/logs/broker.log" 2>&1 &
 echo $! >>"$dir/pids"
 
 for _ in $(seq 1 120); do
   if curl -sf "http://127.0.0.1:$broker_port/api/search?q=warmup&k=1&deadlineMs=5000" >/dev/null 2>&1; then
-    echo "cluster up: broker :$broker_port, 8 shard processes (vector=$use_vector, hedging=$hedge), reranker=$reranker"
+    echo "cluster up: broker :$broker_port, 8 shard processes (partition=$partition, vector=$use_vector, hedging=$hedge), reranker=$reranker"
     exit 0
   fi
   sleep 1

@@ -22,8 +22,16 @@ public sealed class BrokerOptions
 
 public sealed class TopologyOptions
 {
-    /// <summary>One entry per slice (disjoint doc-ID range); each lists ≥1 replica endpoint.</summary>
+    /// <summary>One entry per slice (a disjoint set of documents); each lists ≥1 replica endpoint.</summary>
     public List<SliceOptions> Slices { get; set; } = [];
+
+    /// <summary>
+    /// How documents map to slices: "range" (each slice owns the contiguous ID range its shards
+    /// report in Health) or "modulo" (slice id == docId % slice count). Only used when the broker
+    /// must route a document it has not just seen in a search reply (e.g. /api/doc/{id}); search
+    /// results are always fetched from the slice that returned them.
+    /// </summary>
+    public string Partitioning { get; set; } = "range";
 }
 
 public sealed class SliceOptions

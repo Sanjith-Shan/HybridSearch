@@ -45,3 +45,13 @@ for i in $(seq 0 $((nshards - 1))); do
     --pq-M 96 --pq-sample 100000 --ram-gb 0.4 --threads "${VEC_THREADS:-4}" --min-free-gb 6
   mkdir -p results/vector && cp "$out/build.json" "results/vector/serving_shard$i.build.json"
 done
+
+# Mod (hash) partitioning: shard i holds the passages whose global id % 4 == i. MS MARCO ids are
+# clustered by source split (86% of dev-relevant passages fall in the top id quarter), so range
+# shards are badly skewed; mod shards spread relevant passages and query load evenly. Same global
+# BM25 statistics, so merged top-k == single-index top-k (ctest Sharding.RealData1mFourShardsMod).
+for i in $(seq 0 $((nshards - 1))); do
+  "$bin/hs_index_build" --input "$coll" --out "data/indexes/lexical/1m-4shards-mod/shard$i" \
+    --shard "$i/$nshards" --partition mod --global-stats data/indexes/lexical/1m --codecs bp128 --threads 2 \
+    --report "results/lexical/build_1m_mod_shard$i.json"
+done

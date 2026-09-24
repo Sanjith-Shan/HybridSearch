@@ -3,10 +3,11 @@
 //   hs_index_build --input data/raw/msmarco/collection.tsv --out data/indexes/lexical/full
 //                  [--codecs vbyte,bp128] [--threads 4] [--mem-mb 1536] [--zstd-level 9]
 //                  [--no-docstore] [--max-docs N] [--min-free-gb 3] [--tmp DIR] [--report FILE.json]
-//                  [--shard i/N --global-stats FULL_INDEX_DIR]
+//                  [--shard i/N [--partition range|mod] --global-stats FULL_INDEX_DIR]
 //
 // --shard i/N builds the i-th of N contiguous line slices (the input is sorted by passage ID,
-// so each shard is a contiguous ID range). With --global-stats, BM25's N, avgdl and every
+// so each shard is a contiguous ID range). --partition mod instead keeps passages with id % N == i,
+// which spreads MS MARCO's ID-clustered splits evenly over shards. With --global-stats, BM25's N, avgdl and every
 // term's df come from FULL_INDEX_DIR, so a shard's scores equal the single index's bit for bit.
 
 #include <cstdio>
@@ -22,12 +23,12 @@ static void usage() {
   std::fprintf(stderr,
                "usage: hs_index_build --input TSV --out DIR [--codecs vbyte,bp128] [--threads N] [--mem-mb MB]\n"
                "                      [--zstd-level L] [--no-docstore] [--max-docs N] [--min-free-gb G] [--tmp DIR]\n"
-               "                      [--report FILE.json] [--shard i/N --global-stats FULL_INDEX_DIR]\n");
+               "                      [--report FILE.json] [--shard i/N [--partition range|mod] --global-stats FULL_INDEX_DIR]\n");
 }
 
 int main(int argc, char** argv) {
   BuildOptions opt;
-  std::string report, shard;
+  std::string report, shard, partition = "range";
   for (int i = 1; i < argc; ++i) {
     std::string a = argv[i];
     auto val = [&]() -> std::string {
@@ -50,6 +51,7 @@ int main(int argc, char** argv) {
     else if (a == "--quiet") opt.verbose = false;
     else if (a == "--shard") shard = val();
     else if (a == "--global-stats") opt.global_stats_dir = val();
+    else if (a == "--partition") partition = val();
     else if (a == "--codecs") {
       opt.codecs.clear();
       std::istringstream ss(val());
@@ -77,14 +79,26 @@ int main(int argc, char** argv) {
       if (slash == std::string::npos) throw std::invalid_argument("--shard expects i/N");
       uint64_t i = std::stoull(shard.substr(0, slash)), n = std::stoull(shard.substr(slash + 1));
       if (n == 0 || i >= n) throw std::invalid_argument("--shard: need 0 <= i < N");
-      uint64_t lines = count_lines(opt.input_tsv);
-      opt.skip_docs = lines * i / n;
-      opt.max_docs = lines * (i + 1) / n - opt.skip_docs;
-      opt.shard_label = shard;
+      if (partition == "range") {
+        uint64_t lines = count_lines(opt.input_tsv);
+        opt.skip_docs = lines * i / n;
+        opt.max_docs = lines * (i + 1) / n - opt.skip_docs;
+        opt.shard_label = shard + " range";
+      } else if (partition == "mod") {
+        opt.mod_n = uint32_t(n);
+        opt.mod_i = uint32_t(i);
+        opt.shard_label = shard + " mod";
+      } else {
+        throw std::invalid_argument("--partition must be range or mod");
+      }
       if (opt.global_stats_dir.empty())
         std::fprintf(stderr, "[build] warning: --shard without --global-stats scores with shard-local statistics\n");
-      std::fprintf(stderr, "[build] shard %s: lines [%llu, %llu)\n", shard.c_str(), (unsigned long long)opt.skip_docs,
-                   (unsigned long long)(opt.skip_docs + opt.max_docs));
+      if (partition == "range")
+        std::fprintf(stderr, "[build] shard %s: lines [%llu, %llu)\n", shard.c_str(), (unsigned long long)opt.skip_docs,
+                     (unsigned long long)(opt.skip_docs + opt.max_docs));
+      else
+        std::fprintf(stderr, "[build] shard %s: passage ids with id %% %llu == %llu\n", shard.c_str(),
+                     (unsigned long long)n, (unsigned long long)i);
     }
     BuildReport r = build_index(opt);
     std::fprintf(stderr,

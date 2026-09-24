@@ -236,3 +236,26 @@ Append only. Real entries only — this is where "tell me about a hard bug" answ
 - **Found:** adding a 4-thread CPU cap (the laptop is shared) and rerunning the mining test.
 - **Fix:** cap threads through `OMP_NUM_THREADS` (set when `hybridsearch.rerank` is imported)
   and `torch.set_num_threads`, never `faiss.omp_set_num_threads` in a process that uses torch.
+
+## 2026-09-24 — Range partitioning put 86% of the relevant passages on one shard
+
+**Symptom.** Chaos experiment `slice-down`, on the 1M subset split into 4 shards × 2 replicas. Both
+replicas of slice 3 were hung with SIGSTOP. Dev MRR@10 fell from 0.4119 to 0.0336, keeping only 8%.
+Losing a quarter of the documents should have cost roughly a quarter of the quality.
+
+**Cause.** The shards were contiguous passage-ID ranges. MS MARCO passage IDs are not random with
+respect to the queries: passages are grouped by the split their source query came from, so the dev
+split's passages cluster at high IDs. Of 7,433 dev-relevant passages, slice 0 held 466, slice 1 held
+344, slice 2 held 222 and slice 3 held 6,401 (86.1%). That makes one shard both a quality single point
+of failure and a load hot-spot, since it holds the documents that dev queries actually retrieve.
+
+**How it was found.** The chaos harness reports quality alongside latency. A latency-only chaos
+test would have shown a healthy-looking system: results still returned, with the failed slice
+reported. A manual reproduction first appeared to contradict it. The cause of that was zsh's
+1-based arrays in the reproduction shell, which stopped one replica of two different slices instead
+of both replicas of one.
+
+**Fix.** Modulo partitioning (`global id % N`) for both the lexical and vector shards, plus a broker
+`Topology:Partitioning=modulo` option so the rare lookup that is not tied to a search reply routes
+correctly. Global BM25 statistics keep the merged top-k identical to the single index under either
+scheme. The range shards are kept as the comparison point, and results/chaos/ has both.

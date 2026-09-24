@@ -1,7 +1,7 @@
 {
   "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/m9/ltr_bm25only.json",
-  "date": "2026-09-23T17:58:26-07:00",
-  "command": "python scripts/m9_ltr.py --tag _bm25only",
+  "date": "2026-09-24T16:48:43-07:00",
+  "command": "python scripts/m9_ltr.py --no-dense --tag _bm25only",
   "hardware": {
     "cpu": "Apple M3 Pro",
     "logical_cores": 12,
@@ -9,9 +9,9 @@
     "python": "3.12.7",
     "pinned_threads": false,
     "loadavg_1_5_15": [
-      31.26,
-      41.81,
-      44.97
+      48.02,
+      50.38,
+      55.21
     ],
     "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
     "mem_bytes": 19327352832
@@ -24,7 +24,7 @@
     "onnxruntime": "1.30.0",
     "numpy": "2.5.3"
   },
-  "git_sha": "c32dba1",
+  "git_sha": "e22a9f8",
   "label": "simulated users (click model pbm-navigational, eta_r=(1/r)^1.0, relevance from MS MARCO train labels (train) / TREC DL 2019+2020 graded qrels (eval))",
   "seed": 20260923,
   "seeds": 5,
@@ -35,7 +35,8 @@
       "/Users/sanjithshanmugavel/Documents/HybridSearch/data/runs/reference/anserini-bm25-default.dl20.trec"
     ],
     "dense": false,
-    "world": "full collection, BM25-only features (dense runs not available)",
+    "train_query_sample": "200 of 2000 train_tune queries, seed 20260923",
+    "world": "full collection (Anserini BM25 top-20 candidates)",
     "qrels_eval": {
       "dl19": {
         "path": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/raw/trec-dl/dl19.qrels",

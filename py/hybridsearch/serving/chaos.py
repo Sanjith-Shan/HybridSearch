@@ -125,7 +125,10 @@ async def one_request(client: httpx.AsyncClient, base: str, params: dict, qid: s
         return Sample(phase, qid, (time.perf_counter() - t0) * 1000, 599)
 
 
-async def run_phase(client, base, params, queries, phase, rate, seconds, timeout_s, rng) -> list[Sample]:
+async def run_phase(client, base, params, queries, phase, rate, seconds, timeout_s, seed) -> list[Sample]:
+    # Every phase replays the SAME query sequence (same seed), so baseline, fault and
+    # recovery MRR are a paired comparison and not three different random samples.
+    rng = random.Random(seed)
     tasks = []
     interval = 1.0 / rate
     start = time.perf_counter()
@@ -150,7 +153,6 @@ async def main_async(args) -> dict:
     queries = load_queries(Path(args.queries))
     qrels = load_qrels(Path(args.qrels))
     judged = [q for q in queries if q[0] in qrels]
-    rng = random.Random(args.seed)
     params = {"mode": args.mode, "rerank": str(args.rerank).lower(), "deadlineMs": args.deadline_ms, "k": 10}
     limits = httpx.Limits(max_connections=2000, max_keepalive_connections=500)
     samples: list[Sample] = []
@@ -164,7 +166,7 @@ async def main_async(args) -> dict:
                 await asyncio.sleep(args.settle_seconds)
             print(f"[chaos] phase {phase}: {args.rate}/s for {args.phase_seconds}s", flush=True)
             samples += await run_phase(client, args.base_url, params, judged, phase,
-                                       args.rate, args.phase_seconds, args.timeout_s, rng)
+                                       args.rate, args.phase_seconds, args.timeout_s, args.seed)
     by_phase = {p: summarize([s for s in samples if s.phase == p], qrels)
                 for p in ("baseline", "fault", "recovery")}
     base_mrr = by_phase["baseline"]["mrr_at_10"]

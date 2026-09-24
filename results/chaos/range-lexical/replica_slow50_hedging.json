@@ -1,0 +1,57 @@
+{
+  "experiment": "replica-slow50-hedging",
+  "fault_start": "echo latency_ms=50 > data/cluster/chaos/shard2a",
+  "fault_stop": ": > data/cluster/chaos/shard2a",
+  "rate_per_s": 20.0,
+  "phase_seconds": 20.0,
+  "params": {
+    "mode": "lexical",
+    "rerank": "false",
+    "deadlineMs": 300,
+    "k": 10
+  },
+  "phases": {
+    "baseline": {
+      "requests": 400,
+      "error_rate": 0.0,
+      "p50_ms": 27.6954379999097,
+      "p99_ms": 2016.7541516600656,
+      "p999_ms": 3038.8379218910354,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
+      "failed_shard_rate": 0.0,
+      "hedged_rate": 0.0325,
+      "mrr_at_10": 0.4118888888888889
+    },
+    "fault": {
+      "requests": 400,
+      "error_rate": 0.0,
+      "p50_ms": 93.79866650010626,
+      "p99_ms": 1882.517598920053,
+      "p999_ms": 2409.195695398691,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
+      "failed_shard_rate": 0.0025,
+      "hedged_rate": 0.0375,
+      "mrr_at_10": 0.4118888888888889
+    },
+    "recovery": {
+      "requests": 400,
+      "error_rate": 0.0,
+      "p50_ms": 25.663375000021915,
+      "p99_ms": 122.40190032987809,
+      "p999_ms": 208.99766098387892,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
+      "failed_shard_rate": 0.0,
+      "hedged_rate": 0.0,
+      "mrr_at_10": 0.4118888888888889
+    }
+  },
+  "mrr_retained_under_fault": 1.0,
+  "hardware": {
+    "machine": "arm64",
+    "system": "macOS-26.5.1-arm64-arm-64bit",
+    "note": "macOS runs are dev-signal-only"
+  }
+}

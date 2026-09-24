@@ -1,6 +1,7 @@
 // Build the DiskANN-style SSD index.
 //   hs_vec_disk_build --base passages.fbin [--row-begin B] [--max-n N] --out dir [--docids docids.u64bin]
 //   (rows [B, B+N) of the file: one document shard; docids are sliced the same way)
+//   [--docid-mod M --docid-rem r]  only rows whose global docid % M == r (modulo sharding)
 //                     [--R 64] [--L 100] [--alpha 1.2] [--pq-M 96] [--pq-sample 200000]
 //                     [--partitions P | --ram-gb G] [--overlap 2] [--seed S] [--threads T]
 //                     [--min-free-gb 3] [--graph saved_vamana.graph  (reuse; single partition)]
@@ -60,11 +61,30 @@ int main(int argc, char** argv) try {
     if (size_t(base.row_begin()) + base.n() > all.size()) throw std::runtime_error("docids shorter than rows");
     docids.assign(all.begin() + base.row_begin(), all.begin() + base.row_begin() + base.n());
   }
+  // --docid-mod M --docid-rem r: keep only rows whose global docid % M == r (document
+  // sharding by id modulo), gathered in file order into RAM (n/M rows).
+  const float* data = base.data();
+  uint32_t n = base.n();
+  std::vector<float> gathered;
+  if (a.has("docid-mod")) {
+    if (docids.empty()) throw std::runtime_error("--docid-mod needs --docids");
+    uint64_t M = uint64_t(a.num("docid-mod", 4)), r = uint64_t(a.num("docid-rem", 0));
+    std::vector<uint64_t> keep;
+    for (uint32_t i = 0; i < base.n(); ++i)
+      if (docids[i] % M == r) {
+        keep.push_back(docids[i]);
+        gathered.insert(gathered.end(), base.row(i), base.row(i) + base.dim());
+      }
+    docids.swap(keep);
+    data = gathered.data();
+    n = uint32_t(docids.size());
+    std::fprintf(stderr, "docid %% %llu == %llu: %u rows\n", (unsigned long long)M, (unsigned long long)r, n);
+  }
   DiskBuildStats st;
-  build_disk_index(base.data(), base.n(), base.dim(), out, p, &st, a.has("docids") ? &docids : nullptr);
+  build_disk_index(data, n, base.dim(), out, p, &st, a.has("docids") ? &docids : nullptr);
   std::printf("{\"n\": %u, \"partitions\": %u, \"build_seconds\": %.1f, \"index_bytes\": %llu, "
               "\"peak_rss_bytes\": %llu, \"avg_degree\": %.2f}\n",
-              base.n(), st.partitions, st.seconds_total, (unsigned long long)st.index_bytes,
+              n, st.partitions, st.seconds_total, (unsigned long long)st.index_bytes,
               (unsigned long long)st.peak_rss_bytes, st.avg_degree);
   return 0;
 } catch (const std::exception& e) {

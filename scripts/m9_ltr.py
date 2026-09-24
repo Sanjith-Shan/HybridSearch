@@ -78,14 +78,15 @@ def doc_lengths(pids: set[str]) -> dict[str, int]:
     return {p: have.get(p, 0) for p in pids}
 
 
-def real_sets(subset_world: bool, no_dense: bool = False, n_train: int | None = None, seed: int = 0):
+def real_sets(subset_world: bool, no_dense: bool = False, n_train: int | None = None, seed: int = 0,
+              dense_source: str = "candidates"):
     """Returns (train, eval, provenance) or None if the needed runs are missing."""
     bm25_tr, bm25_ev = find_run(["bm25"], "train_tune"), [find_run(["bm25"], s) for s in ("dl19", "dl20")]
     if not bm25_tr or not all(bm25_ev):
         return None
     dense_tr = find_run(["dense"], "train_tune", exclude=())
     dense_ev = [find_run(["dense"], s, exclude=()) for s in ("dl19", "dl20")]
-    use_dense = bool(dense_tr and all(dense_ev))
+    use_dense = bool(dense_tr and all(dense_ev)) and dense_source == "runs"
     prov = {"bm25_train": str(bm25_tr), "bm25_eval": [str(p) for p in bm25_ev], "dense": use_dense}
     bm_tr = read_run(bm25_tr)
     bm_ev = {**read_run(bm25_ev[0]), **read_run(bm25_ev[1])}
@@ -180,12 +181,16 @@ def main():
     ap.add_argument("--tag", default="")
     ap.add_argument("--no-dense", action="store_true", help="BM25-only features (ablation)")
     ap.add_argument("--train-queries", type=int, default=200, help="seeded sample of train_tune queries")
+    ap.add_argument("--dense-source", choices=["candidates", "runs"], default="candidates",
+                    help="candidates: BGE score for the full-collection BM25 top-20 (encoded here); "
+                         "runs: dense-flat-1m run files, BM25 restricted to the 1M subset")
     args = ap.parse_args()
     t0 = time.time()
     rng0 = np.random.default_rng(args.seed)
 
     sets = None if args.synthetic else real_sets(subset_world=True, no_dense=args.no_dense,
-                                                 n_train=args.train_queries, seed=args.seed)
+                                                 n_train=args.train_queries, seed=args.seed,
+                                                 dense_source=args.dense_source)
     if sets is None:
         tr, ev = D.synthetic(2000, K, rng0, "synthetic-train"), D.synthetic(97, K, rng0, "synthetic-eval")
         prov = {"world": "SYNTHETIC stand-in (features generated from grades); real runs not available"}
@@ -383,7 +388,7 @@ def plot(doc, path):
     ax.set_xlabel("logged sessions (simulated)")
     ax.set_ylabel("nDCG@10 on held-out DL19+DL20" if "SYNTHETIC" not in doc["provenance"]["world"] else "nDCG@10 (synthetic eval)")
     ax.grid(alpha=0.25, lw=0.5)
-    ax.legend(frameon=False, fontsize=8, loc="lower right")
+    ax.legend(frameon=False, fontsize=8, loc="center right", bbox_to_anchor=(1.0, 0.33))
     for sp in ("top", "right"):
         ax.spines[sp].set_visible(False)
     ax = axes[1]
