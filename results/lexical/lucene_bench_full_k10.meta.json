@@ -1,0 +1,12 @@
+{
+  "hardware_label": "dev-signal-only",
+  "cpu": "Apple M3 Pro", "logical_cores": 12, "os": "Darwin 25.5.0 arm64", "pinned": false,
+  "engine": "Lucene 10.5.0 (anserini-2.3.0-fatjar), IndexSearcher.search(query, 10), no executor (single-threaded), query cache off, BM25(0.9,0.4)",
+  "index": "Anserini prebuilt lucene-inverted.msmarco-v1-passage.20221004.252b5e (since deleted to save disk)",
+  "queries": "first 1000 of data/raw/msmarco/queries.dev.small.tsv, analysis excluded from timing",
+  "cache_state": "warm (3 untimed passes)",
+  "load_average": "28.73 26.22 31.50 (end)",
+  "jvm": "/opt/homebrew/opt/openjdk@21 -Xmx4g",
+  "command": "java -Xmx4g -cp anserini-2.3.0-fatjar.jar:data/cache/lucene/classes-anserini LuceneRef bench <index> data/raw/msmarco/queries.dev.small.tsv 10 1000 3",
+  "git_sha": "a7a0714ad77fdca310885005dcc1d89d5658a6c4+dirty"
+}

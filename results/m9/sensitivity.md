@@ -10,8 +10,10 @@ N80 = total query impressions for 80% power at two-sided p<0.05 **in the offline
 |---|---|---|
 | anserini-bm25-default | 0.4912 | run file anserini-bm25-default.{dl19,dl20}.trec under data/runs/ |
 | anserini-bm25-default-1m | 0.6483 | run file anserini-bm25-default-1m.{dl19,dl20}.trec under data/runs/ |
+| bm25-bge-rerank100 | 0.6681 | run built by scripts/m9_make_runs.py (data/runs/m9/); BGE vectors encoded by M9 for BM25 top-100 only |
 | hs-bm25-lucene | 0.4912 | HybridSearch's own BM25 engine run (data/runs/lexical/) |
 | hs-bm25-textbook | 0.4906 | HybridSearch's own BM25 engine run (data/runs/lexical/) |
+| rrf-bm25-bge100 | 0.6161 | run built by scripts/m9_make_runs.py (data/runs/m9/); BGE vectors encoded by M9 for BM25 top-100 only |
 | synthetic-oracle-sigma1.0 | 0.7634 | SYNTHETIC: DL grade + 1.0*N(0,1), shared noise seed 1000 |
 | synthetic-oracle-sigma1.03 | 0.7495 | SYNTHETIC: DL grade + 1.03*N(0,1), shared noise seed 1000 |
 | synthetic-oracle-sigma1.1 | 0.7256 | SYNTHETIC: DL grade + 1.1*N(0,1), shared noise seed 1000 |
@@ -23,16 +25,52 @@ N80 = total query impressions for 80% power at two-sided p<0.05 **in the offline
 
 Per pair, over the 9 click models: ratio = (best A/B metric's N80) / (TDI N80), counting only cells where both reach 80% power in the offline-correct direction. 'TDI wrong' = cells where TDI's expected outcome favours the offline-worse ranker.
 
-| pair | offline delta nDCG@10 | median TDI N80 | median best-A/B N80 | ratio median | ratio min-max | cells | TDI wrong | best-interleaving / TDI (median) |
+Pairs whose offline difference is not significant (paired randomization p >= 0.05 over the 97 topics) have **no known quality ordering**: their 'correct direction' is just the sign of a tiny offline delta, so they are marked and are not evidence for or against either method.
+
+| pair | offline delta nDCG@10 | offline p | median TDI N80 | median best-A/B N80 | ratio median | ratio min-max | cells | TDI wrong | best-interleaving / TDI (median) |
+|---|---|---|---|---|---|---|---|---|---|
+| bm25-bge-rerank100 vs rrf-bm25-bge100 | +0.0519 | 0.0001 | 3,600 | 9,866 | 2.4x | 1.4x-11.6x | 9/9 | 0 | 0.69 |
+| rrf-bm25-bge100 vs anserini-bm25-default | +0.1249 | 5e-05 | 151 | 313 | 2.5x | 1.3x-4.8x | 9/9 | 0 | 0.67 |
+| anserini-bm25-default vs hs-bm25-lucene (no known ordering) | +0.0000 | 1 | 4,734,947 | 29,167,130 | 6.9x | 0.6x-13.2x | 2/9 | 3 | 0.01 |
+| hs-bm25-lucene vs hs-bm25-textbook (no known ordering) | +0.0006 | 0.3 | 133,202 | 431,812 | 4.8x | 2.1x-17.4x | 9/9 | 0 | 0.05 |
+| bm25-bge-rerank100 vs hs-bm25-textbook | +0.1774 | 5e-05 | 164 | 214 | 1.6x | 1.1x-2.9x | 9/9 | 0 | 0.88 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.03 | +0.0139 | 5e-05 | 8,443 | 164,254 | 16.4x | 8.7x-153.7x | 9/9 | 0 | 0.06 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.1 | +0.0378 | 5e-05 | 1,251 | 17,059 | 10.5x | 6.2x-103.0x | 9/9 | 0 | 0.15 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | +0.0973 | 5e-05 | 229 | 626 | 4.1x | 2.4x-31.2x | 9/9 | 0 | 0.29 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.5 | +0.1798 | 5e-05 | 74 | 180 | 2.7x | 2.0x-12.8x | 9/9 | 0 | 0.43 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma2.0 | +0.3010 | 5e-05 | 35 | 73 | 2.3x | 1.8x-4.9x | 9/9 | 0 | 0.52 |
+
+## bm25-bge-rerank100 vs rrf-bm25-bge100
+
+offline nDCG@10 0.6681 vs 0.6161 (delta +0.0519, paired randomization p=0.0001); offline-better: **bm25-bge-rerank100**
+
+| click model | team-draft interleaving | balanced interleaving | probabilistic interleaving | A/B clicks per impression | A/B clicks@1 | A/B abandonment | A/B MRR of first click | best A/B / TDI |
 |---|---|---|---|---|---|---|---|---|
-| anserini-bm25-default vs hs-bm25-lucene | +0.0000 | 4,734,947 | 29,167,130 | 6.9x | 0.6x-13.2x | 2/9 | 3 | 0.01 |
-| hs-bm25-lucene vs hs-bm25-textbook | +0.0006 | 133,202 | 431,812 | 4.8x | 2.1x-17.4x | 9/9 | 0 | 0.05 |
-| anserini-bm25-default vs hs-bm25-textbook | +0.0006 | 102,830 | 539,208 | 6.2x | 4.0x-24.6x | 9/9 | 0 | 0.06 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.03 | +0.0139 | 8,443 | 164,254 | 16.4x | 8.7x-153.7x | 9/9 | 0 | 0.06 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.1 | +0.0378 | 1,251 | 17,059 | 10.5x | 6.2x-103.0x | 9/9 | 0 | 0.15 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | +0.0973 | 229 | 626 | 4.1x | 2.4x-31.2x | 9/9 | 0 | 0.29 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.5 | +0.1798 | 74 | 180 | 2.7x | 2.0x-12.8x | 9/9 | 0 | 0.43 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma2.0 | +0.3010 | 35 | 73 | 2.3x | 1.8x-4.9x | 9/9 | 0 | 0.52 |
+| pbm-perfect | 1,732 | 928 | 1,321 | 2,872 | 20,758 | 8,031 | 14,000 | 1.7x |
+| pbm-navigational | 1,852 | 1,119 | 1,345 | 2,896 | 14,411 | 9,457 | 10,576 | 1.6x |
+| pbm-informational | 6,912 | 5,384 | 5,680 | 9,866 | 52,620 | 42,927 | 38,974 | 1.4x |
+| cascade-perfect | 121 | 103 | 197 | 1,397 | 23,858 | 4,356 | 15,987 | 11.6x |
+| cascade-navigational | 4,189 | 2,991 | 2,446 | 1.2e+06* | 16,774 | 9,926 | 12,445 | 2.4x |
+| cascade-informational | 3,600 | 3,007 | 4,068 | not reached (disagrees) | 46,751 | 1.1e+06* | 35,398 | 9.8x |
+| dbn-perfect | 289 | 198 | 420 | 2,368 | 23,096 | 20,159 | 17,706 | 8.2x |
+| dbn-navigational | 6,049 | 3,633 | 2,977 | 1.4e+05 | 16,239 | 28,799 | 13,237 | 2.2x |
+| dbn-informational | 5,481 | 4,834 | 5,583 | not reached (disagrees) | 54,414 | 1.9e+05 | 41,704 | 7.6x |
+
+## rrf-bm25-bge100 vs anserini-bm25-default
+
+offline nDCG@10 0.6161 vs 0.4912 (delta +0.1249, paired randomization p=5e-05); offline-better: **rrf-bm25-bge100**
+
+| click model | team-draft interleaving | balanced interleaving | probabilistic interleaving | A/B clicks per impression | A/B clicks@1 | A/B abandonment | A/B MRR of first click | best A/B / TDI |
+|---|---|---|---|---|---|---|---|---|
+| pbm-perfect | 134 | 97 | 98 | 292 | 252 | 417 | 240 | 1.8x |
+| pbm-navigational | 176 | 132 | 123 | 368 | 339 | 522 | 316 | 1.8x |
+| pbm-informational | 719 | 576 | 587 | 1,225 | 932 | 2,422 | 913 | 1.3x |
+| cascade-perfect | 39 | 29 | 27 | 190 | 242 | 1,102 | 222 | 4.8x |
+| cascade-navigational | 116 | 69 | 102 | not reached (disagrees) | 351 | 1,741 | 287 | 2.5x |
+| cascade-informational | 234 | 148 | 269 | not reached (disagrees) | 985 | 1.4e+05 | 857 | 3.7x |
+| dbn-perfect | 59 | 44 | 44 | 339 | 244 | 545 | 228 | 3.8x |
+| dbn-navigational | 151 | 86 | 126 | 7,499 | 345 | 807 | 313 | 2.1x |
+| dbn-informational | 305 | 200 | 368 | not reached (disagrees) | 949 | 4,930 | 882 | 2.9x |
 
 ## anserini-bm25-default vs hs-bm25-lucene
 
@@ -66,21 +104,21 @@ offline nDCG@10 0.4912 vs 0.4906 (delta +0.0006, paired randomization p=0.297); 
 | dbn-navigational | 1.3e+05 | 6,016 | 6,552 | not reached (disagrees) | 4.3e+05* | 1.2e+07* | 9e+05* | 3.2x |
 | dbn-informational | 3.7e+05* | 19,065 | 15,055 | not reached (disagrees) | 1.3e+06* | 1.8e+07* | 1.8e+06* | 3.6x |
 
-## anserini-bm25-default vs hs-bm25-textbook
+## bm25-bge-rerank100 vs hs-bm25-textbook
 
-offline nDCG@10 0.4912 vs 0.4906 (delta +0.0006, paired randomization p=0.276); offline-better: **anserini-bm25-default**
+offline nDCG@10 0.6681 vs 0.4906 (delta +0.1774, paired randomization p=5e-05); offline-better: **bm25-bge-rerank100**
 
 | click model | team-draft interleaving | balanced interleaving | probabilistic interleaving | A/B clicks per impression | A/B clicks@1 | A/B abandonment | A/B MRR of first click | best A/B / TDI |
 |---|---|---|---|---|---|---|---|---|
-| pbm-perfect | 66,643 | 3,566 | 6,140 | 2.3e+06* | 2.6e+05* | 1e+06* | 4e+05* | 4.0x |
-| pbm-navigational | 1.2e+05 | 6,021 | 11,517 | 2.8e+06* | 5.4e+05* | 2.1e+06* | 7.8e+05* | 4.5x |
-| pbm-informational | 6.7e+05* | 57,280 | 54,472 | not reached (disagrees) | 2.9e+06* | not reached (disagrees) | 5.3e+06* | 4.3x |
-| cascade-perfect | 6,404 | 472 | 3,681 | not reached (disagrees) | 1.6e+05 | not reached (disagrees) | 2.9e+05* | 24.6x |
-| cascade-navigational | 85,490 | 3,888 | 11,800 | not reached (disagrees) | 6.2e+05* | not reached (disagrees) | 1.2e+06* | 7.2x |
-| cascade-informational | 1.4e+05 | 8,297 | 23,988 | not reached (disagrees) | 1.6e+06* | not reached (disagrees) | 2.1e+06* | 11.8x |
-| dbn-perfect | 15,387 | 821 | 3,485 | 1.6e+07* | 1.9e+05 | 1.4e+07* | 3.9e+05* | 12.2x |
-| dbn-navigational | 1e+05 | 6,508 | 12,022 | not reached (disagrees) | 4.8e+05* | 2e+07* | 1e+06* | 4.7x |
-| dbn-informational | 1.7e+05 | 14,729 | 29,805 | 6.4e+07* | 1e+06* | 5.2e+07* | 1.5e+06* | 6.2x |
+| pbm-perfect | 141 | 124 | 127 | 167 | 193 | 268 | 180 | 1.2x |
+| pbm-navigational | 177 | 160 | 155 | 197 | 244 | 344 | 220 | 1.1x |
+| pbm-informational | 609 | 587 | 751 | 674 | 713 | 1,548 | 646 | 1.1x |
+| cascade-perfect | 44 | 40 | 40 | 102 | 194 | 524 | 164 | 2.3x |
+| cascade-navigational | 139 | 113 | 150 | not reached (disagrees) | 247 | 893 | 215 | 1.6x |
+| cascade-informational | 228 | 202 | 394 | not reached (disagrees) | 697 | 80,118 | 603 | 2.7x |
+| dbn-perfect | 60 | 54 | 59 | 187 | 198 | 398 | 174 | 2.9x |
+| dbn-navigational | 164 | 118 | 173 | 5,248 | 246 | 574 | 214 | 1.3x |
+| dbn-informational | 310 | 246 | 518 | not reached (disagrees) | 700 | 3,645 | 623 | 2.0x |
 
 ## synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.03
 
@@ -164,17 +202,17 @@ offline nDCG@10 0.7634 vs 0.4624 (delta +0.3010, paired randomization p=5e-05); 
 
 ## Agreement of the online verdict with offline nDCG@10
 
-Share of (pair, click model) cells where the method's large-pool expected effect favours the offline-better ranker.
+Share of (pair, click model) cells where the method's large-pool expected effect favours the offline-better ranker. Only pairs with a significant offline difference (paired randomization p < 0.05) count; real and synthetic pairs are shown separately.
 
-| method | agree | cells |
+| method | real pairs: agree / cells | synthetic pairs: agree / cells |
 |---|---|---|
-| team-draft interleaving | 69 | 72 |
-| balanced interleaving | 72 | 72 |
-| probabilistic interleaving | 72 | 72 |
-| A/B clicks per impression | 41 | 72 |
-| A/B clicks@1 | 67 | 72 |
-| A/B abandonment | 58 | 72 |
-| A/B MRR of first click | 67 | 72 |
+| team-draft interleaving | 27 / 27 | 45 / 45 |
+| balanced interleaving | 27 / 27 | 45 / 45 |
+| probabilistic interleaving | 27 / 27 | 45 / 45 |
+| A/B clicks per impression | 19 / 27 | 29 / 45 |
+| A/B clicks@1 | 27 / 27 | 45 / 45 |
+| A/B abandonment | 27 / 27 | 45 / 45 |
+| A/B MRR of first click | 27 / 27 | 45 / 45 |
 
 ## A/A false-positive rate (fresh simulation per trial, no pool)
 
@@ -182,15 +220,15 @@ Ranker `anserini-bm25-default` against itself, N=2000 impressions per trial, 100
 
 | click model | team-draft interleaving | A/B clicks per impression | A/B clicks@1 | A/B abandonment | A/B MRR of first click |
 |---|---|---|---|---|---|
-| pbm-perfect | 0.044 (KS 0.11) | 0.051 (KS 0.74) | 0.050 (KS 0.00025) | 0.053 (KS 0.35) | 0.047 (KS 0.027) |
-| pbm-navigational | 0.050 (KS 0.041) | 0.051 (KS 0.35) | 0.044 (KS 0.63) | 0.055 (KS 0.13) | 0.043 (KS 0.89) |
-| pbm-informational | 0.036 (KS 0.00011) | 0.066 (KS 0.57) | 0.049 (KS 0.41) | 0.069 (KS 0.041) | 0.062 (KS 0.86) |
-| cascade-perfect | 0.041 (KS 0.031) | 0.054 (KS 0.62) | 0.044 (KS 0.2) | 0.059 (KS 0.23) | 0.041 (KS 0.63) |
-| cascade-navigational | 0.036 (KS 0.019) | 0.051 (KS 0.16) | 0.044 (KS 0.15) | 0.043 (KS 0.021) | 0.047 (KS 0.72) |
-| cascade-informational | 0.055 (KS 0.047) | 0.045 (KS 0.96) | 0.047 (KS 0.11) | 0.002 (KS 2.5e-185) | 0.050 (KS 0.7) |
-| dbn-perfect | 0.035 (KS 0.18) | 0.051 (KS 0.45) | 0.056 (KS 0.36) | 0.048 (KS 0.41) | 0.059 (KS 0.54) |
-| dbn-navigational | 0.045 (KS 0.05) | 0.050 (KS 0.1) | 0.046 (KS 0.18) | 0.042 (KS 0.03) | 0.045 (KS 0.51) |
-| dbn-informational | 0.050 (KS 0.22) | 0.057 (KS 0.42) | 0.046 (KS 0.27) | 0.051 (KS 0.095) | 0.052 (KS 0.88) |
+| pbm-perfect | 0.055 (KS 0.25) | 0.047 (KS 0.15) | 0.050 (KS 0.064) | 0.045 (KS 0.59) | 0.052 (KS 0.75) |
+| pbm-navigational | 0.052 (KS 0.19) | 0.042 (KS 0.95) | 0.055 (KS 0.59) | 0.050 (KS 0.19) | 0.067 (KS 0.89) |
+| pbm-informational | 0.044 (KS 0.17) | 0.046 (KS 0.43) | 0.064 (KS 0.34) | 0.052 (KS 0.1) | 0.057 (KS 0.17) |
+| cascade-perfect | 0.048 (KS 0.16) | 0.052 (KS 0.041) | 0.047 (KS 0.33) | 0.045 (KS 0.093) | 0.039 (KS 0.74) |
+| cascade-navigational | 0.044 (KS 0.25) | 0.042 (KS 0.93) | 0.045 (KS 0.52) | 0.045 (KS 0.077) | 0.045 (KS 0.74) |
+| cascade-informational | 0.045 (KS 0.14) | 0.043 (KS 0.73) | 0.055 (KS 0.16) | 0.002 (KS 2.9e-174) | 0.056 (KS 0.49) |
+| dbn-perfect | 0.045 (KS 0.086) | 0.049 (KS 0.51) | 0.039 (KS 0.15) | 0.053 (KS 0.024) | 0.032 (KS 0.19) |
+| dbn-navigational | 0.046 (KS 0.013) | 0.048 (KS 0.66) | 0.053 (KS 0.51) | 0.050 (KS 0.076) | 0.050 (KS 0.28) |
+| dbn-informational | 0.046 (KS 0.024) | 0.056 (KS 0.59) | 0.051 (KS 0.26) | 0.045 (KS 0.093) | 0.051 (KS 0.7) |
 
 ## Direct-simulation check of pool-based N80
 
@@ -198,9 +236,19 @@ At the pool-based N80, fresh click simulation per trial (no pool); power should 
 
 | pair | click model | method | N | direct power | trials |
 |---|---|---|---|---|---|
-| hs-bm25-lucene vs hs-bm25-textbook | dbn-navigational | team-draft interleaving | 133,202 | 0.779 | 1000 |
-| anserini-bm25-default vs hs-bm25-textbook | dbn-navigational | team-draft interleaving | 102,830 | 0.664 | 1000 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | pbm-informational | team-draft interleaving | 601 | 0.793 | 1000 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | pbm-informational | A/B MRR of first click | 2,018 | 0.809 | 1000 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | dbn-navigational | team-draft interleaving | 267 | 0.786 | 1000 |
-| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | dbn-navigational | A/B MRR of first click | 628 | 0.788 | 1000 |
+| bm25-bge-rerank100 vs rrf-bm25-bge100 | pbm-informational | team-draft interleaving | 6,912 | 0.788 | 1000 |
+| bm25-bge-rerank100 vs rrf-bm25-bge100 | pbm-informational | A/B clicks per impression | 9,866 | 0.821 | 1000 |
+| bm25-bge-rerank100 vs rrf-bm25-bge100 | dbn-navigational | team-draft interleaving | 6,049 | 0.826 | 1000 |
+| bm25-bge-rerank100 vs rrf-bm25-bge100 | dbn-navigational | A/B MRR of first click | 13,237 | 0.808 | 1000 |
+| rrf-bm25-bge100 vs anserini-bm25-default | pbm-informational | team-draft interleaving | 719 | 0.791 | 1000 |
+| rrf-bm25-bge100 vs anserini-bm25-default | pbm-informational | A/B MRR of first click | 913 | 0.793 | 1000 |
+| rrf-bm25-bge100 vs anserini-bm25-default | dbn-navigational | team-draft interleaving | 151 | 0.808 | 1000 |
+| rrf-bm25-bge100 vs anserini-bm25-default | dbn-navigational | A/B MRR of first click | 313 | 0.813 | 1000 |
+| bm25-bge-rerank100 vs hs-bm25-textbook | pbm-informational | team-draft interleaving | 609 | 0.775 | 1000 |
+| bm25-bge-rerank100 vs hs-bm25-textbook | pbm-informational | A/B MRR of first click | 646 | 0.800 | 1000 |
+| bm25-bge-rerank100 vs hs-bm25-textbook | dbn-navigational | team-draft interleaving | 164 | 0.823 | 1000 |
+| bm25-bge-rerank100 vs hs-bm25-textbook | dbn-navigational | A/B MRR of first click | 214 | 0.785 | 1000 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | pbm-informational | team-draft interleaving | 601 | 0.802 | 1000 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | pbm-informational | A/B MRR of first click | 2,018 | 0.824 | 1000 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | dbn-navigational | team-draft interleaving | 267 | 0.782 | 1000 |
+| synthetic-oracle-sigma1.0 vs synthetic-oracle-sigma1.25 | dbn-navigational | A/B MRR of first click | 628 | 0.799 | 1000 |

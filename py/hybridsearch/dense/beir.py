@@ -51,9 +51,10 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--datasets", nargs="+", default=["scifact", "nfcorpus", "fiqa"])
     ap.add_argument("--k", type=int, default=1000)
+    ap.add_argument("--threads", type=int, default=8)
     args = ap.parse_args(argv)
-    torch.set_num_threads(4)
-    faiss.omp_set_num_threads(4)
+    torch.set_num_threads(args.threads)
+    faiss.omp_set_num_threads(args.threads)
     stats = {}
     acquire_lock()
     try:

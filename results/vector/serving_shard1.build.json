@@ -1,0 +1,8 @@
+{
+  "n": 250000, "dim": 768, "R": 64, "L_build": 100, "alpha": 1.200, "two_pass": true,
+  "seed": 20260923, "threads": 8, "pq_M": 96, "pq_train_sample": 100000, "pq_iters": 15,
+  "partitions": 5, "overlap": 2, "build_ram_gb": 0.400, "prebuilt_graph": "",
+  "max_partition_size": 156013, "sum_partition_sizes": 500000, "merged_nodes_pruned": 204377,
+  "avg_degree": 60.802, "index_bytes": 1024004096, "peak_rss_bytes": 1236467712,
+  "seconds": {"total": 849.46, "pq": 28.01, "pq_train": 20.70, "partition": 0.52, "graphs": 798.91, "merge_write": 22.01}
+}

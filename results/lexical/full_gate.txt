@@ -1,0 +1,12 @@
+Full-index differential gate (8,841,823 passages), all 6,980 MS MARCO dev queries, k=1000, Lucene BM25 k1=0.9 b=0.4.
+Reference: exhaustive TAAT run data/runs/lexical/hs-bm25-lucene.dev.raw (qid, docid, rank, score, float bits).
+Each line: hs_lex_search --algo A --codec C --k 1000 --raw-out X ; cmp X reference   (byte-identical = ids AND float bits AND order)
+docs_scored/q and postings_decoded/q are at k=1000 (exhaustive: 951,853 / 1,053,119).
+
+bmw/bp128       IDENTICAL   docs_scored/q=45,723   postings_decoded/q=996,025
+bmw/vbyte       IDENTICAL   docs_scored/q=45,723   postings_decoded/q=996,025
+maxscore/bp128  IDENTICAL   (counters not captured in that session's log)
+maxscore/vbyte  IDENTICAL   docs_scored/q=102,278  postings_decoded/q=894,518
+wand/bp128      IDENTICAL   docs_scored/q=80,922   postings_decoded/q=1,023,541
+wand/vbyte      IDENTICAL   docs_scored/q=80,922   postings_decoded/q=1,023,541
+daat is covered on the 1M index for all 6,980 queries (ctest RealData, HS_LEX_REAL_LIMIT=0) and in the ctest gates.

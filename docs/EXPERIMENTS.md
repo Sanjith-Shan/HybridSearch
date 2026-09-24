@@ -110,7 +110,7 @@ Trade-offs:
   click rates between two different populations of queries and users, and the variance
   from those differences dominates. That is the published reason interleaving needs far
   fewer impressions (Chapelle et al. 2012 report 1 to 2 orders of magnitude on Bing and
-  Yahoo! traffic). Section 7 measures how much in simulation.
+  Yahoo! traffic). Section 8 measures how much in simulation.
 * **What it can answer.** Interleaving answers "which ranking do users prefer", a
   pairwise preference. It cannot measure absolute effects (did abandonment go down 2%?),
   cannot test changes outside the result list (snippets, latency, UI), and its outcome is
@@ -173,3 +173,78 @@ examined rank r (Joachims, Swaminathan & Schnabel, WSDM 2017).
   bound (perfect reordering of the 20 candidates).
 * Also: propensity misestimation (IPS with η_r = (1/r)^p for p = 0 … 2 when the truth is
   p = 1) and weight clipping (τ = 1.5 … ∞).
+
+## 8. Results: interleaving vs A/B sensitivity (simulated users)
+
+Source: `results/m9/sensitivity.md` (all tables), `sensitivity.json` (summary; raw power
+curves in `data/m9/sensitivity_raw.json`), `sensitivity.png`, `sensitivity_n80.png`,
+`aa.json`. Command: `.venv/bin/python scripts/m9_sensitivity.py --pool 2e6 --trials 1000`
+(seed 20260923). **Simulated users** under 9 click models (PBM / Cascade / DBN ×
+perfect / navigational / informational), relevance from TREC DL 2019+2020 graded qrels,
+queries uniform over the 97 DL topics.
+
+**Method.** N80 = total query impressions needed for 80% power at two-sided p < 0.05,
+*in the offline-correct direction* (A/B splits N in half between arms). For each
+(pair, click model) we simulate 2M impressions per arm/method, tabulate the discrete
+per-impression outcome, and run 1,000 multinomial trials at each of 141 log-spaced N
+between 10 and 1e8 (see `clicks/sensitivity.py`). The resampling shortcut is checked
+against fresh click simulation at N80 for 6 pairs × 2 models: direct power 0.775 to 0.826
+(1,000 trials each; target 0.80).
+
+**Rankers.** Real (DL19+DL20 nDCG@10): BM25 top-100 re-ordered by BGE-base similarity
+0.6681; RRF(BM25, that BGE ordering) 0.6161; Anserini BM25 0.4912; HybridSearch's own
+BM25 engine, Lucene-quantised lengths 0.4912 and textbook lengths 0.4906. The two BGE
+rankers only reorder BM25's top 100 (no dense retrieval over the collection existed
+when this ran; the BGE vectors were encoded by M9 code). Synthetic: "noisy oracle"
+rankers (grade + σ·noise, shared noise), 0.4624 to 0.7634, so the gap is controlled.
+
+**Headline (median over 9 click models; ratio = best A/B metric's N80 / team-draft N80):**
+
+| pair | Δ nDCG@10 | TDI N80 | best A/B N80 | ratio (range) |
+|---|---|---|---|---|
+| BGE-rerank vs RRF (real) | +0.052 | 3,600 | 9,866 | 2.4x (1.4–11.6x) |
+| RRF vs BM25 (real) | +0.125 | 151 | 313 | 2.5x (1.3–4.8x) |
+| BGE-rerank vs BM25-textbook (real) | +0.177 | 164 | 214 | 1.6x (1.1–2.9x) |
+| synthetic σ1.0 vs σ1.03 | +0.014 | 8,443 | 164,254 | 16.4x (8.7–154x) |
+| synthetic σ1.0 vs σ1.1 | +0.038 | 1,251 | 17,059 | 10.5x (6.2–103x) |
+| synthetic σ1.0 vs σ1.25 | +0.097 | 229 | 626 | 4.1x (2.4–31x) |
+| synthetic σ1.0 vs σ1.5 | +0.180 | 74 | 180 | 2.7x (2.0–13x) |
+| synthetic σ1.0 vs σ2.0 | +0.301 | 35 | 73 | 2.3x (1.8–4.9x) |
+
+**What this says, honestly.**
+
+* Team-draft interleaving needed fewer impressions than the best A/B metric in all 72
+  (pair, model) cells with a known ordering (ratio 1.06x to 154x). The advantage **grows as the gap shrinks**:
+  about 2x for large gaps, about 10–16x (median) for gaps of 0.01–0.04 nDCG@10, and 100x or
+  more only in the best case (cascade/DBN "perfect" users, who click only relevant results).
+* The published finding (Chapelle et al. 2012: interleaving 1–2 orders of magnitude more
+  sensitive on real Bing/Yahoo! traffic) is reproduced **only for small gaps and only for
+  some user models**. For the real ranker pairs here, whose gaps are large (0.05–0.18),
+  the advantage is 1.1–12x, median about 2x. Real A/B tests are also noisier than this
+  simulation (heterogeneous users, sessions, bots, query mix), which hurts A/B more than
+  interleaving, so these ratios are probably a lower bound on the real one. That last
+  point is an argument, not a measurement.
+* **Balanced interleaving was at least as sensitive as team-draft in all 72 cells, and
+  probabilistic interleaving in 61 of 72** (median best-interleaving/TDI N80 = 0.06–0.88
+  per pair). Team-draft pays for its
+  fairness guarantees with variance: its credit comes from team labels, which are random
+  per impression.
+* **Which A/B metric matters a lot.** Clicks per impression ("CTR") often pointed the
+  *wrong* way: it agreed with offline nDCG in only 19 of 27 real-pair cells and 29 of 45
+  synthetic ones. Under cascade/DBN users a better ranking satisfies users sooner and so
+  produces *fewer* clicks. Clicks@1, MRR of first click and abandonment agreed in 27 of 27
+  and 45 of 45 cells; every interleaving method agreed in all cells.
+* **Pairs with no known ordering.** Anserini BM25 vs HybridSearch's own BM25 (identical top
+  10 on 95 of 97 topics) and Lucene-length vs textbook-length BM25 (offline p = 0.3) are in
+  the tables but are not evidence either way. Online methods still "detect" a difference
+  there at 1e5 to 5e6 impressions, because the rankings differ even though nDCG@10 does not.
+  That is a reminder that an online preference and an offline metric are different
+  quantities.
+
+**A/A calibration** (`aa.json`; Anserini BM25 against itself, 2,000 impressions per trial,
+1,000 fresh-simulation trials per click model): false-positive rate at α = 0.05 is
+0.032–0.067 for team-draft and for all four A/B metrics in all 9 models (binomial 95%
+band for a true 5% is about 0.037–0.064), with one exception: abandonment under
+cascade-informational at 0.002. Under that model almost every page gets a click, so
+abandonment is nearly constant and the normal-approximation test is very conservative.
+The sign test is discrete, so its p-values are conservative rather than uniform.

@@ -112,6 +112,8 @@ def hardware() -> dict:
         "mem_bytes": int(sh(["sysctl", "-n", "hw.memsize"]) or 0),
         "os": f"{platform.system()} {platform.release()} ({platform.mac_ver()[0]})",
         "torch": torch.__version__,
+        "load_avg_1_5_15": [round(x, 2) for x in os.getloadavg()],
+        "timing_label": "dev-signal-only (shared machine, other projects running concurrently)",
     }
 
 

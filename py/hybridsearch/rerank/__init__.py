@@ -1,7 +1,7 @@
-"""M5 reranker. CPU threads are capped (the laptop is shared with other agents)."""
+"""M5 reranker. CPU threads are capped at HS_MAX_THREADS (default 8)."""
 import os as _os
 
-MAX_CPU_THREADS = int(_os.environ.get("HS_MAX_THREADS", "4"))
+MAX_CPU_THREADS = int(_os.environ.get("HS_MAX_THREADS") or _os.environ.get("OMP_NUM_THREADS") or "8")
 for _v in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS",
            "RAYON_NUM_THREADS"):
     _os.environ.setdefault(_v, str(MAX_CPU_THREADS))

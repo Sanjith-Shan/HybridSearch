@@ -34,7 +34,7 @@ Output: ``data/rerank/mined/<split>.jsonl``: one record per query
 ``<split>.stats.json``.
 
     python -m hybridsearch.rerank.mine positives   # encode train50k positives (ORT CPU)
-    python -m hybridsearch.rerank.mine dense-runs  # exact FAISS top-k over 1M for every split
+    python -m hybridsearch.rerank.mine dense-runs  # exact dense top-k over 1M for every split
     python -m hybridsearch.rerank.mine mine        # write the jsonl
 """
 from __future__ import annotations
@@ -83,30 +83,40 @@ def load_query_vectors(split: str) -> tuple[list[str], np.ndarray]:
     return qids, vecs
 
 
-def exact_topk(xb: np.ndarray, queries: np.ndarray, k: int, batch: int = 256):
-    """Exact inner-product top-k by BLAS matmul + argpartition. Returns (scores, row ids),
-    sorted by score desc, ties by lower row id. (FAISS is not used in this module: its
-    OpenMP runtime aborts alongside torch's, see docs/BUG_LOG.md.)"""
-    k = min(k, xb.shape[0])
-    S = np.empty((queries.shape[0], k), np.float32)
-    I = np.empty((queries.shape[0], k), np.int64)
-    for i in range(0, queries.shape[0], batch):
-        sc = np.asarray(queries[i:i + batch], np.float32) @ xb.T
-        part = np.argpartition(-sc, k - 1, axis=1)[:, :k]
-        for j in range(sc.shape[0]):
-            cand = part[j]
-            order = np.lexsort((cand, -sc[j, cand]))
-            I[i + j] = cand[order]
-            S[i + j] = sc[j, I[i + j]]
+def exact_topk(xb: np.ndarray, queries: np.ndarray, k: int, batch: int = 1024,
+               chunk: int = 100_000):
+    """Exact inner-product top-k by BLAS matmul, streaming ``xb`` (may be a memmap) in row
+    chunks and keeping a running top-k per query, so resident memory is ~one chunk plus
+    batch x chunk scores, not the whole matrix. Returns (scores, row ids) sorted by score desc,
+    ties by lower row id. (No FAISS here: its OpenMP runtime aborts alongside torch's; see
+    docs/BUG_LOG.md.)"""
+    n = xb.shape[0]
+    k = min(k, n)
+    nq = queries.shape[0]
+    S = np.full((nq, k), -np.inf, np.float32)
+    I = np.full((nq, k), np.iinfo(np.int64).max, np.int64)
+    for c0 in range(0, n, chunk):
+        block = np.ascontiguousarray(xb[c0:c0 + chunk], np.float32)
+        for i in range(0, nq, batch):
+            sc = np.asarray(queries[i:i + batch], np.float32) @ block.T
+            kk = min(k, sc.shape[1])
+            part = np.argpartition(-sc, kk - 1, axis=1)[:, :kk]
+            cs = np.take_along_axis(sc, part, 1)
+            allS = np.concatenate([S[i:i + batch], cs], 1)
+            allI = np.concatenate([I[i:i + batch], part + c0], 1)
+            order = np.lexsort((allI, -allS), axis=1)[:, :k]
+            S[i:i + batch] = np.take_along_axis(allS, order, 1)
+            I[i:i + batch] = np.take_along_axis(allI, order, 1)
     return S, I
 
 
 def load_passage_matrix() -> tuple[np.ndarray, np.ndarray]:
+    """(memmap of passages.fbin, docids). Not loaded into RAM; exact_topk streams it."""
     passages_path = EMB / "passages.fbin"
     if not passages_path.exists():
         raise FileNotFoundError(f"{passages_path} not ready (dense encoding still running?)")
     docids = read_u64bin(DATA / "subset/1m/docids.u64bin")
-    xb = read_fbin(passages_path, mmap=False)
+    xb = read_fbin(passages_path, mmap=True)
     if xb.shape[0] != docids.shape[0]:
         raise ValueError("passages.fbin rows != docids")
     return xb, docids
@@ -136,7 +146,7 @@ def dense_runs(splits: list[str], k: int) -> None:
 
 # ------------------------------------------------------------------ positives
 def encode_positives(split: str = "train50k", batch: int = 32, threads: int | None = None,
-                     backend: str = "mps") -> Path:
+                     backend: str = "mps", only_runs: str | None = None) -> Path:
     """Encode every judged passage of ``split`` with BGE-base (no prefix, max 512, CLS, L2).
     ``backend="mps"`` uses the dense agent's torch Encoder under the data/locks/mps mutex;
     ``"ort"`` uses the exported ONNX encoder on CPU (identical vectors to ~1e-6, far slower on
@@ -145,7 +155,15 @@ def encode_positives(split: str = "train50k", batch: int = 32, threads: int | No
 
     _, qrels_path = SPLITS[split]
     qrels = read_qrels(qrels_path)
+    if only_runs:  # only the queries the BM25 run(s) cover (the ones mining will use)
+        covered = run_qids([REPO_ROOT / p for p in only_runs.split(",")])
+        qrels = {q: d for q, d in qrels.items() if q in covered}
     pids = sorted({int(d) for docs in qrels.values() for d, g in docs.items() if g > 0})
+    out = DATA / f"rerank/positives.{split}.fbin"
+    have = Path(f"{out}.pids.txt")
+    if have.exists() and set(map(int, have.read_text().split())) >= set(pids):
+        print(f"{out} already covers these {len(pids)} positives")
+        return out
     text = load_passages(set(pids))
     texts = [text[str(p)] for p in pids]
     t = time.time()
@@ -169,7 +187,6 @@ def encode_positives(split: str = "train50k", batch: int = 32, threads: int | No
         with MPSLock(backend, f"rerank-mine positives {split}", wait=True):
             t = time.time()
             vecs = Encoder(backend).encode_passages(texts)
-    out = DATA / f"rerank/positives.{split}.fbin"
     out.parent.mkdir(parents=True, exist_ok=True)
     write_fbin(out, vecs)
     Path(f"{out}.pids.txt").write_text("\n".join(map(str, pids)) + "\n")
@@ -198,6 +215,19 @@ def random_pool(rng: np.random.Generator, exclude: set[str], n: int) -> list[str
         if p not in seen:
             seen.add(p)
             out.append(p)
+    return out
+
+
+def run_qids(run_paths: list[Path]) -> set[str]:
+    out: set[str] = set()
+    for p in run_paths:
+        last = None
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                q = line[:line.index(" ")]
+                if q != last:
+                    out.add(q)
+                    last = q
     return out
 
 
@@ -239,6 +269,13 @@ def mine(cfg: MineConfig) -> Path:
     pos_vecs = read_fbin(pos_path, mmap=False)
     pos_row = {p: i for i, p in enumerate(Path(f"{pos_path}.pids.txt").read_text().split())}
 
+    # dense search only for queries the BM25 run(s) cover (all strategies train on those)
+    covered = run_qids([REPO_ROOT / p for p in cfg.bm25_run.split(",")])
+    keep_rows = [i for i, q in enumerate(qids) if q in covered]
+    skipped_no_run = len(qids) - len(keep_rows)
+    qids = [qids[i] for i in keep_rows]
+    qvecs = qvecs[keep_rows]
+    qrow = {q: i for i, q in enumerate(qids)}
     t = time.time()
     dS, dP = exact_dense_search(qvecs, cfg.dense_depth)
     print(f"dense search {len(qids)} x 1M in {time.time() - t:.0f}s", flush=True)
@@ -308,6 +345,7 @@ def mine(cfg: MineConfig) -> Path:
             f.write(json.dumps({"qid": qid, "pos": pos, "bm25": bm25_pool, "dense": dense_pool,
                                 "random": rnd}) + "\n")
     tmp.replace(out)
+    stats["skipped_no_bm25_run"] = skipped_no_run
     stats["seconds"] = round(time.time() - t, 1)
     stats["config"] = asdict(cfg)
     Path(f"{MINED / cfg.split}.stats.json").write_text(json.dumps(stats, indent=2) + "\n")
@@ -324,10 +362,13 @@ def main() -> None:
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--pool-depth", type=int, default=50)
     ap.add_argument("--bm25-run", default=MineConfig.bm25_run, help="comma-separated run files")
+    ap.add_argument("--only-covered", action="store_true",
+                    help="positives: encode only queries covered by --bm25-run")
     ap.add_argument("--backend", default="mps", choices=["mps", "cuda", "cpu", "ort"])
     args = ap.parse_args()
     if args.cmd == "positives":
-        encode_positives(args.split, threads=args.threads, backend=args.backend)
+        encode_positives(args.split, threads=args.threads, backend=args.backend,
+                         only_runs=args.bm25_run if args.only_covered else None)
     elif args.cmd == "dense-runs":
         dense_runs(args.splits, args.k)
     else:

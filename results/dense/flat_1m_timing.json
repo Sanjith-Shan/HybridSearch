@@ -1,0 +1,24 @@
+{
+  "note": "exact IndexFlatIP, blocked; dev-signal-only timing",
+  "block": 100000,
+  "threads": 8,
+  "k": 1000,
+  "splits": {
+    "dev": {
+      "queries": 6980,
+      "seconds": 118.4
+    },
+    "dl19": {
+      "queries": 43,
+      "seconds": 20.3
+    },
+    "dl20": {
+      "queries": 54,
+      "seconds": 20.3
+    },
+    "train_tune": {
+      "queries": 2000,
+      "seconds": 61.4
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "index": "data/indexes/lexical/full",
+  "num_postings": 266247718,
+  "num_terms": 2660824,
+  "min_df": 0,
+  "reps": 5,
+  "results": [
+    {"codec": "vbyte", "postings": 266247718, "postings_in_full_blocks": 254197760, "bytes": 628986128, "bits_per_posting": 18.8993, "median_seconds": 4.97144, "min_seconds": 3.30996, "max_seconds": 6.1743, "ns_per_posting": 18.6722, "million_postings_per_second": 53.5555},
+    {"codec": "bp128-neon", "postings": 266247718, "postings_in_full_blocks": 254197760, "bytes": 451022817, "bits_per_posting": 13.552, "median_seconds": 2.48812, "min_seconds": 1.94766, "max_seconds": 4.30384, "ns_per_posting": 9.34514, "million_postings_per_second": 107.008},
+    {"codec": "bp128-scalar", "postings": 266247718, "postings_in_full_blocks": 254197760, "bytes": 451022817, "bits_per_posting": 13.552, "median_seconds": 1.90275, "min_seconds": 1.65174, "max_seconds": 2.19953, "ns_per_posting": 7.14655, "million_postings_per_second": 139.928}
+  ]
+}

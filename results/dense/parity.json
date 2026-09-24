@@ -4,7 +4,7 @@
   "ours": "hybridsearch.dense.encode (transformers AutoModel, CLS, L2, MPS fp32, length-sorted batches)",
   "n_passages": 200,
   "seed": 20260923,
-  "source_file": "passages.fbin.partial",
+  "source_file": "passages.fbin",
   "passage_cos_min": 0.9999998807907104,
   "passage_cos_mean": 1.0,
   "n_queries": 200,

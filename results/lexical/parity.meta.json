@@ -1,0 +1,12 @@
+{
+  "kind": "correctness (no timings)",
+  "cpu": "Apple M3 Pro", "os": "Darwin 25.5.0 arm64",
+  "git_sha": "a7a0714ad77fdca310885005dcc1d89d5658a6c4+dirty",
+  "commands": [
+    "engine/build-lex/hs_index_build --input data/raw/msmarco/collection.tsv --out data/indexes/lexical/full --threads 3 --mem-mb 1536",
+    "engine/build-lex/hs_lex_search --index data/indexes/lexical/full --queries <dev|dl19|dl20 queries> --out data/runs/lexical/hs-bm25-<model>.<set>.trec --raw-out data/runs/lexical/hs-bm25-<model>.<set>.raw --algo exhaustive --model <lucene|textbook> --k 1000 --threads 3",
+    "python -m hybridsearch.eval <run> <qrels> --metrics RR@10 R@1000 | nDCG@10 'R(rel=2)@1000' --json results/lexical/eval_<model>.<set>.json",
+    "PYTHONPATH=py python -m hybridsearch.lexical.parity --lucene <raw> --textbook <raw> --anserini data/runs/reference/anserini-bm25-default.<set>.trec --qrels <qrels> --queries <queries> --ours-terms ours.terms.tsv --anserini-terms anserini_idx.terms.tsv --ours-index data/indexes/lexical/full --anserini-norms anserini_idx.norms.bin --out-json results/lexical/parity_<set>.json",
+    "PYTHONPATH=py python -m hybridsearch.lexical.score_agreement <lucene raw sorted by qid> <textbook raw sorted> <anserini run sorted> results/lexical/score_agreement_dev.json"
+  ]
+}

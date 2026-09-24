@@ -30,8 +30,9 @@ def machine_meta(**extra) -> dict:
         "date": _dt.datetime.now().astimezone().isoformat(timespec="seconds"),
         "git_sha": _sh(["git", "rev-parse", "HEAD"]),
         "git_dirty": bool(_sh(["git", "status", "--porcelain"])),
+        "load_avg_1_5_15": [round(x, 2) for x in os.getloadavg()],
         "pinned": False,
-        "timing_label": "dev-signal-only (macOS, shared & overloaded machine, threads not pinned)",
+        "timing_label": "dev-signal-only (macOS, shared machine with other projects running concurrently, threads not pinned)",
     }
     meta.update(extra)
     return meta

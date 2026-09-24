@@ -40,8 +40,8 @@ for i in $(seq 0 $((nshards - 1))); do
   b=$(( i * nvec / nshards )); e=$(( (i + 1) * nvec / nshards ))
   out="data/indexes/vector/1m-4shards/shard$i"
   [ -f "$out/disk.index" ] && [ -f "$out/build.json" ] && continue
-  HS_THREADS=4 "$vbin/hs_vec_disk_build" --base "$emb/passages.fbin" --row-begin "$b" --max-n $(( e - b )) \
+  HS_THREADS="${VEC_THREADS:-4}" "$vbin/hs_vec_disk_build" --base "$emb/passages.fbin" --row-begin "$b" --max-n $(( e - b )) \
     --docids data/subset/1m/docids.u64bin --out "$out" --R 64 --L 100 --alpha 1.2 \
-    --pq-M 96 --pq-sample 100000 --ram-gb 0.4 --threads 4 --min-free-gb 8
+    --pq-M 96 --pq-sample 100000 --ram-gb 0.4 --threads "${VEC_THREADS:-4}" --min-free-gb 6
   mkdir -p results/vector && cp "$out/build.json" "results/vector/serving_shard$i.build.json"
 done

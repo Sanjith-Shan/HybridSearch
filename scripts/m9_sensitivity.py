@@ -18,7 +18,7 @@ from __future__ import annotations
 import os
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
-    os.environ.setdefault(_v, "1")  # shared laptop: run via scripts/bg.sh, 1 thread
+    os.environ.setdefault(_v, "4")  # shared laptop: cap BLAS threads
 
 import argparse
 import itertools
@@ -244,15 +244,21 @@ def main():
     # -------- A/A: fresh simulation per trial (no pool), same ranker on both sides
     aa_ranker = next((n for n in runs if "bm25" in n and not n.startswith("rrf")), "synthetic-oracle-sigma1.0")
     grades = table.grades(aa_ranker)
-    aa_pair = S.build_pair(table, aa_ranker, aa_ranker, rng, methods=("tdi",))
+    aa_pair = S.build_pair(table, aa_ranker, aa_ranker, sub_rng("aa-pair", aa_ranker), methods=("tdi",))
     aa = {"ranker": aa_ranker, "n_impressions": args.aa_n, "trials": args.aa_trials, "alpha": 0.05, "models": {}}
     for model in models:
-        entry = {}
-        p, _ = S.direct_interleave_pvalues("tdi", aa_pair.entries["tdi"], model, args.aa_n, args.aa_trials, rng)
-        entry["tdi"] = {"fpr": float(np.mean(p < 0.05)), "ks_p_uniform": float(stats.kstest(p, "uniform").pvalue)}
-        abp = S.direct_ab_pvalues(grades, grades, model, args.aa_n, args.aa_trials, rng)
-        for mt, (pp, _) in abp.items():
-            entry["ab:" + mt] = {"fpr": float(np.mean(pp < 0.05)), "ks_p_uniform": float(stats.kstest(pp, "uniform").pvalue)}
+        def run_aa(model=model):
+            r = sub_rng("aa", aa_ranker, model.name)
+            entry = {}
+            p, _ = S.direct_interleave_pvalues("tdi", aa_pair.entries["tdi"], model, args.aa_n, args.aa_trials, r)
+            entry["tdi"] = {"fpr": float(np.mean(p < 0.05)), "ks_p_uniform": float(stats.kstest(p, "uniform").pvalue)}
+            abp = S.direct_ab_pvalues(grades, grades, model, args.aa_n, args.aa_trials, r)
+            for mt, (pp, _) in abp.items():
+                entry["ab:" + mt] = {"fpr": float(np.mean(pp < 0.05)),
+                                     "ks_p_uniform": float(stats.kstest(pp, "uniform").pvalue)}
+            return entry
+        entry = cached(f"aa|{aa_ranker}|{model.name}|{args.aa_n}|{args.aa_trials}|{args.seed}|{table_sig(aa_ranker)}",
+                       run_aa)
         aa["models"][model.name] = entry
         print(f"A/A {model.name}: " + ", ".join(f"{k_} {v['fpr']:.3f}" for k_, v in entry.items()), flush=True)
 
@@ -263,26 +269,35 @@ def main():
         if rec["model"] not in ("dbn-navigational", "pbm-informational"):
             continue
         a, b = rec["a"], rec["b"]
-        if not (a.startswith("synthetic") and b.endswith("1.25")) and a.startswith("synthetic"):
+        if a.startswith("synthetic") and not b.endswith("1.25"):
             continue
+        if rec["offline"]["paired_randomization_p"] >= 0.05:
+            continue  # no known ordering: nothing to validate against
+        vkey = f"val|{a}|{b}|{rec['model']}|{vt}|{args.seed}|{rec['methods']['tdi']['n80']}"
+        vpath = CELLS / (xxhash.xxh64_hexdigest(vkey.encode()) + ".json")
+        if vpath.exists():
+            validation.append(json.loads(vpath.read_text()))
+            continue
+        rng = sub_rng("val", a, b, rec["model"])
         pair = S.build_pair(table, a, b, rng, methods=("tdi",))
         model = make_model(*rec["model"].split("-"))
         a_better = rec["offline"]["delta"] > 0
         v = {"a": a, "b": b, "model": rec["model"], "trials": vt}
         n = rec["methods"]["tdi"]["n80"]
-        if n and n * vt <= 3e8:
+        if n and n * vt <= 5e7:
             p, d = S.direct_interleave_pvalues("tdi", pair.entries["tdi"], model, int(round(n)), vt, rng)
             v["tdi"] = {"n": int(round(n)), "power_direct": float(np.mean((p < 0.05) & (d * (1 if a_better else -1) > 0)))}
         cand = [(k_, x["n80"]) for k_, x in rec["methods"].items() if k_.startswith("ab:") and x["n80"]]
         if cand:
             mt, n = min(cand, key=lambda z: z[1])
-            if n * vt <= 3e8:
+            if n * vt <= 5e7:
                 res = S.direct_ab_pvalues(pair.grades_a, pair.grades_b, model, int(round(n)), vt, rng)
                 p, d = res[mt[3:]]
                 good = 1 if S.abstats.HIGHER_IS_BETTER[mt[3:]] else -1
                 v[mt] = {"n": int(round(n)),
                          "power_direct": float(np.mean((p < 0.05) & (d * good * (1 if a_better else -1) > 0)))}
         validation.append(v)
+        vpath.write_text(json.dumps(v))
         print("validation", v, flush=True)
 
     common = {"seed": args.seed, "pool_impressions_per_arm_or_method": M, "trials_per_grid_point": args.trials,
@@ -394,10 +409,14 @@ def write_markdown(doc, aa):
             L.append(f"| {rec['model']} | " + " | ".join(cells) + f" | {ratio} |")
     L += ["", "## Agreement of the online verdict with offline nDCG@10", "",
           "Share of (pair, click model) cells where the method's large-pool expected effect favours the "
-          "offline-better ranker.", "", "| method | agree | cells |", "|---|---|---|"]
+          "offline-better ranker. Only pairs with a significant offline difference (paired randomization "
+          "p < 0.05) count; real and synthetic pairs are shown separately.", "",
+          "| method | real pairs: agree / cells | synthetic pairs: agree / cells |", "|---|---|---|"]
+    known = [r for r in doc["results"] if r["offline"]["paired_randomization_p"] < 0.05]
     for m in METHODS:
-        cells = [rec["methods"][m]["online_agrees_with_offline"] for rec in doc["results"]]
-        L.append(f"| {METHOD_NAMES[m]} | {sum(cells)} | {len(cells)} |")
+        re_ = [r["methods"][m]["online_agrees_with_offline"] for r in known if not r["a"].startswith("synthetic")]
+        sy = [r["methods"][m]["online_agrees_with_offline"] for r in known if r["a"].startswith("synthetic")]
+        L.append(f"| {METHOD_NAMES[m]} | {sum(re_)} / {len(re_)} | {sum(sy)} / {len(sy)} |")
     L += ["", "## A/A false-positive rate (fresh simulation per trial, no pool)", "",
           f"Ranker `{aa['ranker']}` against itself, N={aa['n_impressions']} impressions per trial, "
           f"{aa['trials']} trials, alpha=0.05. KS = p-value of a Kolmogorov-Smirnov test of p-value uniformity "
@@ -471,6 +490,10 @@ def plot(doc):
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_title(f"{kind} (navigational + informational)", fontsize=10)
+        from matplotlib.ticker import FixedLocator, NullLocator
+        ax.xaxis.set_major_locator(FixedLocator([0.01, 0.02, 0.05, 0.1, 0.2, 0.3]))
+        ax.xaxis.set_minor_locator(NullLocator())
+        ax.set_xticklabels(["0.01", "0.02", "0.05", "0.1", "0.2", "0.3"])
         ax.set_xlabel("|offline delta nDCG@10|")
         ax.grid(alpha=0.25, lw=0.5)
         for s in ("top", "right"):

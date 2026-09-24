@@ -147,6 +147,34 @@ def disk(prefix, path, mrr_path=None):
         save(fig, prefix + ".mrr.png")
 
 
+def shards(prefix, check_path, mrr_path=None):
+    """Merged 4-shard results from hs_vec_shard_check (+ mrr_points json)."""
+    data = [r for r in rows(check_path) if "L" in r]
+    by = defaultdict(list)
+    for r in data:
+        by[f"{r['shards']} shards, W={r['W']} {r['mode']}"].append(r)
+    fig, axes = plt.subplots(1, 2 if mrr_path else 1, figsize=(13 if mrr_path else 7, 4.8), facecolor=SURFACE)
+    axes = axes if mrr_path else [axes]
+    curves(axes[0], by, x="ssd_reads_per_query_all_shards", y="recall")
+    style(axes[0], "Merged recall@10 vs 4 KB reads per query (sum over shards)", "SSD reads / query, all shards",
+          "recall@10 vs global brute force")
+    if mrr_path:
+        m = json.loads(Path(mrr_path).read_text())
+        pts = sorted([r for r in m["runs"] if r.get("operating_point")], key=lambda r: r["operating_point"]["L"])
+        xs = [r["operating_point"]["recall"] for r in pts]
+        ys = [r["metrics"]["RR@10"] for r in pts]
+        ax = axes[1]
+        ax.plot(xs, ys, color=PALETTE[0], marker="o", markersize=5, linewidth=2)
+        for r, x, y in zip(pts, xs, ys):
+            ax.annotate(f"L={r['operating_point']['L']}", (x, y), textcoords="offset points", xytext=(4, -10),
+                        fontsize=7, color=INK2)
+        ref = m["reference_metrics"]["RR@10"]
+        ax.axhline(ref, color=INK2, linestyle="--", linewidth=1)
+        ax.text(min(xs), ref + 0.0004, f"exact search {ref:.4f}", fontsize=8, color=INK2)
+        style(ax, "MS MARCO dev MRR@10 vs merged recall@10", "recall@10 vs exact (dev queries)", "MRR@10 (dev)")
+    save(fig, prefix + ".png")
+
+
 if __name__ == "__main__":
     cmd, *args = sys.argv[1:]
-    {"build-sweep": build_sweep, "compare": compare, "disk": disk}[cmd](*args)
+    {"build-sweep": build_sweep, "compare": compare, "disk": disk, "shards": shards}[cmd](*args)

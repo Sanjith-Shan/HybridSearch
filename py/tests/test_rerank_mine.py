@@ -61,7 +61,7 @@ def test_mine_end_to_end(world):
     out = M.mine(M.MineConfig(split="t", bm25_run="bm25.trec", pool_depth=10, dense_depth=40))
     recs = [json.loads(line) for line in out.read_text().splitlines()]
     stats = json.loads((tmp / "mined/t.stats.json").read_text())
-    assert len(recs) == 18 and stats["queries"] == 18 and stats["no_bm25_hits"] == 2
+    assert len(recs) == 18 and stats["queries"] == 18 and stats["skipped_no_bm25_run"] == 2
     qrels = {}
     for line in (tmp / "qrels.tsv").read_text().splitlines():
         q, _, p, _ = line.split()
@@ -89,10 +89,11 @@ def test_mine_is_deterministic(world):
 def test_exact_topk_matches_bruteforce():
     rng = np.random.default_rng(1)
     xb = rng.normal(size=(500, 8)).astype(np.float32)
+    xb /= np.linalg.norm(xb, axis=1, keepdims=True)  # unit rows: a row is its own nearest
     q = rng.normal(size=(7, 8)).astype(np.float32)
     xb[10] = xb[20]  # a tie: lower row id must come first
     q[0] = xb[10]
-    S, I = M.exact_topk(xb, q, 25, batch=3)
+    S, I = M.exact_topk(xb, q, 25, batch=3, chunk=64)  # forces running-top-k merges
     full = q @ xb.T
     for j in range(7):
         want = sorted(range(500), key=lambda r: (-full[j, r], r))[:25]

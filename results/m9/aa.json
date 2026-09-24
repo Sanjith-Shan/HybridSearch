@@ -6,200 +6,200 @@
  "models": {
   "pbm-perfect": {
    "tdi": {
-    "fpr": 0.044,
-    "ks_p_uniform": 0.10853982376375437
+    "fpr": 0.055,
+    "ks_p_uniform": 0.2520301503521859
    },
    "ab:ctr": {
-    "fpr": 0.051,
-    "ks_p_uniform": 0.7383213402271416
+    "fpr": 0.047,
+    "ks_p_uniform": 0.15395877924364032
    },
    "ab:clicks_at_1": {
     "fpr": 0.05,
-    "ks_p_uniform": 0.00024885612899094536
+    "ks_p_uniform": 0.06442756602121069
    },
    "ab:abandonment": {
-    "fpr": 0.053,
-    "ks_p_uniform": 0.3487982305964481
+    "fpr": 0.045,
+    "ks_p_uniform": 0.5884458683867433
    },
    "ab:rr_first": {
-    "fpr": 0.047,
-    "ks_p_uniform": 0.027271049503501565
+    "fpr": 0.052,
+    "ks_p_uniform": 0.7481238495152778
    }
   },
   "pbm-navigational": {
    "tdi": {
-    "fpr": 0.05,
-    "ks_p_uniform": 0.04103301389409875
+    "fpr": 0.052,
+    "ks_p_uniform": 0.19349417513649003
    },
    "ab:ctr": {
-    "fpr": 0.051,
-    "ks_p_uniform": 0.3470111571283946
+    "fpr": 0.042,
+    "ks_p_uniform": 0.9548933857132408
    },
    "ab:clicks_at_1": {
-    "fpr": 0.044,
-    "ks_p_uniform": 0.6321138851773586
+    "fpr": 0.055,
+    "ks_p_uniform": 0.5888801710246774
    },
    "ab:abandonment": {
-    "fpr": 0.055,
-    "ks_p_uniform": 0.13286075236472927
+    "fpr": 0.05,
+    "ks_p_uniform": 0.1943282281606199
    },
    "ab:rr_first": {
-    "fpr": 0.043,
-    "ks_p_uniform": 0.8931991589123274
+    "fpr": 0.067,
+    "ks_p_uniform": 0.8926566433250891
    }
   },
   "pbm-informational": {
    "tdi": {
-    "fpr": 0.036,
-    "ks_p_uniform": 0.0001073071474281642
+    "fpr": 0.044,
+    "ks_p_uniform": 0.16848479713743392
    },
    "ab:ctr": {
-    "fpr": 0.066,
-    "ks_p_uniform": 0.5679493816906537
+    "fpr": 0.046,
+    "ks_p_uniform": 0.42563128832966046
    },
    "ab:clicks_at_1": {
-    "fpr": 0.049,
-    "ks_p_uniform": 0.41173009420908757
+    "fpr": 0.064,
+    "ks_p_uniform": 0.3373220140875357
    },
    "ab:abandonment": {
-    "fpr": 0.069,
-    "ks_p_uniform": 0.04100941032384875
+    "fpr": 0.052,
+    "ks_p_uniform": 0.10477892801888944
    },
    "ab:rr_first": {
-    "fpr": 0.062,
-    "ks_p_uniform": 0.8623890769503608
+    "fpr": 0.057,
+    "ks_p_uniform": 0.17231693584870855
    }
   },
   "cascade-perfect": {
    "tdi": {
-    "fpr": 0.041,
-    "ks_p_uniform": 0.030986559296730554
+    "fpr": 0.048,
+    "ks_p_uniform": 0.16363013648513525
    },
    "ab:ctr": {
-    "fpr": 0.054,
-    "ks_p_uniform": 0.6232865843706714
+    "fpr": 0.052,
+    "ks_p_uniform": 0.040574975655622514
    },
    "ab:clicks_at_1": {
-    "fpr": 0.044,
-    "ks_p_uniform": 0.20032819274535474
+    "fpr": 0.047,
+    "ks_p_uniform": 0.32819766474369816
    },
    "ab:abandonment": {
-    "fpr": 0.059,
-    "ks_p_uniform": 0.22887276730399098
+    "fpr": 0.045,
+    "ks_p_uniform": 0.09298528319117427
    },
    "ab:rr_first": {
-    "fpr": 0.041,
-    "ks_p_uniform": 0.6267894952164816
+    "fpr": 0.039,
+    "ks_p_uniform": 0.7404690226479073
    }
   },
   "cascade-navigational": {
    "tdi": {
-    "fpr": 0.036,
-    "ks_p_uniform": 0.01876645344318566
+    "fpr": 0.044,
+    "ks_p_uniform": 0.2520301503521859
    },
    "ab:ctr": {
-    "fpr": 0.051,
-    "ks_p_uniform": 0.1616338737039943
+    "fpr": 0.042,
+    "ks_p_uniform": 0.9290619918282234
    },
    "ab:clicks_at_1": {
-    "fpr": 0.044,
-    "ks_p_uniform": 0.15481816662199366
+    "fpr": 0.045,
+    "ks_p_uniform": 0.5224152287570663
    },
    "ab:abandonment": {
-    "fpr": 0.043,
-    "ks_p_uniform": 0.021008932246530436
+    "fpr": 0.045,
+    "ks_p_uniform": 0.07749281065119629
    },
    "ab:rr_first": {
-    "fpr": 0.047,
-    "ks_p_uniform": 0.718760532543951
+    "fpr": 0.045,
+    "ks_p_uniform": 0.7398548191143544
    }
   },
   "cascade-informational": {
    "tdi": {
-    "fpr": 0.055,
-    "ks_p_uniform": 0.046580946303090065
+    "fpr": 0.045,
+    "ks_p_uniform": 0.13537880032577188
    },
    "ab:ctr": {
-    "fpr": 0.045,
-    "ks_p_uniform": 0.9627787743832695
+    "fpr": 0.043,
+    "ks_p_uniform": 0.7338724926585785
    },
    "ab:clicks_at_1": {
-    "fpr": 0.047,
-    "ks_p_uniform": 0.1088655136050436
+    "fpr": 0.055,
+    "ks_p_uniform": 0.16401515089088592
    },
    "ab:abandonment": {
     "fpr": 0.002,
-    "ks_p_uniform": 2.5243360244882107e-185
+    "ks_p_uniform": 2.9160855375971755e-174
    },
    "ab:rr_first": {
-    "fpr": 0.05,
-    "ks_p_uniform": 0.6955956450870879
+    "fpr": 0.056,
+    "ks_p_uniform": 0.49335009180511713
    }
   },
   "dbn-perfect": {
    "tdi": {
-    "fpr": 0.035,
-    "ks_p_uniform": 0.1848438262457338
+    "fpr": 0.045,
+    "ks_p_uniform": 0.08634586244621612
    },
    "ab:ctr": {
-    "fpr": 0.051,
-    "ks_p_uniform": 0.44655314156759274
+    "fpr": 0.049,
+    "ks_p_uniform": 0.5102281111169416
    },
    "ab:clicks_at_1": {
-    "fpr": 0.056,
-    "ks_p_uniform": 0.36370932312380955
+    "fpr": 0.039,
+    "ks_p_uniform": 0.15027284229791105
    },
    "ab:abandonment": {
-    "fpr": 0.048,
-    "ks_p_uniform": 0.40603079991177726
+    "fpr": 0.053,
+    "ks_p_uniform": 0.024386712564837487
    },
    "ab:rr_first": {
-    "fpr": 0.059,
-    "ks_p_uniform": 0.5353828076253497
+    "fpr": 0.032,
+    "ks_p_uniform": 0.1890738277095375
    }
   },
   "dbn-navigational": {
    "tdi": {
-    "fpr": 0.045,
-    "ks_p_uniform": 0.05014962652815469
+    "fpr": 0.046,
+    "ks_p_uniform": 0.013407258913727928
    },
    "ab:ctr": {
-    "fpr": 0.05,
-    "ks_p_uniform": 0.10372910266732327
+    "fpr": 0.048,
+    "ks_p_uniform": 0.6583371429149276
    },
    "ab:clicks_at_1": {
-    "fpr": 0.046,
-    "ks_p_uniform": 0.18489592060997417
+    "fpr": 0.053,
+    "ks_p_uniform": 0.5090488521249024
    },
    "ab:abandonment": {
-    "fpr": 0.042,
-    "ks_p_uniform": 0.030366693538098732
+    "fpr": 0.05,
+    "ks_p_uniform": 0.0764287481798609
    },
    "ab:rr_first": {
-    "fpr": 0.045,
-    "ks_p_uniform": 0.5095853964262509
+    "fpr": 0.05,
+    "ks_p_uniform": 0.2804313486457273
    }
   },
   "dbn-informational": {
    "tdi": {
-    "fpr": 0.05,
-    "ks_p_uniform": 0.22129596683584052
+    "fpr": 0.046,
+    "ks_p_uniform": 0.02392269783584222
    },
    "ab:ctr": {
-    "fpr": 0.057,
-    "ks_p_uniform": 0.4180444983382794
+    "fpr": 0.056,
+    "ks_p_uniform": 0.5884542881102741
    },
    "ab:clicks_at_1": {
-    "fpr": 0.046,
-    "ks_p_uniform": 0.2664740272535464
+    "fpr": 0.051,
+    "ks_p_uniform": 0.25664283269683585
    },
    "ab:abandonment": {
-    "fpr": 0.051,
-    "ks_p_uniform": 0.09490963023265087
+    "fpr": 0.045,
+    "ks_p_uniform": 0.09298528319117427
    },
    "ab:rr_first": {
-    "fpr": 0.052,
-    "ks_p_uniform": 0.8767939424725687
+    "fpr": 0.051,
+    "ks_p_uniform": 0.6955840428502928
    }
   }
  }

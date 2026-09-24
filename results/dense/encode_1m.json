@@ -1,0 +1,25 @@
+{
+  "n": 1000000,
+  "dim": 768,
+  "chunks": 50,
+  "excluded_chunks": [
+    {
+      "chunk": 35,
+      "seconds": 7256.9,
+      "reason": "process was SIGSTOPped ~2h mid-chunk by the coordinator"
+    }
+  ],
+  "encode_seconds_excluding_paused": 9609.1,
+  "passages_per_sec_mean_excluding_paused": 102.0,
+  "passages_per_sec_median_chunk": 109.8,
+  "passages_per_sec_min_chunk": 42.6,
+  "passages_per_sec_max_chunk": 207.0,
+  "device": "Apple M3 Pro GPU (MPS), fp32",
+  "model": "BAAI/bge-base-en-v1.5",
+  "notes": "Encoded across several process runs, resumed from the last flushed chunk after kills and reboots. Settings by run: chunks 0-35 token budget 32768 / batch 256 / 4 threads; 36-40 budget 8192 / batch 64 / 4 threads / nice 10; 41-49 budget 16384 / batch 128 / 8 threads. The machine was shared with other projects (load avg 20-77) throughout, so this is dev-signal-only.",
+  "norm_check_all_rows": {
+    "min": 0.9999998211860657,
+    "max": 1.0000001192092896,
+    "rows_with_norm_below_0.99": 0
+  }
+}
