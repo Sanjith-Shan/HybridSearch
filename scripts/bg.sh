@@ -15,7 +15,7 @@ if [ "$free_gb" -lt "$min_free_gb" ]; then
   echo "bg.sh: refusing, ${free_gb} GB free < ${min_free_gb} GB reserve" >&2
   exit 3
 fi
-export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}" MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}" MKL_NUM_THREADS="${OMP_NUM_THREADS:-1}" OPENBLAS_NUM_THREADS="${OMP_NUM_THREADS:-1}" \
   VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false \
   DOTNET_PROCESSOR_COUNT="${DOTNET_PROCESSOR_COUNT:-1}"
 if command -v taskpolicy >/dev/null; then
