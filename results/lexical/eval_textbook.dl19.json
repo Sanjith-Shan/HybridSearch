@@ -1,0 +1,14 @@
+{
+  "run": "data/runs/lexical/hs-bm25-textbook.dl19.trec",
+  "qrels": "data/raw/trec-dl/dl19.qrels",
+  "n_queries": 43,
+  "missing_from_run": 0,
+  "metrics": {
+    "nDCG@10": 0.505593,
+    "R(rel=2)@1000": 0.75117
+  },
+  "n_per_metric": {
+    "nDCG@10": 43,
+    "R(rel=2)@1000": 43
+  }
+}

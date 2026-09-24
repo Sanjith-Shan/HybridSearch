@@ -1,0 +1,25 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/rerank/export_reranker-public_parity.json",
+  "date": "2026-09-23T17:20:02-07:00",
+  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/rerank/export.py --model cross-encoder/ms-marco-MiniLM-L6-v2 --out data/models/reranker-public --tag reranker-public --parity-only",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "8cdb8bb",
+  "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "onnx_dir": "data/models/reranker-public"
+}

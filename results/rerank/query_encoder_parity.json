@@ -1,0 +1,13 @@
+{
+  "n_queries": 500,
+  "query_source": "data/raw/msmarco/queries.dev.small.tsv",
+  "reference": "sentence-transformers BAAI/bge-base-en-v1.5 on torch CPU, max_seq_length=64",
+  "candidate": "onnxruntime CPUExecutionProvider, data/models/query-encoder/model.onnx",
+  "cosine_min": 0.9999998807907104,
+  "cosine_mean": 1.0,
+  "max_abs_diff": 6.631016731262207e-07,
+  "norm_min": 0.9999989867210388,
+  "norm_max": 1.0000005960464478,
+  "threshold": 0.9999,
+  "pass": true
+}

@@ -1,0 +1,25 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/rerank/query_encoder_parity.json",
+  "date": "2026-09-23T17:15:13-07:00",
+  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/dense/export_query_encoder.py --parity-only",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "8cdb8bb",
+  "model": "BAAI/bge-base-en-v1.5",
+  "onnx": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/models/query-encoder/model.onnx"
+}

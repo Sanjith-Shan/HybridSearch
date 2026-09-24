@@ -1,0 +1,28 @@
+{
+  "name": "public-ort-fp32.bm25full",
+  "split": "dl19",
+  "model": "data/models/reranker-public/model.onnx",
+  "backend": "ort",
+  "device": "cpu",
+  "candidates": "data/runs/reference/anserini-bm25-default.dl19.trec",
+  "candidate_label": "Anserini BM25 default, full 8.8M",
+  "depth": 100,
+  "n_queries_qrels": 43,
+  "n_queries_with_candidates": 43,
+  "n_pairs": 4300,
+  "metrics": {
+    "nDCG@10": 0.7267,
+    "RR(rel=2)@10": 0.8651,
+    "R(rel=2)@100": 0.491
+  },
+  "first_stage_metrics_at_depth": {
+    "nDCG@10": 0.5058,
+    "RR(rel=2)@10": 0.7024,
+    "R(rel=2)@100": 0.491
+  },
+  "score_seconds": 1529.5,
+  "pairs_per_s": 2.8,
+  "load_seconds": 53.0,
+  "max_length": 512,
+  "throughput_note": "score_seconds/pairs_per_s are NOT a speed result: measured with ORT thread spinning on under load average ~50 on 12 cores (other agents), before the spinning fix. Quality metrics are valid."
+}

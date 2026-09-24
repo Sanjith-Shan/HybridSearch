@@ -1,0 +1,5 @@
+base: mps_base.yaml
+# ablation: strategy=dense-hard (all else from mps_base.yaml)
+strategy: dense-hard
+out_dir: data/rerank/runs/mps_dense
+label: "M3 Pro MPS, dense-hard negatives"

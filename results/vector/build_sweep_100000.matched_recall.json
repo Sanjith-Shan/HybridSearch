@@ -1,0 +1,174 @@
+{
+  "source": "results/vector/build_sweep_100000.search.jsonl",
+  "method": "linear interpolation of cost vs recall@10 between measured L_search points",
+  "targets": {
+    "0.95": {
+      "R64-L100-a1.2": {
+        "hops_per_query": 28.6,
+        "dist_per_query": 1074.5
+      },
+      "R32-L100-a1.2": {
+        "hops_per_query": 62.3,
+        "dist_per_query": 1098.3,
+        "cpu_us_per_query": 528.6
+      },
+      "R16-L100-a1.2": {
+        "hops_per_query": 198.0,
+        "dist_per_query": 1547.3,
+        "cpu_us_per_query": 858.9
+      },
+      "R96-L100-a1.2": {
+        "hops_per_query": 22.1,
+        "dist_per_query": 1085.9,
+        "cpu_us_per_query": 556.9
+      },
+      "R64-L50-a1.2": {
+        "hops_per_query": 36.9,
+        "dist_per_query": 1083.8,
+        "cpu_us_per_query": 503.8
+      },
+      "R64-L200-a1.2": {
+        "hops_per_query": 26.8,
+        "dist_per_query": 1079.7,
+        "cpu_us_per_query": 501.1
+      },
+      "R64-L100-a1.0": {
+        "hops_per_query": 47.5,
+        "dist_per_query": 954.3,
+        "cpu_us_per_query": 394.5
+      },
+      "R64-L100-a1.4": {
+        "hops_per_query": 33.5,
+        "dist_per_query": 1177.3,
+        "cpu_us_per_query": 490.8
+      },
+      "R64-L100-a1.2-1pass": {
+        "hops_per_query": 29.1,
+        "dist_per_query": 1260.0,
+        "cpu_us_per_query": 1374.3
+      }
+    },
+    "0.97": {
+      "R64-L100-a1.2": {
+        "hops_per_query": 44.4,
+        "dist_per_query": 1500.7
+      },
+      "R32-L100-a1.2": {
+        "hops_per_query": 107.2,
+        "dist_per_query": 1694.1,
+        "cpu_us_per_query": 959.2
+      },
+      "R16-L100-a1.2": null,
+      "R96-L100-a1.2": {
+        "hops_per_query": 32.8,
+        "dist_per_query": 1451.6,
+        "cpu_us_per_query": 740.1
+      },
+      "R64-L50-a1.2": {
+        "hops_per_query": 59.9,
+        "dist_per_query": 1576.4,
+        "cpu_us_per_query": 819.6
+      },
+      "R64-L200-a1.2": {
+        "hops_per_query": 42.2,
+        "dist_per_query": 1515.9,
+        "cpu_us_per_query": 732.3
+      },
+      "R64-L100-a1.0": {
+        "hops_per_query": 77.2,
+        "dist_per_query": 1409.3,
+        "cpu_us_per_query": 841.5
+      },
+      "R64-L100-a1.4": {
+        "hops_per_query": 58.0,
+        "dist_per_query": 1768.1,
+        "cpu_us_per_query": 787.1
+      },
+      "R64-L100-a1.2-1pass": {
+        "hops_per_query": 45.9,
+        "dist_per_query": 1814.9,
+        "cpu_us_per_query": 1586.7
+      }
+    },
+    "0.98": {
+      "R64-L100-a1.2": {
+        "hops_per_query": 62.1,
+        "dist_per_query": 1944.6
+      },
+      "R32-L100-a1.2": {
+        "hops_per_query": 160.6,
+        "dist_per_query": 2354.4,
+        "cpu_us_per_query": 1232.2
+      },
+      "R16-L100-a1.2": null,
+      "R96-L100-a1.2": {
+        "hops_per_query": 46.4,
+        "dist_per_query": 1884.1,
+        "cpu_us_per_query": 1057.4
+      },
+      "R64-L50-a1.2": {
+        "hops_per_query": 90.8,
+        "dist_per_query": 2193.8,
+        "cpu_us_per_query": 1206.0
+      },
+      "R64-L200-a1.2": {
+        "hops_per_query": 58.4,
+        "dist_per_query": 1937.6,
+        "cpu_us_per_query": 1058.4
+      },
+      "R64-L100-a1.0": {
+        "hops_per_query": 110.6,
+        "dist_per_query": 1892.4,
+        "cpu_us_per_query": 1093.9
+      },
+      "R64-L100-a1.4": {
+        "hops_per_query": 81.8,
+        "dist_per_query": 2305.1,
+        "cpu_us_per_query": 1059.8
+      },
+      "R64-L100-a1.2-1pass": {
+        "hops_per_query": 62.4,
+        "dist_per_query": 2326.7,
+        "cpu_us_per_query": 2446.2
+      }
+    },
+    "0.99": {
+      "R64-L100-a1.2": {
+        "hops_per_query": 116.0,
+        "dist_per_query": 3158.6
+      },
+      "R32-L100-a1.2": null,
+      "R16-L100-a1.2": null,
+      "R96-L100-a1.2": {
+        "hops_per_query": 79.0,
+        "dist_per_query": 2835.5,
+        "cpu_us_per_query": 1724.6
+      },
+      "R64-L50-a1.2": {
+        "hops_per_query": 171.7,
+        "dist_per_query": 3663.5,
+        "cpu_us_per_query": 1986.6
+      },
+      "R64-L200-a1.2": {
+        "hops_per_query": 107.1,
+        "dist_per_query": 3081.9,
+        "cpu_us_per_query": 1576.1
+      },
+      "R64-L100-a1.0": {
+        "hops_per_query": 188.6,
+        "dist_per_query": 2942.6,
+        "cpu_us_per_query": 1811.2
+      },
+      "R64-L100-a1.4": {
+        "hops_per_query": 159.0,
+        "dist_per_query": 3853.4,
+        "cpu_us_per_query": 3255.5
+      },
+      "R64-L100-a1.2-1pass": {
+        "hops_per_query": 119.1,
+        "dist_per_query": 3921.8,
+        "cpu_us_per_query": 2694.1
+      }
+    }
+  }
+}

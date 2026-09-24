@@ -1,0 +1,5 @@
+base: mps_base.yaml
+# ablation: strategy=mixed (all else from mps_base.yaml)
+strategy: mixed
+out_dir: data/rerank/runs/mps_mixed
+label: "M3 Pro MPS, mixed negatives"

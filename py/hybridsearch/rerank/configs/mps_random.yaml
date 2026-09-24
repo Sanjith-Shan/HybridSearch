@@ -1,0 +1,5 @@
+base: mps_base.yaml
+# ablation: strategy=random (all else from mps_base.yaml)
+strategy: random
+out_dir: data/rerank/runs/mps_random
+label: "M3 Pro MPS, random negatives"

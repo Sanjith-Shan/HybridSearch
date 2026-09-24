@@ -1,0 +1,19 @@
+{
+  "hardware_label": "dev-signal-only",
+  "cpu": "Apple M3 Pro",
+  "logical_cores": 12,
+  "performance_cores": "6",
+  "efficiency_cores": "6",
+  "memory_bytes": "19327352832",
+  "os": "Darwin 25.5.0 arm64",
+  "pinned": false,
+  "pinning_note": "macOS cannot pin threads; laptop timings are a development signal only",
+  "cache_state": "warm (untimed decode pass first)",
+  "load_average_at_end": "48.80 59.25 57.09",
+  "compiler": "Apple LLVM 17.0.0 (clang-1700.6.3.2)",
+  "compile_command": "/usr/bin/c++  -I/Users/sanjithshanmugavel/Documents/HybridSearch/engine/include -O3 -DNDEBUG -std=c++20 -arch arm64 -mcpu=native -Wall -Wextra -o CMakeFiles/bench_lex_codec.dir/bench/bench_lex_codec.cc.o -c /Users/sanjithshanmugavel/Documents/HybridSearch/engine/bench/bench_lex_codec.cc",
+  "git_sha": "c32dba11a82da32ad8a7c8d2dcda3d853b01e2f7+dirty",
+  "command": "engine/build-lex/bench_lex_codec --index data/indexes/lexical/1m --out results/lexical/codec_1m.json --reps 5",
+  "cwd": "/Users/sanjithshanmugavel/Documents/HybridSearch",
+  "written_at": "2026-09-23T18:14:09-0700"
+}

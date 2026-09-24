@@ -1,0 +1,140 @@
+{
+  "all_gates_pass": true,
+  "runs": [
+    {
+      "run": "data/runs/reference/anserini-bm25-default.dev.trec",
+      "qrels": "data/raw/msmarco/qrels.dev.small.tsv",
+      "corpus": "full 8.8M",
+      "queries_in_qrels": 6980,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.184,
+        "nDCG@10": 0.2284,
+        "R@100": 0.6578,
+        "R@1000": 0.8526
+      },
+      "gates": {
+        "RR@10": {
+          "published": 0.184,
+          "ours": 0.184,
+          "pass": true
+        },
+        "R@1000": {
+          "published": 0.8526,
+          "ours": 0.8526,
+          "pass": true
+        }
+      }
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default.dl19.trec",
+      "qrels": "data/raw/trec-dl/dl19.qrels",
+      "corpus": "full 8.8M",
+      "queries_in_qrels": 43,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.5058,
+        "RR(rel=2)@10": 0.7024,
+        "R(rel=2)@100": 0.491,
+        "R(rel=2)@1000": 0.7501
+      },
+      "gates": {
+        "nDCG@10": {
+          "published": 0.5058,
+          "ours": 0.5058,
+          "pass": true
+        }
+      }
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default.dl20.trec",
+      "qrels": "data/raw/trec-dl/dl20.qrels",
+      "corpus": "full 8.8M",
+      "queries_in_qrels": 54,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.4796,
+        "RR(rel=2)@10": 0.6533,
+        "R(rel=2)@100": 0.5599,
+        "R(rel=2)@1000": 0.7863
+      },
+      "gates": {
+        "nDCG@10": {
+          "published": 0.4796,
+          "ours": 0.4796,
+          "pass": true
+        }
+      }
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default.train_tune.trec",
+      "qrels": "data/subset/train_tune/qrels.tsv",
+      "corpus": "full 8.8M",
+      "queries_in_qrels": 2000,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.1741,
+        "nDCG@10": 0.219,
+        "R@100": 0.6522,
+        "R@1000": 0.84
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default-1m.dev.trec",
+      "qrels": "data/subset/1m/qrels.dev.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 6980,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.4209,
+        "nDCG@10": 0.4703,
+        "R@100": 0.8446,
+        "R@1000": 0.9424
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default-1m.dl19.trec",
+      "qrels": "data/subset/1m/qrels.dl19.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 43,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.643,
+        "RR(rel=2)@10": 0.8031,
+        "R(rel=2)@100": 0.6422,
+        "R(rel=2)@1000": 0.8795
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default-1m.dl20.trec",
+      "qrels": "data/subset/1m/qrels.dl20.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 54,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.6525,
+        "RR(rel=2)@10": 0.7758,
+        "R(rel=2)@100": 0.7043,
+        "R(rel=2)@1000": 0.9051
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/anserini-bm25-default-1m.train_tune.trec",
+      "qrels": "data/subset/train_tune/qrels.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 2000,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.4031,
+        "nDCG@10": 0.4574,
+        "R@100": 0.833,
+        "R@1000": 0.9403
+      },
+      "gates": {}
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/m9/sensitivity.md",
+  "date": "2026-09-23T19:26:14-07:00",
+  "command": "python scripts/m9_sensitivity.py --pool 2e6 --trials 1000",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      34.38,
+      28.19,
+      31.55
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "79086ad",
+  "seed": 20260923,
+  "pool_impressions_per_arm_or_method": 2000000,
+  "trials_per_grid_point": 1000,
+  "n_grid": "logspace(1, 8, 141) rounded",
+  "click_models": [
+    {
+      "name": "pbm-perfect",
+      "alpha_by_dl_grade": [
+        0.0,
+        0.2,
+        0.8,
+        1.0
+      ],
+      "sigma_by_dl_grade": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eta": [
+        1.0,
+        0.5,
+        0.3333333333333333,
+        0.25,
+        0.2,
+        0.16666666666666666,
+        0.14285714285714285,
+        0.125,
+        0.1111111111111111,
+        0.1
+      ]
+    },
+    {
+      "name": "pbm-navigational",
+      "alpha_by_dl_grade": [
+        0.05,
+        0.3,
+        0.7,
+        0.95
+      ],
+      "sigma_by_dl_grade": [
+        0.2,
+        0.3,
+        0.7,
+        0.9
+      ],
+      "eta": [
+        1.0,
+        0.5,
+        0.3333333333333333,
+        0.25,
+        0.2,
+        0.16666666666666666,
+        0.14285714285714285,
+        0.125,
+        0.1111111111111111,
+        0.1
+      ]
+    },
+    {
+      "name": "pbm-informational",
+      "alpha_by_dl_grade": [
+        0.4,
+        0.6,
+        0.8,
+        0.9
+      ],
+      "sigma_by_dl_grade": [
+        0.1,
+        0.2,
+        0.4,
+        0.5
+      ],
+      "eta": [
+        1.0,
+        0.5,
+        0.3333333333333333,
+        0.25,
+        0.2,
+        0.16666666666666666,
+        0.14285714285714285,
+        0.125,
+        0.1111111111111111,
+        0.1
+      ]
+    },
+    {
+      "name": "cascade-perfect",
+      "alpha_by_dl_grade": [
+        0.0,
+        0.2,
+        0.8,
+        1.0
+      ],
+      "sigma_by_dl_grade": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gamma": 1.0
+    },
+    {
+      "name": "cascade-navigational",
+      "alpha_by_dl_grade": [
+        0.05,
+        0.3,
+        0.7,
+        0.95
+      ],
+      "sigma_by_dl_grade": [
+        0.2,
+        0.3,
+        0.7,
+        0.9
+      ],
+      "gamma": 1.0
+    },
+    {
+      "name": "cascade-informational",
+      "alpha_by_dl_grade": [
+        0.4,
+        0.6,
+        0.8,
+        0.9
+      ],
+      "sigma_by_dl_grade": [
+        0.1,
+        0.2,
+        0.4,
+        0.5
+      ],
+      "gamma": 1.0
+    },
+    {
+      "name": "dbn-perfect",
+      "alpha_by_dl_grade": [
+        0.0,
+        0.2,
+        0.8,
+        1.0
+      ],
+      "sigma_by_dl_grade": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gamma": 0.9
+    },
+    {
+      "name": "dbn-navigational",
+      "alpha_by_dl_grade": [
+        0.05,
+        0.3,
+        0.7,
+        0.95
+      ],
+      "sigma_by_dl_grade": [
+        0.2,
+        0.3,
+        0.7,
+        0.9
+      ],
+      "gamma": 0.9
+    },
+    {
+      "name": "dbn-informational",
+      "alpha_by_dl_grade": [
+        0.4,
+        0.6,
+        0.8,
+        0.9
+      ],
+      "sigma_by_dl_grade": [
+        0.1,
+        0.2,
+        0.4,
+        0.5
+      ],
+      "gamma": 0.9
+    }
+  ],
+  "qrels": {
+    "dl19": {
+      "path": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/raw/trec-dl/dl19.qrels",
+      "topics": 43,
+      "judgments": 9260
+    },
+    "dl20": {
+      "path": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/raw/trec-dl/dl20.qrels",
+      "topics": 54,
+      "judgments": 11386
+    }
+  },
+  "rankers": {
+    "anserini-bm25-default": "run file anserini-bm25-default.{dl19,dl20}.trec under data/runs/",
+    "anserini-bm25-default-1m": "run file anserini-bm25-default-1m.{dl19,dl20}.trec under data/runs/",
+    "hs-bm25-lucene": "HybridSearch's own BM25 engine run (data/runs/lexical/)",
+    "hs-bm25-textbook": "HybridSearch's own BM25 engine run (data/runs/lexical/)",
+    "synthetic-oracle-sigma1.0": "SYNTHETIC: DL grade + 1.0*N(0,1), shared noise seed 1000",
+    "synthetic-oracle-sigma1.03": "SYNTHETIC: DL grade + 1.03*N(0,1), shared noise seed 1000",
+    "synthetic-oracle-sigma1.1": "SYNTHETIC: DL grade + 1.1*N(0,1), shared noise seed 1000",
+    "synthetic-oracle-sigma1.25": "SYNTHETIC: DL grade + 1.25*N(0,1), shared noise seed 1000",
+    "synthetic-oracle-sigma1.5": "SYNTHETIC: DL grade + 1.5*N(0,1), shared noise seed 1000",
+    "synthetic-oracle-sigma2.0": "SYNTHETIC: DL grade + 2.0*N(0,1), shared noise seed 1000"
+  },
+  "topics": 97,
+  "label": "SIMULATED users; relevance from TREC DL 2019+2020 graded qrels; not user traffic",
+  "runtime_s": 952.3
+}

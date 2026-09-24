@@ -1,0 +1,10 @@
+{
+  "what": "Full-collection index-level comparison: HybridSearch lexical index vs Anserini prebuilt index lucene-inverted.msmarco-v1-passage.20221004.252b5e (read with Lucene 10.5.0 from anserini-2.3.0-fatjar via tools/lucene_ref indexstats)",
+  "collection": "data/raw/msmarco/collection.tsv (8,841,823 passages)",
+  "ours": {"num_docs": 8841823, "docCount": 8841823, "sumTotalTermFreq": 352316036, "sumDocFreq_postings": 266247718, "numTerms": 2660824, "avgdl_float": 39.8465385},
+  "anserini": {"maxDoc": 8841823, "docCount": 8841823, "sumTotalTermFreq": 352316036, "sumDocFreq": 266247718, "numTerms": 2660824},
+  "term_dictionary": {"terms_compared": 2660824, "terms_only_ours": 0, "terms_only_anserini": 0, "df_differs": 0, "cf_differs": 0, "method": "byte-identical 'term\tdf\tcf' dumps (cmp)"},
+  "norms": {"docs_compared": 8841823, "norm_bytes_differ": 0},
+  "analyzer_differential_10k": {"passages": 10000, "sample": "every 884th line of collection.tsv", "tokens": 396841, "passages_with_non_ascii": 2371, "mismatched_passages": 0, "reference": "Lucene 10.5.0 analysis chain of Anserini DefaultEnglishAnalyzer (tools/lucene_ref analyze)"},
+  "analyzer_codepoint_sweep": {"lines": 14456793, "construction": "every code point U+0000..U+10FFFF except surrogates, TAB, LF, CR, in 13 contexts each", "mismatched_lines": 0}
+}

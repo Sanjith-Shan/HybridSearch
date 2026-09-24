@@ -1,0 +1,53 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/m9/ltr_bm25only.md",
+  "date": "2026-09-23T18:00:34-07:00",
+  "command": "python scripts/m9_ltr.py --tag _bm25only",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      58.03,
+      46.55,
+      46.26
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "c32dba1",
+  "label": "simulated users (click model pbm-navigational, eta_r=(1/r)^1.0, relevance from MS MARCO train labels (train) / TREC DL 2019+2020 graded qrels (eval))",
+  "seed": 20260923,
+  "seeds": 5,
+  "provenance": {
+    "bm25_train": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/runs/reference/anserini-bm25-default.train_tune.trec",
+    "bm25_eval": [
+      "/Users/sanjithshanmugavel/Documents/HybridSearch/data/runs/reference/anserini-bm25-default.dl19.trec",
+      "/Users/sanjithshanmugavel/Documents/HybridSearch/data/runs/reference/anserini-bm25-default.dl20.trec"
+    ],
+    "dense": false,
+    "world": "full collection, BM25-only features (dense runs not available)",
+    "qrels_eval": {
+      "dl19": {
+        "path": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/raw/trec-dl/dl19.qrels",
+        "topics": 43,
+        "judgments": 9260
+      },
+      "dl20": {
+        "path": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/raw/trec-dl/dl20.qrels",
+        "topics": 54,
+        "judgments": 11386
+      }
+    },
+    "train_label_map": "MS MARCO label 1 -> DL grade 2; unjudged -> 0"
+  }
+}

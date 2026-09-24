@@ -1,0 +1,19 @@
+{
+  "hardware_label": "dev-signal-only",
+  "cpu": "Apple M3 Pro",
+  "logical_cores": 12,
+  "performance_cores": "6",
+  "efficiency_cores": "6",
+  "memory_bytes": "19327352832",
+  "os": "Darwin 25.5.0 arm64",
+  "pinned": false,
+  "pinning_note": "macOS cannot pin threads; laptop timings are a development signal only",
+  "cache_state": "warm (1+ untimed pass over all queries first)",
+  "load_average_at_end": "28.36 30.05 31.21",
+  "compiler": "Apple LLVM 17.0.0 (clang-1700.6.3.2)",
+  "compile_command": "/usr/bin/c++  -I/Users/sanjithshanmugavel/Documents/HybridSearch/engine/include -O3 -DNDEBUG -std=c++20 -arch arm64 -mcpu=native -Wall -Wextra -o CMakeFiles/hs_lex_bench.dir/tools/hs_lex_bench.cc.o -c /Users/sanjithshanmugavel/Documents/HybridSearch/engine/tools/hs_lex_bench.cc",
+  "git_sha": "79086ad337f647ef9bdba958eec1e12348c75ce6+dirty",
+  "command": "engine/build-lex/hs_lex_bench --index data/indexes/lexical/full --queries data/raw/msmarco/queries.dev.small.tsv --limit 1000 --algos maxscore,bmw --codecs bp128 --warmup 3 --out results/lexical/vs_lucene_ours_b.json --label full-dev1000-k10-vs-lucene-B",
+  "cwd": "/Users/sanjithshanmugavel/Documents/HybridSearch",
+  "written_at": "2026-09-23T19:33:46-0700"
+}

@@ -1,0 +1,206 @@
+{
+ "ranker": "anserini-bm25-default",
+ "n_impressions": 2000,
+ "trials": 1000,
+ "alpha": 0.05,
+ "models": {
+  "pbm-perfect": {
+   "tdi": {
+    "fpr": 0.044,
+    "ks_p_uniform": 0.10853982376375437
+   },
+   "ab:ctr": {
+    "fpr": 0.051,
+    "ks_p_uniform": 0.7383213402271416
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.05,
+    "ks_p_uniform": 0.00024885612899094536
+   },
+   "ab:abandonment": {
+    "fpr": 0.053,
+    "ks_p_uniform": 0.3487982305964481
+   },
+   "ab:rr_first": {
+    "fpr": 0.047,
+    "ks_p_uniform": 0.027271049503501565
+   }
+  },
+  "pbm-navigational": {
+   "tdi": {
+    "fpr": 0.05,
+    "ks_p_uniform": 0.04103301389409875
+   },
+   "ab:ctr": {
+    "fpr": 0.051,
+    "ks_p_uniform": 0.3470111571283946
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.044,
+    "ks_p_uniform": 0.6321138851773586
+   },
+   "ab:abandonment": {
+    "fpr": 0.055,
+    "ks_p_uniform": 0.13286075236472927
+   },
+   "ab:rr_first": {
+    "fpr": 0.043,
+    "ks_p_uniform": 0.8931991589123274
+   }
+  },
+  "pbm-informational": {
+   "tdi": {
+    "fpr": 0.036,
+    "ks_p_uniform": 0.0001073071474281642
+   },
+   "ab:ctr": {
+    "fpr": 0.066,
+    "ks_p_uniform": 0.5679493816906537
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.049,
+    "ks_p_uniform": 0.41173009420908757
+   },
+   "ab:abandonment": {
+    "fpr": 0.069,
+    "ks_p_uniform": 0.04100941032384875
+   },
+   "ab:rr_first": {
+    "fpr": 0.062,
+    "ks_p_uniform": 0.8623890769503608
+   }
+  },
+  "cascade-perfect": {
+   "tdi": {
+    "fpr": 0.041,
+    "ks_p_uniform": 0.030986559296730554
+   },
+   "ab:ctr": {
+    "fpr": 0.054,
+    "ks_p_uniform": 0.6232865843706714
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.044,
+    "ks_p_uniform": 0.20032819274535474
+   },
+   "ab:abandonment": {
+    "fpr": 0.059,
+    "ks_p_uniform": 0.22887276730399098
+   },
+   "ab:rr_first": {
+    "fpr": 0.041,
+    "ks_p_uniform": 0.6267894952164816
+   }
+  },
+  "cascade-navigational": {
+   "tdi": {
+    "fpr": 0.036,
+    "ks_p_uniform": 0.01876645344318566
+   },
+   "ab:ctr": {
+    "fpr": 0.051,
+    "ks_p_uniform": 0.1616338737039943
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.044,
+    "ks_p_uniform": 0.15481816662199366
+   },
+   "ab:abandonment": {
+    "fpr": 0.043,
+    "ks_p_uniform": 0.021008932246530436
+   },
+   "ab:rr_first": {
+    "fpr": 0.047,
+    "ks_p_uniform": 0.718760532543951
+   }
+  },
+  "cascade-informational": {
+   "tdi": {
+    "fpr": 0.055,
+    "ks_p_uniform": 0.046580946303090065
+   },
+   "ab:ctr": {
+    "fpr": 0.045,
+    "ks_p_uniform": 0.9627787743832695
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.047,
+    "ks_p_uniform": 0.1088655136050436
+   },
+   "ab:abandonment": {
+    "fpr": 0.002,
+    "ks_p_uniform": 2.5243360244882107e-185
+   },
+   "ab:rr_first": {
+    "fpr": 0.05,
+    "ks_p_uniform": 0.6955956450870879
+   }
+  },
+  "dbn-perfect": {
+   "tdi": {
+    "fpr": 0.035,
+    "ks_p_uniform": 0.1848438262457338
+   },
+   "ab:ctr": {
+    "fpr": 0.051,
+    "ks_p_uniform": 0.44655314156759274
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.056,
+    "ks_p_uniform": 0.36370932312380955
+   },
+   "ab:abandonment": {
+    "fpr": 0.048,
+    "ks_p_uniform": 0.40603079991177726
+   },
+   "ab:rr_first": {
+    "fpr": 0.059,
+    "ks_p_uniform": 0.5353828076253497
+   }
+  },
+  "dbn-navigational": {
+   "tdi": {
+    "fpr": 0.045,
+    "ks_p_uniform": 0.05014962652815469
+   },
+   "ab:ctr": {
+    "fpr": 0.05,
+    "ks_p_uniform": 0.10372910266732327
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.046,
+    "ks_p_uniform": 0.18489592060997417
+   },
+   "ab:abandonment": {
+    "fpr": 0.042,
+    "ks_p_uniform": 0.030366693538098732
+   },
+   "ab:rr_first": {
+    "fpr": 0.045,
+    "ks_p_uniform": 0.5095853964262509
+   }
+  },
+  "dbn-informational": {
+   "tdi": {
+    "fpr": 0.05,
+    "ks_p_uniform": 0.22129596683584052
+   },
+   "ab:ctr": {
+    "fpr": 0.057,
+    "ks_p_uniform": 0.4180444983382794
+   },
+   "ab:clicks_at_1": {
+    "fpr": 0.046,
+    "ks_p_uniform": 0.2664740272535464
+   },
+   "ab:abandonment": {
+    "fpr": 0.051,
+    "ks_p_uniform": 0.09490963023265087
+   },
+   "ab:rr_first": {
+    "fpr": 0.052,
+    "ks_p_uniform": 0.8767939424725687
+   }
+  }
+ }
+}

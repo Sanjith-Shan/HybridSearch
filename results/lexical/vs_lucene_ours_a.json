@@ -1,0 +1,21 @@
+{
+  "label": "full-dev1000-k10-vs-lucene-A",
+  "index": "data/indexes/lexical/full",
+  "queries": "data/raw/msmarco/queries.dev.small.tsv",
+  "num_queries": 1000,
+  "k": 10,
+  "model": "lucene",
+  "k1": 0.9,
+  "b": 0.4,
+  "warmup_passes": 3,
+  "reps": 1,
+  "threads": 1,
+  "timed_region": "LexicalIndex::search (analysis excluded)",
+  "index_num_docs": 8841823,
+  "index_num_postings": 266247718,
+  "bp128_kernel": "neon",
+  "results": [
+    {"algorithm": "maxscore", "codec": "bp128", "n": 1000, "mean_us": 7252.11, "p50_us": 4534.42, "p90_us": 15349.2, "p95_us": 21915, "p99_us": 43173, "p999_us": 130788, "max_us": 130788, "docs_scored_per_query": 17212.9, "postings_decoded_per_query": 359094, "blocks_decoded_per_query": 2806.79, "hits_per_query": 10},
+    {"algorithm": "bmw", "codec": "bp128", "n": 1000, "mean_us": 23964.6, "p50_us": 13136.5, "p90_us": 57812.6, "p95_us": 86727.8, "p99_us": 159358, "p999_us": 242820, "max_us": 242820, "docs_scored_per_query": 1632.57, "postings_decoded_per_query": 533358, "blocks_decoded_per_query": 4168.24, "hits_per_query": 10}
+  ]
+}

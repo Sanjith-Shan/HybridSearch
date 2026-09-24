@@ -1,0 +1,78 @@
+{
+  "metrics": {
+    "anserini": {
+      "RR@10": 0.18398616227770956,
+      "R@1000": 0.8526146131805158
+    },
+    "lucene": {
+      "RR@10": 0.18398059080365672,
+      "R@1000": 0.8526146131805158
+    },
+    "textbook": {
+      "RR@10": 0.18459260017282939,
+      "R@1000": 0.8526146131805158
+    }
+  },
+  "comparison_vs_anserini": {
+    "lucene": {
+      "queries": 6980,
+      "buckets": {
+        "identical": 6799,
+        "tie_order": 146,
+        "tie_cutoff": 35
+      },
+      "top10_overlap_mean": 9.994985673352435,
+      "top10_overlap_hist": {
+        "9": 35,
+        "10": 6945
+      },
+      "examples": {
+        "tie_order": [
+          "174249",
+          "342285",
+          "1089277",
+          "1088903",
+          "1087690"
+        ],
+        "tie_cutoff": [
+          "1089763",
+          "1089693",
+          "1089156",
+          "1088475",
+          "1088309"
+        ]
+      }
+    },
+    "textbook": {
+      "queries": 6980,
+      "buckets": {
+        "length_quantisation": 3253,
+        "identical": 3727
+      },
+      "top10_overlap_mean": 9.868624641833811,
+      "top10_overlap_hist": {
+        "8": 15,
+        "9": 887,
+        "10": 6078
+      },
+      "examples": {
+        "length_quantisation": [
+          "300674",
+          "125705",
+          "320792",
+          "1090270",
+          "1101279"
+        ]
+      }
+    }
+  },
+  "index_diagnostics": {
+    "terms_ours": 2660824,
+    "terms_anserini": 2660824,
+    "terms_only_ours": 0,
+    "terms_only_anserini": 0,
+    "terms_df_differs": 0,
+    "norms_compared": 8841823,
+    "norms_differ": 0
+  }
+}

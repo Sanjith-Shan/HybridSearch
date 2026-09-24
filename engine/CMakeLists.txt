@@ -48,6 +48,14 @@ target_link_libraries(hs_common PUBLIC Threads::Threads)
 
 add_library(hs_lexical ${HS_LEXICAL_SOURCES} src/lexical/_anchor.cc)
 target_link_libraries(hs_lexical PUBLIC hs_common)
+# Lexical doc store compression: zstd if present (Homebrew on macOS), raw blocks otherwise.
+find_path(HS_ZSTD_INCLUDE zstd.h)
+find_library(HS_ZSTD_LIB zstd)
+if(HS_ZSTD_INCLUDE AND HS_ZSTD_LIB)
+  target_include_directories(hs_lexical PRIVATE ${HS_ZSTD_INCLUDE})
+  target_link_libraries(hs_lexical PUBLIC ${HS_ZSTD_LIB})
+  target_compile_definitions(hs_lexical PRIVATE HS_HAVE_ZSTD=1)
+endif()
 
 add_library(hs_vector ${HS_VECTOR_SOURCES} src/vector/_anchor.cc)
 target_link_libraries(hs_vector PUBLIC hs_common)

@@ -1,0 +1,29 @@
+# Full-scale run for a rented A100 80GB (RunPod, per campaign/specs/RUNPOD_SHARED.md).
+# Same recipe as the MPS ablation winner; larger groups/batch, bf16, many more steps.
+base_model: nreimers/MiniLM-L6-H384-uncased
+strategy: mixed       # override on the command line with the MPS ablation winner
+loss: listwise
+n_neg: 15             # group = 16 pairs
+batch_groups: 64      # 1,024 pairs per optimizer step
+grad_accum: 1
+lr: 5.0e-5
+weight_decay: 0.01
+warmup_frac: 0.05
+max_steps: 5000       # 320k groups = 6.4 passes over the 50k mined queries (the binding limit; see README)
+max_len: 256
+seed: 20260923
+device: cuda
+amp: bf16
+mined: data/rerank/mined/train50k.jsonl
+queries: data/subset/train50k/queries.tsv
+qrels: data/subset/train50k/qrels.tsv
+val_run: data/runs/reference/anserini-bm25-default.train_tune.trec
+val_queries: data/subset/train_tune/queries.tsv
+val_qrels: data/subset/train_tune/qrels.tsv
+val_n: 2000
+val_depth: 50
+eval_every: 1000
+save_every: 1000
+log_every: 100
+out_dir: data/rerank/runs/a100
+label: "A100 SXM4 80GB, RunPod, bf16"

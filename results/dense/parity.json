@@ -1,0 +1,16 @@
+{
+  "model": "BAAI/bge-base-en-v1.5",
+  "reference": "sentence-transformers SentenceTransformer.encode(normalize_embeddings=True), CPU fp32",
+  "ours": "hybridsearch.dense.encode (transformers AutoModel, CLS, L2, MPS fp32, length-sorted batches)",
+  "n_passages": 200,
+  "seed": 20260923,
+  "source_file": "passages.fbin.partial",
+  "passage_cos_min": 0.9999998807907104,
+  "passage_cos_mean": 1.0,
+  "n_queries": 200,
+  "query_set": "dev",
+  "query_cos_min": 0.9999998211860657,
+  "query_cos_mean": 1.0,
+  "threshold": 0.9999,
+  "pass": true
+}

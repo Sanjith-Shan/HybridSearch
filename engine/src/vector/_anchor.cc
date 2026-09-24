@@ -1,2 +1,2 @@
-// Keeps the vector library non-empty before its first real source lands.
+// Kept because engine/CMakeLists.txt lists it explicitly.
 namespace hs { void vector_anchor() {} }

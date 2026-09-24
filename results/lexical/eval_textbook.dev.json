@@ -1,0 +1,14 @@
+{
+  "run": "data/runs/lexical/hs-bm25-textbook.dev.trec",
+  "qrels": "data/raw/msmarco/qrels.dev.small.tsv",
+  "n_queries": 6980,
+  "missing_from_run": 0,
+  "metrics": {
+    "RR@10": 0.18451,
+    "R@1000": 0.852615
+  },
+  "n_per_metric": {
+    "RR@10": 6980,
+    "R@1000": 6980
+  }
+}

@@ -23,6 +23,8 @@ dependencies = [
   "grpcio>=1.66",
   "grpcio-tools>=1.66",
   "pyyaml>=6",
+  "scikit-learn>=1.4",   # M9: isotonic fit of power curves
+  "xxhash>=3",           # M9: experiment assignment hash (mirrors the broker)
 ]
 
 [project.optional-dependencies]

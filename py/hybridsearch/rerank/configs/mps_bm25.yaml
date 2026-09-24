@@ -1,0 +1,5 @@
+base: mps_base.yaml
+# ablation: strategy=bm25-hard (all else from mps_base.yaml)
+strategy: bm25-hard
+out_dir: data/rerank/runs/mps_bm25
+label: "M3 Pro MPS, bm25-hard negatives"

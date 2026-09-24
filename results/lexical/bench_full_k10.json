@@ -1,0 +1,29 @@
+{
+  "label": "full-dev1000-k10",
+  "index": "data/indexes/lexical/full",
+  "queries": "data/raw/msmarco/queries.dev.small.tsv",
+  "num_queries": 1000,
+  "k": 10,
+  "model": "lucene",
+  "k1": 0.9,
+  "b": 0.4,
+  "warmup_passes": 1,
+  "reps": 1,
+  "threads": 1,
+  "timed_region": "LexicalIndex::search (analysis excluded)",
+  "index_num_docs": 8841823,
+  "index_num_postings": 266247718,
+  "bp128_kernel": "neon",
+  "results": [
+    {"algorithm": "exhaustive", "codec": "vbyte", "n": 1000, "mean_us": 154016, "p50_us": 96775.2, "p90_us": 342235, "p95_us": 467552, "p99_us": 859170, "p999_us": 1.65299e+06, "max_us": 1.65299e+06, "docs_scored_per_query": 923730, "postings_decoded_per_query": 1.01067e+06, "blocks_decoded_per_query": 7898.31, "hits_per_query": 10},
+    {"algorithm": "daat", "codec": "vbyte", "n": 1000, "mean_us": 89873.3, "p50_us": 52387.9, "p90_us": 201143, "p95_us": 294142, "p99_us": 554756, "p999_us": 1.47538e+06, "max_us": 1.47538e+06, "docs_scored_per_query": 923730, "postings_decoded_per_query": 1.01067e+06, "blocks_decoded_per_query": 7898.31, "hits_per_query": 10},
+    {"algorithm": "maxscore", "codec": "vbyte", "n": 1000, "mean_us": 36585.1, "p50_us": 20205, "p90_us": 89552.3, "p95_us": 125689, "p99_us": 234470, "p999_us": 390383, "max_us": 390383, "docs_scored_per_query": 17212.9, "postings_decoded_per_query": 359094, "blocks_decoded_per_query": 2806.79, "hits_per_query": 10},
+    {"algorithm": "wand", "codec": "vbyte", "n": 1000, "mean_us": 40403.6, "p50_us": 19072.8, "p90_us": 96501.1, "p95_us": 137147, "p99_us": 294303, "p999_us": 1.60335e+06, "max_us": 1.60335e+06, "docs_scored_per_query": 17666.7, "postings_decoded_per_query": 676347, "blocks_decoded_per_query": 5285.62, "hits_per_query": 10},
+    {"algorithm": "bmw", "codec": "vbyte", "n": 1000, "mean_us": 35020.2, "p50_us": 19234.9, "p90_us": 82664.1, "p95_us": 119872, "p99_us": 242128, "p999_us": 474637, "max_us": 474637, "docs_scored_per_query": 1632.57, "postings_decoded_per_query": 533358, "blocks_decoded_per_query": 4168.24, "hits_per_query": 10},
+    {"algorithm": "exhaustive", "codec": "bp128", "n": 1000, "mean_us": 86057.4, "p50_us": 61018.7, "p90_us": 163542, "p95_us": 221873, "p99_us": 465755, "p999_us": 2.52017e+06, "max_us": 2.52017e+06, "docs_scored_per_query": 923730, "postings_decoded_per_query": 1.01067e+06, "blocks_decoded_per_query": 7898.31, "hits_per_query": 10},
+    {"algorithm": "daat", "codec": "bp128", "n": 1000, "mean_us": 69608.5, "p50_us": 39584.6, "p90_us": 147944, "p95_us": 213226, "p99_us": 509670, "p999_us": 1.1144e+06, "max_us": 1.1144e+06, "docs_scored_per_query": 923730, "postings_decoded_per_query": 1.01067e+06, "blocks_decoded_per_query": 7898.31, "hits_per_query": 10},
+    {"algorithm": "maxscore", "codec": "bp128", "n": 1000, "mean_us": 24348.3, "p50_us": 12245.2, "p90_us": 49999.2, "p95_us": 69542.5, "p99_us": 195795, "p999_us": 1.51979e+06, "max_us": 1.51979e+06, "docs_scored_per_query": 17212.9, "postings_decoded_per_query": 359094, "blocks_decoded_per_query": 2806.79, "hits_per_query": 10},
+    {"algorithm": "wand", "codec": "bp128", "n": 1000, "mean_us": 88252.8, "p50_us": 35597.1, "p90_us": 216942, "p95_us": 329466, "p99_us": 736554, "p999_us": 3.42539e+06, "max_us": 3.42539e+06, "docs_scored_per_query": 17666.7, "postings_decoded_per_query": 676347, "blocks_decoded_per_query": 5285.62, "hits_per_query": 10},
+    {"algorithm": "bmw", "codec": "bp128", "n": 1000, "mean_us": 29695.9, "p50_us": 17111.2, "p90_us": 68237.8, "p95_us": 94794, "p99_us": 164165, "p999_us": 788440, "max_us": 788440, "docs_scored_per_query": 1632.57, "postings_decoded_per_query": 533358, "blocks_decoded_per_query": 4168.24, "hits_per_query": 10}
+  ]
+}

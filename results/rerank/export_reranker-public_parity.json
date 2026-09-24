@@ -1,0 +1,32 @@
+{
+  "fp32": {
+    "n_pairs": 500,
+    "n_queries": 100,
+    "pairs": "dev.small first 100 judged queries x (1 judged passage + 4 random pids, seed 0)",
+    "reference": "transformers cross-encoder/ms-marco-MiniLM-L6-v2 torch CPU fp32 logits",
+    "candidate": "data/models/reranker-public/model.onnx",
+    "max_abs_diff": 7.62939453125e-06,
+    "mean_abs_diff": 1.4694854826302617e-06,
+    "score_range": [
+      -11.495243072509766,
+      11.363977432250977
+    ],
+    "groups_same_order": 100,
+    "tolerance": 0.001,
+    "pass": true
+  },
+  "int8": {
+    "n_pairs": 500,
+    "n_queries": 100,
+    "pairs": "dev.small first 100 judged queries x (1 judged passage + 4 random pids, seed 0)",
+    "reference": "transformers cross-encoder/ms-marco-MiniLM-L6-v2 torch CPU fp32 logits",
+    "candidate": "data/models/reranker-public/model.int8.onnx",
+    "max_abs_diff": 0.627604067325592,
+    "mean_abs_diff": 0.026705561205744743,
+    "score_range": [
+      -11.495243072509766,
+      11.363977432250977
+    ],
+    "groups_same_order": 85
+  }
+}

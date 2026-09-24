@@ -1,0 +1,227 @@
+{
+  "n_events": 319011,
+  "n_pages": 23950,
+  "n_sessions": 12000,
+  "data_quality": {},
+  "simulated": {
+    "dbn-navigational": 23950
+  },
+  "label": "SIMULATED users: dbn-navigational (23950 pages); relevance from TREC DL graded qrels",
+  "experiments": {
+    "sim-aa": {
+      "kind": "aa",
+      "pages": 3952,
+      "variants": {
+        "control": {
+          "pages": 2004,
+          "sessions": 997
+        },
+        "treatment": {
+          "pages": 1948,
+          "sessions": 1006
+        }
+      },
+      "srm": {
+        "counts": [
+          997,
+          1006
+        ],
+        "expected": [
+          1001.5,
+          1001.5
+        ],
+        "chi2": 0.040439340988517224,
+        "p": 0.8406240155635467,
+        "srm": false,
+        "threshold": 0.0005
+      },
+      "control": "control",
+      "treatment": "treatment",
+      "ab": {
+        "n_a": 2004,
+        "n_b": 1948,
+        "metrics": {
+          "ctr": {
+            "a": 1.1022954091816368,
+            "b": 1.0600616016427105,
+            "delta": -0.04223380753892636,
+            "delta_ci95": [
+              -0.08389962887366935,
+              0.0004550703521089487
+            ],
+            "p_welch": 0.05717468665708934,
+            "higher_is_better": true
+          },
+          "clicks_at_1": {
+            "a": 0.5214570858283433,
+            "b": 0.5164271047227926,
+            "delta": -0.0050299811055506405,
+            "delta_ci95": [
+              -0.03559016463991934,
+              0.027180853897953553
+            ],
+            "p_welch": 0.751753660283744,
+            "higher_is_better": true
+          },
+          "abandonment": {
+            "a": 0.13972055888223553,
+            "b": 0.1457905544147844,
+            "delta": 0.006069995532548861,
+            "delta_ci95": [
+              -0.0163480021476554,
+              0.02792910073077663
+            ],
+            "p_welch": 0.5856415475577293,
+            "higher_is_better": false
+          },
+          "rr_first": {
+            "a": 0.6500631673161613,
+            "b": 0.643440769531632,
+            "delta": -0.0066223977845293325,
+            "delta_ci95": [
+              -0.030821118835956795,
+              0.016777216209427924
+            ],
+            "p_welch": 0.5975993824536323,
+            "higher_is_better": true
+          }
+        }
+      }
+    },
+    "sim-ab": {
+      "kind": "ab",
+      "pages": 3983,
+      "variants": {
+        "control": {
+          "pages": 2069,
+          "sessions": 1035
+        },
+        "treatment": {
+          "pages": 1914,
+          "sessions": 986
+        }
+      },
+      "srm": {
+        "counts": [
+          1035,
+          986
+        ],
+        "expected": [
+          1010.5,
+          1010.5
+        ],
+        "chi2": 1.1880257298367145,
+        "p": 0.27572815197213657,
+        "srm": false,
+        "threshold": 0.0005
+      },
+      "control": "control",
+      "treatment": "treatment",
+      "ab": {
+        "n_a": 2069,
+        "n_b": 1914,
+        "metrics": {
+          "ctr": {
+            "a": 1.1053649105848236,
+            "b": 1.132183908045977,
+            "delta": 0.02681899746115346,
+            "delta_ci95": [
+              -0.015164867201708376,
+              0.06566802169458798
+            ],
+            "p_welch": 0.1693523714673969,
+            "higher_is_better": true
+          },
+          "clicks_at_1": {
+            "a": 0.5355244079265346,
+            "b": 0.7695924764890282,
+            "delta": 0.23406806856249363,
+            "delta_ci95": [
+              0.20381564347664918,
+              0.2620231834519929
+            ],
+            "p_welch": 6.807899972980712e-58,
+            "higher_is_better": true
+          },
+          "abandonment": {
+            "a": 0.13919768003866603,
+            "b": 0.03709508881922675,
+            "delta": -0.10210259121943929,
+            "delta_ci95": [
+              -0.11831301549014586,
+              -0.08438779808215317
+            ],
+            "p_welch": 1.922859010606549e-31,
+            "higher_is_better": false
+          },
+          "rr_first": {
+            "a": 0.6581194810774318,
+            "b": 0.8567874973047388,
+            "delta": 0.198668016227307,
+            "delta_ci95": [
+              0.17723078600245237,
+              0.218824451951775
+            ],
+            "p_welch": 1.12561111478161e-76,
+            "higher_is_better": true
+          }
+        }
+      }
+    },
+    "sim-interleave": {
+      "kind": "interleave",
+      "pages": 3800,
+      "interleaving": {
+        "impressions": 3800,
+        "wins_a": 1081,
+        "wins_b": 2140,
+        "ties": 579,
+        "delta_ab": -0.13934210526315788,
+        "delta_ci95": [
+          -0.1530296052631579,
+          -0.12565460526315791
+        ],
+        "p_sign": 5.596569625715032e-79
+      },
+      "team_balance_rank1": {
+        "a_share": 0.5031578947368421,
+        "n": 3800,
+        "p": 0.7090723647514806
+      }
+    }
+  },
+  "not_enrolled": {
+    "pages": 12215,
+    "ctr": 1.0900532132623824,
+    "clicks_at_1": 0.529512893982808,
+    "abandonment": 0.1367171510437986,
+    "rr_first": 0.6563184089299521
+  },
+  "source": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/events_sim/simulated.jsonl",
+  "experiments_config": [
+    {
+      "id": "sim-ab",
+      "kind": "ab",
+      "allocation": 0.5,
+      "salt": "sim-ab-1",
+      "control": "anserini-bm25-default",
+      "treatment": "synthetic-oracle-sigma1.0"
+    },
+    {
+      "id": "sim-aa",
+      "kind": "aa",
+      "allocation": 0.5,
+      "salt": "sim-aa-1",
+      "control": "anserini-bm25-default",
+      "treatment": "anserini-bm25-default"
+    },
+    {
+      "id": "sim-interleave",
+      "kind": "interleave",
+      "allocation": 0.5,
+      "salt": "sim-il-1",
+      "control": "anserini-bm25-default",
+      "treatment": "synthetic-oracle-sigma1.0"
+    }
+  ]
+}

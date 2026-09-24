@@ -1,0 +1,1 @@
+{"engine": "lucene 10.5.0 IndexSearcher.search(q, 10)", "n": 1000, "warmup_passes": 3, "mean_us": 40557.9, "p50_us": 22869.1, "p90_us": 91054.2, "p95_us": 138297.3, "p99_us": 273685.1, "max_us": 603116.6}

@@ -1,0 +1,14 @@
+{
+  "kind": "correctness (no timings)",
+  "hardware_label": "n/a (not a timing result)",
+  "cpu": "Apple M3 Pro",
+  "os": "Darwin 25.5.0 arm64",
+  "git_sha": "c32dba11a82da32ad8a7c8d2dcda3d853b01e2f7+dirty",
+  "commands": [
+    "engine/build-lex/hs_index_build --input data/raw/msmarco/collection.tsv --out data/indexes/lexical/full --threads 3 --mem-mb 1536 --report results/lexical/build_full.json",
+    "engine/build-lex/hs_lex_dump --index data/indexes/lexical/full --terms ours.terms.tsv",
+    "java -cp anserini-2.3.0-fatjar.jar:classes LuceneRef indexstats ~/.cache/pyserini/indexes/manual/lucene-inverted.msmarco-v1-passage.20221004.252b5e anserini_idx",
+    "cmp ours.terms.tsv anserini_idx.terms.tsv; numpy compare of norms.u8 vs anserini_idx.norms.bin by passage id",
+    "awk 'NR%884==1' collection.tsv | head -10000 > p10k.tsv; tools/lucene_ref/run.sh analyze < p10k.tsv vs engine/build-lex/hs_lex_analyze < p10k.tsv (cmp)"
+  ]
+}
