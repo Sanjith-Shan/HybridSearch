@@ -1,0 +1,97 @@
+// A tiny, hand-written stand-in for MS MARCO passages, for UI tests and demos
+// without the real engine. Doc IDs are made up (not real MS MARCO pids).
+
+export interface Passage {
+  docId: number;
+  text: string;
+}
+
+export const CORPUS: Passage[] = [
+  { docId: 7067032, text: 'Lima is the capital and the largest city of Peru. It is located in the valleys of the Chillón, Rímac and Lurín rivers, in the central coastal part of the country, overlooking the Pacific Ocean.' },
+  { docId: 7067033, text: 'Peru is a country in western South America. The seat of government is in Lima, and the historic capital of the Inca Empire was Cusco, high in the Andes.' },
+  { docId: 7067040, text: 'Cusco was the capital of the Inca Empire from the 13th century until the 16th-century Spanish conquest. Today the city is a UNESCO World Heritage Site in Peru.' },
+  { docId: 812, text: 'The capital of Bolivia is a matter of definition: Sucre is the constitutional capital, while La Paz is the seat of government.' },
+  { docId: 4410, text: 'Quito, the capital of Ecuador, sits at 2,850 metres in the Andes and is one of the highest capital cities in the world.' },
+  { docId: 1200, text: 'To hard boil an egg, place it in a pot of cold water, bring the water to a boil, then simmer for 9 to 12 minutes. Cool the egg in ice water before peeling.' },
+  { docId: 1201, text: 'Soft boiled eggs need about 6 minutes in boiling water for a runny yolk. Large eggs straight from the fridge may need an extra minute.' },
+  { docId: 1202, text: 'How long you cook an egg depends on its size and starting temperature. A medium egg reaches a jammy yolk after roughly seven minutes of boiling.' },
+  { docId: 1203, text: 'Poaching is a gentle way to cook eggs: crack each egg into barely simmering water with a splash of vinegar and cook for three to four minutes.' },
+  { docId: 2300, text: 'Symptoms of vitamin D deficiency include fatigue, bone pain, muscle weakness, aches and mood changes such as depression. Severe deficiency causes rickets in children.' },
+  { docId: 2301, text: 'Vitamin D is made in the skin in response to sunlight. People who spend little time outdoors, or who have darker skin, are at higher risk of low levels.' },
+  { docId: 2302, text: 'Low levels of the sunshine vitamin are linked to weak bones, frequent infections and tiredness. A blood test measures 25-hydroxyvitamin D.' },
+  { docId: 2303, text: 'Vitamin C deficiency, known as scurvy, causes bleeding gums, bruising and slow wound healing. It is rare in people who eat fresh fruit.' },
+  { docId: 3100, text: 'Photosynthesis is the process by which green plants use sunlight, water and carbon dioxide to make glucose and release oxygen. It takes place in the chloroplasts.' },
+  { docId: 3101, text: 'Chlorophyll absorbs mostly blue and red light and reflects green, which is why leaves look green. The light reactions of photosynthesis happen in the thylakoid membranes.' },
+  { docId: 3102, text: 'Plants turn light energy into chemical energy stored in sugar. This conversion, which also produces the oxygen we breathe, is the basis of almost every food chain.' },
+  { docId: 3103, text: 'Cellular respiration is roughly the reverse of photosynthesis: cells break glucose down with oxygen to release energy, carbon dioxide and water.' },
+  { docId: 5000, text: 'The mitochondria is often called the powerhouse of the cell because it produces most of the cell’s supply of ATP, the molecule used as a source of chemical energy.' },
+  { docId: 5001, text: 'A black hole is a region of spacetime where gravity is so strong that nothing, not even light, can escape. The boundary is called the event horizon.' },
+  { docId: 5002, text: 'The speed of light in a vacuum is exactly 299,792,458 metres per second. Nothing with mass can travel as fast as light.' },
+  { docId: 5003, text: 'To lose weight safely, aim for a small calorie deficit, eat plenty of protein and vegetables, sleep well and stay active most days of the week.' },
+  { docId: 5004, text: 'Weight loss of one to two pounds a week is considered safe. Crash diets often lead to muscle loss and weight regain.' },
+  { docId: 5005, text: 'A mortgage is a loan used to buy a home. The interest rate, the term and the down payment together decide your monthly payment.' },
+  { docId: 5006, text: 'Compound interest is interest calculated on the initial principal and on the interest accumulated in previous periods.' },
+  { docId: 5007, text: 'São Paulo is the most populous city in Brazil 🇧🇷 and in the Southern Hemisphere. Its name honours Saint Paul; locals are called paulistanos.' },
+  { docId: 5008, text: 'The café culture of Vienna 😀 dates to the 17th century; a naïve visitor may be surprised that a glass of water comes with every coffee.' },
+  { docId: 5009, text: 'Émile Durkheim is regarded as a founder of sociology. His study of suicide 𝒮 used statistics to argue that social facts shape individual behaviour.' },
+  { docId: 5010, text: 'The Amazon River flows through Peru, Colombia and Brazil. By volume of water it is the largest river in the world.' },
+  { docId: 5011, text: 'Machu Picchu is a 15th-century Inca citadel in southern Peru, on a mountain ridge above the Sacred Valley, about 80 kilometres from Cusco.' },
+  { docId: 5012, text: 'Search engines rank documents with scoring functions such as BM25, which rewards query terms that are frequent in a document but rare in the collection.' },
+  { docId: 5013, text: 'Dense retrieval encodes queries and passages as vectors, so a passage can match a query that shares no words with it, only meaning.' },
+  { docId: 5014, text: 'A cross-encoder reads the query and the passage together, which makes it more accurate than a bi-encoder but too slow to run over the whole collection.' },
+  { docId: 5015, text: 'Reciprocal rank fusion combines ranked lists by summing one over sixty plus the rank of each document in every list.' },
+  { docId: 5016, text: 'An autocomplete trie stores the top completions at every node, so suggestions for any prefix come back in microseconds.' },
+  { docId: 5017, text: 'The average cost of a new roof depends on the material; asphalt shingles are the cheapest option, while slate lasts the longest.' },
+  { docId: 5018, text: 'Dogs need vaccinations against rabies, distemper and parvovirus. Puppies get a series of shots starting at six to eight weeks.' },
+  { docId: 5019, text: 'The normal body temperature for adults is about 37 degrees Celsius, or 98.6 degrees Fahrenheit, though it varies through the day.' },
+];
+
+/** A slice of a query log, (query, count), standing in for the MS MARCO train queries. */
+export const QUERY_LOG: Array<[string, number]> = [
+  ['what is the capital of peru', 412],
+  ['what is the capital of bolivia', 188],
+  ['what is the capital of ecuador', 97],
+  ['what is photosynthesis', 640],
+  ['what is the powerhouse of the cell', 233],
+  ['what is compound interest', 301],
+  ['what is a black hole', 276],
+  ['what is dense retrieval', 12],
+  ['what is bm25', 18],
+  ['how long to boil an egg', 520],
+  ['how long to hard boil eggs', 344],
+  ['how long to soft boil an egg', 210],
+  ['how to lose weight', 312],
+  ['how to lose weight fast', 290],
+  ['how to poach an egg', 150],
+  ['how to calculate compound interest', 122],
+  ['how much does a new roof cost', 205],
+  ['how fast is the speed of light', 188],
+  ['symptoms of vitamin d deficiency', 480],
+  ['symptoms of vitamin c deficiency', 140],
+  ['symptoms of dehydration', 260],
+  ['define photosynthesis', 175],
+  ['define mortgage', 90],
+  ['define sociology', 66],
+  ['normal body temperature', 330],
+  ['puppy vaccination schedule', 115],
+  ['machu picchu', 222],
+  ['amazon river length', 101],
+  ['são paulo population', 44],
+  ['café culture vienna', 9],
+];
+
+/** Tiny synonym table so the mock's "dense" retriever finds meaning matches BM25 misses. */
+export const SYNONYMS: Record<string, string[]> = {
+  capital: ['seat', 'government', 'city'],
+  tired: ['fatigue', 'tiredness'],
+  fatigue: ['tired', 'tiredness'],
+  sunshine: ['sunlight', 'vitamin'],
+  plants: ['photosynthesis', 'chlorophyll'],
+  photosynthesis: ['plants', 'light', 'energy', 'sugar', 'oxygen'],
+  egg: ['eggs', 'boil', 'cook'],
+  boil: ['cook', 'simmer'],
+  weight: ['diet', 'calorie'],
+  deficiency: ['low', 'levels', 'weak'],
+  vitamin: ['sunshine', 'sunlight'],
+  peru: ['lima', 'inca', 'cusco'],
+};

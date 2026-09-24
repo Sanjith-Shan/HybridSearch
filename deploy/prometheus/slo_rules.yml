@@ -1,0 +1,42 @@
+# SLO recording and burn-rate alert rules. The SLO itself is written down in
+# docs/SLO.md; these rules are its executable form.
+#
+# Metric names follow the broker's Prometheus exporter. If the broker's names
+# differ, change them here and in docs/SLO.md together.
+groups:
+  - name: hybridsearch-slo
+    rules:
+      - record: hs:search_requests:rate5m
+        expr: sum(rate(hs_search_requests_total[5m]))
+      - record: hs:search_errors:rate5m
+        expr: sum(rate(hs_search_requests_total{outcome!="ok"}[5m]))
+      - record: hs:search_slow:rate5m
+        expr: |
+          sum(rate(hs_search_duration_seconds_count[5m]))
+          - sum(rate(hs_search_duration_seconds_bucket{le="0.3"}[5m]))
+      # Bad events = errors + requests slower than 300 ms.
+      - record: hs:search_bad_ratio:rate5m
+        expr: (hs:search_errors:rate5m + hs:search_slow:rate5m) / clamp_min(hs:search_requests:rate5m, 1e-9)
+      - record: hs:search_bad_ratio:rate1h
+        expr: |
+          (sum(rate(hs_search_requests_total{outcome!="ok"}[1h]))
+           + sum(rate(hs_search_duration_seconds_count[1h])) - sum(rate(hs_search_duration_seconds_bucket{le="0.3"}[1h])))
+          / clamp_min(sum(rate(hs_search_requests_total[1h])), 1e-9)
+      - record: hs:search_degraded_ratio:rate5m
+        expr: sum(rate(hs_degradation_total[5m])) / clamp_min(hs:search_requests:rate5m, 1e-9)
+      - record: hs:hedge_extra_load:ratio5m
+        expr: sum(rate(hs_hedges_sent_total[5m])) / clamp_min(sum(rate(hs_shard_requests_total[5m])), 1e-9)
+
+      # Multi-window burn-rate alerts (Google SRE workbook), SLO 99.5% good.
+      # Error budget 0.5%. 14.4x burn over 1h pages; 6x over 6h tickets.
+      - alert: SearchErrorBudgetFastBurn
+        expr: hs:search_bad_ratio:rate1h > (14.4 * 0.005) and hs:search_bad_ratio:rate5m > (14.4 * 0.005)
+        labels: { severity: page }
+        annotations:
+          summary: "Search SLO burning error budget 14x too fast"
+      - alert: HedgingOverBudget
+        expr: hs:hedge_extra_load:ratio5m > 0.05
+        for: 10m
+        labels: { severity: ticket }
+        annotations:
+          summary: "Hedged requests are adding more than 5% extra shard load"

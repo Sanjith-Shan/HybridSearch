@@ -1,0 +1,23 @@
+{
+  "what": "HybridSearch web production bundle (vite build), initial load",
+  "entries": [
+    {
+      "file": "index.html",
+      "rawBytes": 761,
+      "gzipBytes": 439
+    },
+    {
+      "file": "index-DJkGNZfv.js",
+      "rawBytes": 287739,
+      "gzipBytes": 87915
+    },
+    {
+      "file": "index-DO_V6OW5.css",
+      "rawBytes": 20479,
+      "gzipBytes": 5123
+    }
+  ],
+  "totalRawBytes": 308979,
+  "totalGzipBytes": 93477,
+  "notes": "Single JS chunk (React 19 + app). gzip level 9 via Python gzip; source maps excluded. No Lighthouse run was performed."
+}

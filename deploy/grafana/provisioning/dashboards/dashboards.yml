@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: hybridsearch
+    folder: HybridSearch
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards

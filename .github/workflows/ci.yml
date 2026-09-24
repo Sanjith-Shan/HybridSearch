@@ -1,0 +1,85 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  engine:
+    name: engine (C++20, ${{ matrix.config }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [release, asan-ubsan]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build g++-14 \
+            libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libzstd-dev
+      - name: Configure
+        run: |
+          extra=""
+          if [ "${{ matrix.config }}" = "asan-ubsan" ]; then extra="-DHS_SANITIZE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo"; fi
+          CXX=g++-14 cmake -S engine -B engine/build -G Ninja -DHS_NATIVE=OFF $extra
+      - name: Build
+        run: cmake --build engine/build -j
+      - name: Test (includes the pruning differential gate)
+        run: ctest --test-dir engine/build --output-on-failure -j4
+
+  python:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install
+        run: |
+          uv venv --python 3.12 .venv
+          VIRTUAL_ENV=.venv uv pip install --index-strategy unsafe-best-match \
+            --extra-index-url https://download.pytorch.org/whl/cpu -e ".[dev]"
+      - name: Test
+        run: .venv/bin/python -m pytest -q
+
+  broker:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - name: Test
+        run: dotnet test broker/HybridSearch.sln -c Release --logger "trx;LogFileName=broker.trx"
+
+  web:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: End-to-end, keyboard-only path, and axe-core (zero violations)
+        run: pnpm e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: web/playwright-report

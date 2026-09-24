@@ -9,4 +9,4 @@ prefix="/opt/homebrew"
 [ -d "$prefix" ] || prefix="/usr/local"
 cmake -S "$here/engine" -B "$build" -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_PREFIX_PATH="$prefix" -DProtobuf_PROTOC_EXECUTABLE="$prefix/bin/protoc" -Wno-dev "$@"
-cmake --build "$build" -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
+cmake --build "$build" -j"${HS_JOBS:-4}"

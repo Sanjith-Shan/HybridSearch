@@ -1,0 +1,18 @@
+{
+  "result": "results/web/bundle-size.json",
+  "command": "cd web && npx vite build && python3 gzip -9 of dist/index.html + dist/assets/*.{js,css}",
+  "tooling": {
+    "node": "v24.2.0",
+    "vite": "8.3.0",
+    "react": "19.3.0",
+    "typescript": "6.0.3"
+  },
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "cores": 12,
+    "os": "macOS 26.5.1"
+  },
+  "gitSha": "8cdb8bb1e32688797960c107c90ae9471bddfd1d",
+  "label": "size measurement (deterministic; hardware irrelevant to the number)",
+  "date": "2026-09-23"
+}
