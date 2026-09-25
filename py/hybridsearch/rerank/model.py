@@ -43,18 +43,20 @@ def clip_query(tok, query: str, max_query_len: int = MAX_QUERY_LEN) -> str:
 
 
 def encode_pairs(tok, queries: list[str], passages: list[str], max_length: int,
-                 return_tensors: str = "pt"):
+                 return_tensors: str = "pt", pad_multiple: int | None = None):
     """Tokenise (query, passage) pairs. Returns the tokenizer's BatchEncoding with
     input_ids, attention_mask, token_type_ids, padded to the longest pair."""
     if len(queries) != len(passages):
         raise ValueError("queries and passages must have equal length")
     return tok(queries, passages, padding=True, truncation="only_second",
                max_length=max_length, return_tensors=return_tensors,
-               return_token_type_ids=True)
+               return_token_type_ids=True, pad_to_multiple_of=pad_multiple)
 
 
-def pair_batch(tok, queries, passages, max_length) -> PairBatch:
-    enc = encode_pairs(tok, list(queries), list(passages), max_length)
+def pair_batch(tok, queries, passages, max_length, pad_multiple: int | None = 32) -> PairBatch:
+    """Padded to a multiple of 32 tokens: on MPS every distinct shape gets its own cached
+    graph and buffers, so bucketing lengths bounds memory (docs/BUG_LOG.md 2026-09-24)."""
+    enc = encode_pairs(tok, list(queries), list(passages), max_length, pad_multiple=pad_multiple)
     return PairBatch(enc["input_ids"], enc["attention_mask"], enc["token_type_ids"])
 
 

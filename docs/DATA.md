@@ -105,7 +105,8 @@ BEIR: `data/embeddings/beir/{ds}/corpus.fbin` + `corpus.docids.txt`, `queries.te
 | Run | Produced by |
 |---|---|
 | `anserini-bm25-default.{dev,dl19,dl20,train_tune}.trec` | Pyserini 2.4.0 BM25 k1=0.9 b=0.4, top 1000, prebuilt `msmarco-v1-passage` index (`scripts/reference_bm25.sh`) |
-| `bm25.train50k.first10k.trec` | same, for the **first 10,000** of the 50,000 train50k queries (`data/subset/train50k/queries.first10k.tsv` + `qrels.first10k.tsv`, lines 1–10,000 of `queries.tsv`). The remaining 40,000 were dropped when the machine rebooted and the prebuilt index was deleted to save disk; the full train50k BM25 run is to come from HybridSearch's own lexical engine. |
+| `bm25.train50k.first10k.trec` | Pyserini BM25 default, full index, for the **first 10,000** train50k queries (`data/subset/train50k/queries.first10k.tsv` + `qrels.first10k.tsv`). The other 40,000 were dropped after a reboot, once the prebuilt index had been deleted |
+| `bm25.train50k.trec` | all 50,000 train50k queries, produced by **HybridSearch's own lexical engine** (tag `hs-bm25-lucene`, full 8.8M index), not by Pyserini. On the shared first 10k queries it matches Anserini's run to 4 decimals on RR@10/nDCG@10/R@100/R@1000 (`results/reference/train50k_engine_vs_anserini_first10k.json`) |
 | `anserini-bm25-default-1m.{dev,dl19,dl20,train_tune}.trec` | Pyserini BM25 over a Lucene index of the 1M subset at `data/indexes/anserini/1m` (`scripts/reference_bm25_1m.sh`) |
 | `dense-flat-1m.{dev,dl19,dl20,train_tune}.trec` | exact FAISS `IndexFlatIP` over `passages.fbin`, top 1000 (`python -m hybridsearch.dense.flat`) |
 | `dense-flat.beir-{scifact,nfcorpus,fiqa}.test.trec` | exact `IndexFlatIP` over the BEIR corpus embeddings |

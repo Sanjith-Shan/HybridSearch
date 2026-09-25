@@ -61,6 +61,7 @@ class TrainConfig:
     seed: int = 20260923
     device: str = "auto"
     amp: str = "none"               # none | bf16 | fp16 (fp16/bf16 on CUDA; MPS stays fp32)
+    mps_mem_fraction: float = 0.3   # hard cap on MPS memory (fraction of recommended max): OOM, not swap
     mined: str = "data/rerank/mined/train50k.jsonl"
     queries: str = "data/subset/train50k/queries.tsv"
     qrels: str = "data/subset/train50k/qrels.tsv"
@@ -226,6 +227,8 @@ def train(cfg: TrainConfig, resume: bool = False, wait_lock: bool = False) -> di
     out = resolve(cfg.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     device = pick_device(cfg.device)
+    if device == "mps":
+        torch.mps.set_per_process_memory_fraction(cfg.mps_mem_fraction)
     torch.manual_seed(cfg.seed)
     np.random.seed(cfg.seed)
 
@@ -358,7 +361,11 @@ def train(cfg: TrainConfig, resume: bool = False, wait_lock: bool = False) -> di
             if step % cfg.log_every == 0:
                 rate = pairs_since / (time.time() - t_since)
                 rec = {"step": step, "loss": round(loss_acc, 5), "lr": sched.get_last_lr()[0],
-                       "pairs_per_s": round(rate, 1), "topups": sampler.topups}
+                       "pairs_per_s": round(rate, 1), "topups": sampler.topups,
+                       "loadavg_1m": round(os.getloadavg()[0], 1)}
+                if device == "mps":
+                    rec["mps_driver_gb"] = round(torch.mps.driver_allocated_memory() / 2**30, 2)
+                    torch.mps.empty_cache()
                 log_f.write(json.dumps(rec) + "\n")
                 log_f.flush()
                 print(json.dumps(rec), flush=True)

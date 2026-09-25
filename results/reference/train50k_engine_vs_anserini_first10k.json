@@ -1,0 +1,16 @@
+{
+  "qrels": "data/subset/train50k/qrels.first10k.tsv",
+  "n_queries": 10000,
+  "anserini_pyserini_bm25_default": {
+    "RR@10": 0.1792,
+    "nDCG@10": 0.2222,
+    "R@100": 0.6615,
+    "R@1000": 0.8649
+  },
+  "hybridsearch_engine_bm25 (bm25.train50k.trec restricted to the same 10k qids, tag hs-bm25-lucene)": {
+    "RR@10": 0.1792,
+    "nDCG@10": 0.2222,
+    "R@100": 0.6615,
+    "R@1000": 0.8649
+  }
+}

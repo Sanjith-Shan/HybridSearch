@@ -3,8 +3,8 @@
 base_model: nreimers/MiniLM-L6-H384-uncased
 loss: listwise
 n_neg: 7              # group = 1 positive + 7 negatives = 8 pairs
-batch_groups: 16      # 128 pairs per optimizer step
-grad_accum: 1
+batch_groups: 8       # micro-batch 64 pairs (MPS memory: attention for 128x256 pairs is GBs)
+grad_accum: 2         # effective 16 groups = 128 pairs per optimizer step
 lr: 3.0e-5
 weight_decay: 0.01
 warmup_frac: 0.1
