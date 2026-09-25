@@ -25,11 +25,17 @@ test('full keyboard-only path', async ({ page }) => {
   await page.keyboard.press('Tab'); // search button
   await page.keyboard.press('Tab'); // radio group (checked = Hybrid)
   await expect(page.getByRole('radio', { name: 'Hybrid' })).toBeFocused();
+  // Step through unambiguous states: each list is identified by its mode and phase,
+  // so an assertion can't be satisfied by the previous list before React commits
+  // the change (that race failed this test on Linux CI).
+  const settled = (mode: string) => page.locator(`.results[data-mode="${mode}"][data-phase="final"][data-stale="false"]`);
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('radio', { name: 'Lexical' })).toBeChecked();
+  await expect(settled('lexical')).toBeVisible();
   await page.keyboard.press('ArrowLeft');
   await expect(page.getByRole('radio', { name: 'Hybrid' })).toBeChecked();
-  await expect(page.locator('.result .stage--rerank').first()).toBeVisible();
+  await expect(settled('hybrid')).toBeVisible();
+  await expect(page.locator('.result .stage--fused').first()).toBeVisible();
 
   // j / k move between results (focus leaves the text box first).
   await page.keyboard.press('Tab'); // rerank switch

@@ -36,7 +36,9 @@ export function ResultList({ response, phase, stale, settled, explainRequested, 
   const listRef = useRef<HTMLOListElement>(null);
   const [open, setOpen] = useState<ReadonlySet<number>>(new Set());
   const order = response.results.map((r) => r.docId).join(',');
-  useFlip(listRef, `${phase}:${order}`);
+  const listKey = `${phase}:${order}`;
+  useFlip(listRef, listKey);
+
 
   const byDoc = new Map(response.results.map((r) => [r.docId, r]));
   const handleImpression = useCallback(
@@ -66,7 +68,15 @@ export function ResultList({ response, phase, stale, settled, explainRequested, 
   };
 
   return (
-    <ol className="results" ref={listRef} data-stale={stale} aria-busy={stale} aria-label="Search results">
+    <ol
+      className="results"
+      ref={listRef}
+      data-stale={stale}
+      data-phase={phase}
+      data-mode={response.mode}
+      aria-busy={stale}
+      aria-label="Search results"
+    >
       {response.results.map((r) => {
         const panelId = `why-${r.docId}`;
         const isOpen = open.has(r.docId);

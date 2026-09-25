@@ -29,6 +29,10 @@ if(HS_NATIVE)
   endif()
 endif()
 add_compile_options(-Wall -Wextra)
+# BM25 must reproduce Lucene's float scores bit for bit, which rules out fused multiply-add
+# contraction. clang honours the HS_STRICT_FP pragma in bm25.hpp; GCC ignores it and contracts
+# by default on aarch64, so contraction is disabled for the whole build on every compiler.
+add_compile_options(-ffp-contract=off)
 if(HS_SANITIZE)
   add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address,undefined)

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { expectAccessible, search } from './helpers';
+import { MOCK, expectAccessible, search } from './helpers';
 
 test('search → results → why panel', async ({ page }) => {
   await page.goto('/');
@@ -97,6 +97,49 @@ test('URL state: linkable, mode switch pushes history, back/forward restore', as
   await expect(page.getByRole('radio', { name: 'Dense' })).toBeChecked();
 });
 
+test('switching mode immediately after load is not undone by a stale URL-sync timer', async ({ page }) => {
+  // Regression (Linux CI): the typing URL-sync timer armed at mount captured the
+  // old mode and, 400 ms later, replaced ?mode=dense with ?mode=lexical.
+  await page.goto('/?q=capital&mode=lexical');
+  await page.getByRole('radio', { name: 'Dense' }).check();
+  await expect(page).toHaveURL(/mode=dense/);
+  await page.waitForTimeout(700);
+  await expect(page).toHaveURL(/mode=dense/);
+  await expect(page.getByRole('radio', { name: 'Dense' })).toBeChecked();
+});
+
+test('keyboard focus stays on the same result when the reranked list replaces the lexical one', async ({ page }) => {
+  // Chromium drops focus from a node that is moved in the DOM, and React moves keyed
+  // <li>s when the final list reorders the lexical one (React DOM then restores focus
+  // after commit). Pick a result React will move (keyed reconciliation: an old child
+  // whose index is below the last placed index), focus it during the lexical phase,
+  // and check focus is on it once the final list is in.
+  const q = 'what is the capital of peru';
+  const get = async (path: string): Promise<number[]> =>
+    ((await (await fetch(`${MOCK}${path}`)).json()) as { results: { docId: number }[] }).results.map((r) => r.docId);
+  const final = await get(`/api/search?q=${encodeURIComponent(q)}&mode=hybrid&rerank=true&k=10`);
+  const lexical = await get(`/api/search?q=${encodeURIComponent(q)}&mode=lexical&rerank=false&k=10`);
+  let lastPlaced = -1;
+  let moved: number | null = null;
+  for (const id of final) {
+    const oldIndex = lexical.indexOf(id);
+    if (oldIndex === -1) continue;
+    if (oldIndex < lastPlaced) {
+      moved = id;
+      break;
+    }
+    lastPlaced = oldIndex;
+  }
+  expect(moved, 'the mock query must reorder at least one lexical result').not.toBeNull();
+
+  await page.goto(`/?q=${encodeURIComponent(q)}`);
+  const link = page.locator(`[data-docid="${moved}"] [data-result-link]`);
+  await expect(page.locator('.results[data-phase="lexical"]')).toBeVisible();
+  await link.focus();
+  await expect(page.locator('.results[data-phase="final"]')).toBeVisible();
+  await expect(link).toBeFocused();
+});
+
 test('did you mean offers a correction', async ({ page }) => {
   await page.goto('/?q=photosynthsis');
   const dym = page.getByRole('button', { name: 'photosynthesis' });
@@ -130,10 +173,23 @@ test('opening a result shows the full passage; back returns to the same results'
 });
 
 test('mobile layout has no horizontal scroll and stays accessible', async ({ page }) => {
-  await page.setViewportSize({ width: 360, height: 780 });
-  await search(page, 'symptoms of vitamin d deficiency');
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(0);
+  // 320 CSS px is the WCAG 1.4.10 reflow width. Report the offending elements, since
+  // overflow depends on font metrics (Linux CI fonts are wider than macOS's).
+  for (const width of [320, 360]) {
+    await page.setViewportSize({ width, height: 780 });
+    await search(page, 'symptoms of vitamin d deficiency');
+    const overflow = await page.evaluate(() => {
+      const w = document.documentElement.clientWidth;
+      return {
+        px: document.documentElement.scrollWidth - w,
+        culprits: [...document.querySelectorAll('body *')]
+          .filter((e) => e.getBoundingClientRect().right > w + 0.5)
+          .slice(0, 5)
+          .map((e) => `${e.tagName}.${e.getAttribute('class') ?? ''}`),
+      };
+    });
+    expect(overflow, `horizontal overflow at ${width}px`).toEqual({ px: 0, culprits: [] });
+  }
   await page.getByRole('button', { name: /Why this result/ }).first().click();
   await expectAccessible(page, 'mobile results + why');
 });

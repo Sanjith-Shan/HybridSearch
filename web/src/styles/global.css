@@ -220,8 +220,9 @@ select {
   margin: 0 auto;
   padding: 10px 20px;
   display: flex;
+  flex-wrap: wrap; /* never overflow at 320 px, whatever the font metrics (1.4.10) */
   align-items: center;
-  gap: 24px;
+  gap: 4px 24px;
 }
 .brand {
   display: inline-flex;
@@ -240,8 +241,12 @@ select {
 .brand svg {
   flex: none;
 }
+.site-nav {
+  min-width: 0;
+}
 .site-nav ul {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   list-style: none;
   margin: 0;
@@ -1334,7 +1339,7 @@ details.table-toggle[open] > summary {
   }
   .site-header__inner {
     padding: 8px 14px;
-    gap: 8px;
+    gap: 0 8px;
     justify-content: space-between;
   }
   .brand {

@@ -229,6 +229,8 @@ public class ApiTests
             ["Broker:Degradation:DefaultShardLexicalMs"] = "5",
             ["Broker:Degradation:DefaultFetchMs"] = "1",
             ["Broker:Degradation:MinSamples"] = "1000000",
+            // Exploration probes are random by design; this test checks the deterministic policy.
+            ["Broker:Degradation:ProbeFraction"] = "0",
         });
         var j = await GetJson(app.Client, "/api/search?q=capital&deadlineMs=250");
         var steps = j.GetProperty("degradation").GetProperty("steps").EnumerateArray().Select(s => s.GetString()).ToList();

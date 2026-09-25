@@ -79,8 +79,9 @@ export function SearchPage({ active, inputRef, shortcutsEnabled }: Props) {
       needPush.current = false;
     }, 400);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft]);
+    // mode/rerank must be deps: a timer armed before a mode switch would otherwise
+    // fire with the old mode and replaceState the URL back to it (seen on Linux CI).
+  }, [draft, mode, rerank, onSearchRoute, writeUrl]);
 
   const commit = (q: string): void => {
     setDraft(q);

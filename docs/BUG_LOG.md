@@ -311,3 +311,19 @@ stack showed `test_export_parity` stuck inside `torch.layer_norm`. The test pass
 with a multi-threaded pool. The same conflict aborted a process during reranker mining earlier.
 **Fix.** `py/tests/conftest.py` sets OMP/MKL to one thread before any library loads. The suite now
 passes: 190 passed, 1 skipped, in 54 s.
+
+## 2026-09-25 — The first Linux CI run found three portability bugs that macOS had hidden
+
+- **The BM25 bit-exactness test failed under GCC on aarch64.** `bm25.hpp` disables fused
+  multiply-add with a clang-only pragma. GCC ignores it and contracts to FMA by default on aarch64,
+  which changes the last bits of the scores. Fix: `-ffp-contract=off` for the whole engine on every
+  compiler.
+- **A k-means test had passed on macOS by luck.** Its data came from `std::normal_distribution`,
+  whose output differs between libc++ and libstdc++. On Linux, the random-point init put two of four
+  centres in one blob, and Lloyd's iterations cannot recover from that. Fix: the test now uses
+  platform-independent data and a new `KMeansInit::PlusPlus` option (k-means++, drawing only raw
+  mt19937_64 output). The default stays random-point init, because that is what the reported
+  indexes were built with.
+- **Missing standard includes** (`<string>`, `<algorithm>`) that libc++ pulled in transitively.
+- Found by compiling and running the whole suite with GCC 14 in an Ubuntu 24.04 container:
+  85/85 pass afterwards.

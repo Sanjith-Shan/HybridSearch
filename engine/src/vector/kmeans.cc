@@ -35,7 +35,39 @@ std::vector<float> kmeans(const float* data, size_t n, uint32_t dim, const KMean
   if (n == 0 || p.k == 0) throw std::invalid_argument("kmeans: empty input");
   const uint32_t k = p.k;
   std::vector<float> C(size_t(k) * dim);
-  {
+  if (p.init == KMeansInit::PlusPlus) {
+    // k-means++: first centre uniform, each next one sampled with probability proportional
+    // to its squared distance from the nearest centre chosen so far.
+    std::mt19937_64 rng(p.seed);
+    auto unit = [&rng] { return double(rng() >> 11) * 0x1.0p-53; };  // [0,1), portable
+    std::vector<double> d2(n, std::numeric_limits<double>::infinity());
+    size_t first = rng() % n;
+    std::copy(data + first * dim, data + (first + 1) * dim, C.begin());
+    for (uint32_t j = 1; j < k; ++j) {
+      const float* c = C.data() + size_t(j - 1) * dim;
+      double total = 0;
+      for (size_t i = 0; i < n; ++i) {
+        double d = 0;
+        for (uint32_t t = 0; t < dim; ++t) {
+          double e = double(data[i * dim + t]) - double(c[t]);
+          d += e * e;
+        }
+        if (d < d2[i]) d2[i] = d;
+        total += d2[i];
+      }
+      size_t pick = n - 1;
+      if (total > 0) {
+        double r = unit() * total, acc = 0;
+        for (size_t i = 0; i < n; ++i) {
+          acc += d2[i];
+          if (acc > r) { pick = i; break; }
+        }
+      } else {
+        pick = rng() % n;  // every point coincides with a centre already
+      }
+      std::copy(data + pick * dim, data + (pick + 1) * dim, C.begin() + size_t(j) * dim);
+    }
+  } else {
     std::vector<size_t> idx(n);
     std::iota(idx.begin(), idx.end(), size_t(0));
     std::mt19937_64 rng(p.seed);

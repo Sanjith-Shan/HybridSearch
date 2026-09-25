@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <gtest/gtest.h>
 
 #include <numeric>
@@ -13,21 +14,27 @@ namespace hs::vector {
 
 TEST(KMeans, RecoversWellSeparatedClusters) {
   // Four tight blobs at the corners of a square; every point must land with its blob.
+  // The data comes from raw mt19937 output (not std::normal_distribution, whose output
+  // differs between libc++ and libstdc++), so the test is the same test on every platform.
+  // It uses k-means++: with random-point init, two of the four picks land in one blob most
+  // of the time and Lloyd's iterations cannot separate them. This test once passed on macOS
+  // only by luck of the data (docs/BUG_LOG.md 2026-09-25).
   std::vector<float> x;
   std::vector<uint32_t> truth;
   float cx[4] = {0, 10, 0, 10}, cy[4] = {0, 0, 10, 10};
   std::mt19937 rng(3);
-  std::normal_distribution<float> g(0, 0.3f);
+  auto jitter = [&rng] { return (float(rng()) / 4294967296.0f - 0.5f) * 0.6f; };  // uniform ±0.3
   for (uint32_t i = 0; i < 400; ++i) {
     uint32_t c = i % 4;
-    x.push_back(cx[c] + g(rng));
-    x.push_back(cy[c] + g(rng));
+    x.push_back(cx[c] + jitter());
+    x.push_back(cy[c] + jitter());
     truth.push_back(c);
   }
   KMeansParams p;
   p.k = 4;
   p.iters = 20;
   p.seed = 5;
+  p.init = KMeansInit::PlusPlus;
   std::vector<uint32_t> labels;
   auto C = kmeans(x.data(), 400, 2, p, &labels);
   // Same true cluster <=> same label.
