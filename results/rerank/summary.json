@@ -1,0 +1,192 @@
+[
+  {
+    "file": "results/rerank/eval/ours-ort-fp32.bm25full-q200.dev.json",
+    "name": "ours-ort-fp32.bm25full-q200",
+    "split": "dev",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 200,
+    "backend": "ort/cpu",
+    "metrics": {
+      "RR@10": 0.1014,
+      "nDCG@10": 0.1237,
+      "R@100": 0.645
+    },
+    "first_stage": {
+      "RR@10": 0.1906,
+      "nDCG@10": 0.2262,
+      "R@100": 0.645
+    }
+  },
+  {
+    "file": "results/rerank/eval/ours-ort-fp32.bm25full.dl19.json",
+    "name": "ours-ort-fp32.bm25full",
+    "split": "dl19",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 43,
+    "backend": "ort/cpu",
+    "metrics": {
+      "nDCG@10": 0.395,
+      "RR(rel=2)@10": 0.5708,
+      "R(rel=2)@100": 0.491
+    },
+    "first_stage": {
+      "nDCG@10": 0.5058,
+      "RR(rel=2)@10": 0.7024,
+      "R(rel=2)@100": 0.491
+    }
+  },
+  {
+    "file": "results/rerank/eval/ours-ort-int8.bm25full-q200.dev.json",
+    "name": "ours-ort-int8.bm25full-q200",
+    "split": "dev",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 200,
+    "backend": "ort/cpu",
+    "metrics": {
+      "RR@10": 0.105,
+      "nDCG@10": 0.1301,
+      "R@100": 0.645
+    },
+    "first_stage": {
+      "RR@10": 0.1906,
+      "nDCG@10": 0.2262,
+      "R@100": 0.645
+    }
+  },
+  {
+    "file": "results/rerank/eval/ours-ort-int8.bm25full.dl19.json",
+    "name": "ours-ort-int8.bm25full",
+    "split": "dl19",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 43,
+    "backend": "ort/cpu",
+    "metrics": {
+      "nDCG@10": 0.3922,
+      "RR(rel=2)@10": 0.5532,
+      "R(rel=2)@100": 0.491
+    },
+    "first_stage": {
+      "nDCG@10": 0.5058,
+      "RR(rel=2)@10": 0.7024,
+      "R(rel=2)@100": 0.491
+    }
+  },
+  {
+    "file": "results/rerank/eval/ours.bm25full-q200.dev.json",
+    "name": "ours.bm25full-q200",
+    "split": "dev",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 200,
+    "backend": "torch/mps",
+    "metrics": {
+      "RR@10": 0.1014,
+      "nDCG@10": 0.1237,
+      "R@100": 0.645
+    },
+    "first_stage": {
+      "RR@10": 0.1906,
+      "nDCG@10": 0.2262,
+      "R@100": 0.645
+    }
+  },
+  {
+    "file": "results/rerank/eval/ours.bm25full.dl19.json",
+    "name": "ours.bm25full",
+    "split": "dl19",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 43,
+    "backend": "torch/mps",
+    "metrics": {
+      "nDCG@10": 0.395,
+      "RR(rel=2)@10": 0.5708,
+      "R(rel=2)@100": 0.491
+    },
+    "first_stage": {
+      "nDCG@10": 0.5058,
+      "RR(rel=2)@10": 0.7024,
+      "R(rel=2)@100": 0.491
+    }
+  },
+  {
+    "file": "results/rerank/eval/ours.bm25full.dl20.json",
+    "name": "ours.bm25full",
+    "split": "dl20",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 54,
+    "backend": "torch/mps",
+    "metrics": {
+      "nDCG@10": 0.2902,
+      "RR(rel=2)@10": 0.3587,
+      "R(rel=2)@100": 0.5599
+    },
+    "first_stage": {
+      "nDCG@10": 0.4796,
+      "RR(rel=2)@10": 0.6533,
+      "R(rel=2)@100": 0.5599
+    }
+  },
+  {
+    "file": "results/rerank/eval/public.bm25full-q200.dev.json",
+    "name": "public.bm25full-q200",
+    "split": "dev",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 200,
+    "backend": "torch/mps",
+    "metrics": {
+      "RR@10": 0.378,
+      "nDCG@10": 0.4233,
+      "R@100": 0.645
+    },
+    "first_stage": {
+      "RR@10": 0.1906,
+      "nDCG@10": 0.2262,
+      "R@100": 0.645
+    }
+  },
+  {
+    "file": "results/rerank/eval/public.bm25full.dl19.json",
+    "name": "public.bm25full",
+    "split": "dl19",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 43,
+    "backend": "torch/mps",
+    "metrics": {
+      "nDCG@10": 0.7267,
+      "RR(rel=2)@10": 0.8651,
+      "R(rel=2)@100": 0.491
+    },
+    "first_stage": {
+      "nDCG@10": 0.5058,
+      "RR(rel=2)@10": 0.7024,
+      "R(rel=2)@100": 0.491
+    }
+  },
+  {
+    "file": "results/rerank/eval/public.bm25full.dl20.json",
+    "name": "public.bm25full",
+    "split": "dl20",
+    "candidates": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+    "depth": 100,
+    "queries": 54,
+    "backend": "torch/mps",
+    "metrics": {
+      "nDCG@10": 0.6747,
+      "RR(rel=2)@10": 0.846,
+      "R(rel=2)@100": 0.5599
+    },
+    "first_stage": {
+      "nDCG@10": 0.4796,
+      "RR(rel=2)@10": 0.6533,
+      "R(rel=2)@100": 0.5599
+    }
+  }
+]

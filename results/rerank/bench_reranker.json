@@ -1,0 +1,98 @@
+{
+  "name": "reranker",
+  "model_dir": "data/models/reranker",
+  "results": {
+    "model.onnx|threads=7": [
+      {
+        "batch": 1,
+        "requests": 10,
+        "mean_ms": 9.038,
+        "p50_ms": 7.666,
+        "p90_ms": 14.56,
+        "p99_ms": 20.184,
+        "pairs_per_s": 110.6,
+        "mean_seq_len": 98.7,
+        "py_tokenize_mean_ms": 1.775
+      },
+      {
+        "batch": 16,
+        "requests": 10,
+        "mean_ms": 287.813,
+        "p50_ms": 310.534,
+        "p90_ms": 364.775,
+        "p99_ms": 390.71,
+        "pairs_per_s": 55.6,
+        "mean_seq_len": 154.9,
+        "py_tokenize_mean_ms": 2.653
+      },
+      {
+        "batch": 64,
+        "requests": 10,
+        "mean_ms": 1164.435,
+        "p50_ms": 1138.972,
+        "p90_ms": 1442.488,
+        "p99_ms": 1524.821,
+        "pairs_per_s": 55.0,
+        "mean_seq_len": 187.1,
+        "py_tokenize_mean_ms": 16.292
+      },
+      {
+        "batch": 100,
+        "requests": 10,
+        "mean_ms": 1876.216,
+        "p50_ms": 1809.049,
+        "p90_ms": 2369.548,
+        "p99_ms": 2453.964,
+        "pairs_per_s": 53.3,
+        "mean_seq_len": 192.1,
+        "py_tokenize_mean_ms": 20.747
+      }
+    ],
+    "model.int8.onnx|threads=7": [
+      {
+        "batch": 1,
+        "requests": 10,
+        "mean_ms": 6.38,
+        "p50_ms": 5.023,
+        "p90_ms": 10.485,
+        "p99_ms": 14.323,
+        "pairs_per_s": 156.7,
+        "mean_seq_len": 98.7,
+        "py_tokenize_mean_ms": 0.355
+      },
+      {
+        "batch": 16,
+        "requests": 10,
+        "mean_ms": 101.364,
+        "p50_ms": 97.91,
+        "p90_ms": 130.922,
+        "p99_ms": 158.904,
+        "pairs_per_s": 157.8,
+        "mean_seq_len": 154.9,
+        "py_tokenize_mean_ms": 2.108
+      },
+      {
+        "batch": 64,
+        "requests": 10,
+        "mean_ms": 692.987,
+        "p50_ms": 591.783,
+        "p90_ms": 860.403,
+        "p99_ms": 1507.719,
+        "pairs_per_s": 92.4,
+        "mean_seq_len": 187.1,
+        "py_tokenize_mean_ms": 17.712
+      },
+      {
+        "batch": 100,
+        "requests": 10,
+        "mean_ms": 2319.346,
+        "p50_ms": 1637.979,
+        "p90_ms": 4362.977,
+        "p99_ms": 4963.781,
+        "pairs_per_s": 43.1,
+        "mean_seq_len": 192.1,
+        "py_tokenize_mean_ms": 32.512
+      }
+    ]
+  }
+}

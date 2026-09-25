@@ -1,0 +1,24 @@
+{
+  "queries": 10000,
+  "no_bm25_hits": 0,
+  "pos_in_bm25_top1000": 8715,
+  "leak_removed_bm25": 6072,
+  "leak_removed_dense": 1117,
+  "fn_dropped_bm25": 1520,
+  "fn_dropped_dense": 3286,
+  "unverifiable_bm25": 444431,
+  "unverifiable_dense": 311879,
+  "verified_kept_bm25": 55472,
+  "verified_kept_dense": 188121,
+  "skipped_no_bm25_run": 40000,
+  "seconds": 604.9,
+  "config": {
+    "split": "train50k",
+    "bm25_run": "data/runs/reference/bm25.train50k.first10k.trec",
+    "pool_depth": 50,
+    "dense_depth": 200,
+    "dense_margin": 0.05,
+    "bm25_rel_margin": 0.1,
+    "seed": 20260923
+  }
+}

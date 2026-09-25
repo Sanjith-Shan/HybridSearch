@@ -1,0 +1,30 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/rerank/eval/ours-ort-int8.bm25full-q200.dev.json",
+  "date": "2026-09-24T18:58:21-07:00",
+  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/rerank/rerank_run.py --name ours-ort-int8.bm25full-q200 --split dev --candidates data/runs/reference/anserini-bm25-default.dev.trec --depth 100 --model data/models/reranker/model.int8.onnx --backend ort --batch 64 --max-queries 200 --candidate-label Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      31.05,
+      26.61,
+      20.82
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "355fd1b",
+  "pairs_scored": 20000,
+  "note": "pairs_per_s is throughput on this laptop, dev-signal-only"
+}

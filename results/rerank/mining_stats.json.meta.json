@@ -1,0 +1,32 @@
+{
+  "result": "results/rerank/mining_stats.json",
+  "date": "2026-09-24T19:22:20-07:00",
+  "command": "python -c",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      44.82,
+      31.9,
+      29.47
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "355fd1b",
+  "what": "hard-negative mining filter counts, first 10k train50k queries",
+  "bm25_run": "data/runs/reference/bm25.train50k.first10k.trec",
+  "seconds": 604.9,
+  "peak_rss_gb": 2.07
+}
