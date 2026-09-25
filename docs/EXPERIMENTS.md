@@ -64,6 +64,11 @@ redirect), and the report says "do not trust the metrics" rather than printing
 significance stars next to them. `py/tests/test_clicks_analyze_events.py` injects a
 logging bug that loses 15% of treatment sessions and checks that SRM fires.
 
+In the simulated event log (`results/m9/events_report_simulated.md`) the A/A
+experiment's arm counts were 944 vs 1,059 sessions, chi-square p = 0.010. Nothing is wrong
+with that split (the hash is fair); at a 0.05 threshold it would have been a false alarm,
+which is exactly why the threshold is strict.
+
 For interleaving there are no arms, so the analyser checks **team balance** instead: the
 team owning rank 1 should be A half of the time (binomial test). A skew means the coin or
 the logging is broken.
@@ -188,10 +193,14 @@ queries uniform over the 97 DL topics.
 (pair, click model) we simulate 2M impressions per arm/method, tabulate the discrete
 per-impression outcome, and run 1,000 multinomial trials at each of 141 log-spaced N
 between 10 and 1e8 (see `clicks/sensitivity.py`). The resampling shortcut is checked
-against fresh click simulation at N80 for 6 pairs × 2 models: direct power 0.775 to 0.826
-(1,000 trials each; target 0.80).
+against fresh click simulation at N80 (28 checks: 7 known-ordering pairs × 2 models × TDI and
+the best A/B metric): direct power 0.759 to 0.828 (1,000 trials each; target 0.80).
 
-**Rankers.** Real (DL19+DL20 nDCG@10): BM25 top-100 re-ordered by BGE-base similarity
+**Rankers.** Real, 1M-subset world (the data agent's dense flat run covers the 1M subset):
+BGE-base flat dense retrieval 0.7952, RRF(BM25-1M, dense) 0.7661, Anserini BM25 on the
+subset 0.6483. The subset keeps every judged-relevant passage, so its scores are higher than
+full-collection scores and the two worlds are never compared with each other.
+Real, full-collection world: BM25 top-100 re-ordered by BGE-base similarity
 0.6681; RRF(BM25, that BGE ordering) 0.6161; Anserini BM25 0.4912; HybridSearch's own
 BM25 engine, Lucene-quantised lengths 0.4912 and textbook lengths 0.4906. The two BGE
 rankers only reorder BM25's top 100 (no dense retrieval over the collection existed
@@ -202,6 +211,9 @@ rankers (grade + σ·noise, shared noise), 0.4624 to 0.7634, so the gap is contr
 
 | pair | Δ nDCG@10 | TDI N80 | best A/B N80 | ratio (range) |
 |---|---|---|---|---|
+| dense vs RRF(BM25, dense) (real, 1M) | +0.029 | 8,293 | 26,328 | 4.0x (1.4–27x) |
+| RRF(BM25, dense) vs BM25 (real, 1M) | +0.118 | 285 | 582 | 2.2x (1.6–7.0x) |
+| dense vs BM25 (real, 1M) | +0.147 | 337 | 461 | 1.4x (1.0–3.3x) |
 | BGE-rerank vs RRF (real) | +0.052 | 3,600 | 9,866 | 2.4x (1.4–11.6x) |
 | RRF vs BM25 (real) | +0.125 | 151 | 313 | 2.5x (1.3–4.8x) |
 | BGE-rerank vs BM25-textbook (real) | +0.177 | 164 | 214 | 1.6x (1.1–2.9x) |
@@ -213,27 +225,29 @@ rankers (grade + σ·noise, shared noise), 0.4624 to 0.7634, so the gap is contr
 
 **What this says, honestly.**
 
-* Team-draft interleaving needed fewer impressions than the best A/B metric in all 72
-  (pair, model) cells with a known ordering (ratio 1.06x to 154x). The advantage **grows as the gap shrinks**:
+* Team-draft interleaving needed fewer impressions than the best A/B metric in 98 of 99
+  (pair, model) cells with a known ordering (ratio 0.96x to 154x; the one exception is
+  dense vs BM25 on the subset, a large gap, where the best A/B metric was 4% cheaper, 0.96x). The advantage **grows as the gap shrinks**:
   about 2x for large gaps, about 10–16x (median) for gaps of 0.01–0.04 nDCG@10, and 100x or
   more only in the best case (cascade/DBN "perfect" users, who click only relevant results).
 * The published finding (Chapelle et al. 2012: interleaving 1–2 orders of magnitude more
   sensitive on real Bing/Yahoo! traffic) is reproduced **only for small gaps and only for
-  some user models**. For the real ranker pairs here, whose gaps are large (0.05–0.18),
-  the advantage is 1.1–12x, median about 2x. Real A/B tests are also noisier than this
+  some user models**. For the real ranker pairs here the advantage is 1.0–27x: about
+  1.4–2.5x (median) for the large gaps (0.12–0.18), 2.4–4x for the smaller ones
+  (dense vs RRF, +0.029; BGE-rerank vs RRF, +0.052). Real A/B tests are also noisier than this
   simulation (heterogeneous users, sessions, bots, query mix), which hurts A/B more than
   interleaving, so these ratios are probably a lower bound on the real one. That last
   point is an argument, not a measurement.
-* **Balanced interleaving was at least as sensitive as team-draft in all 72 cells, and
-  probabilistic interleaving in 61 of 72** (median best-interleaving/TDI N80 = 0.06–0.88
+* **Balanced interleaving was at least as sensitive as team-draft in 96 of 99 cells, and
+  probabilistic interleaving in 69 of 99** (median best-interleaving/TDI N80 = 0.06–0.88
   per pair). Team-draft pays for its
   fairness guarantees with variance: its credit comes from team labels, which are random
   per impression.
 * **Which A/B metric matters a lot.** Clicks per impression ("CTR") often pointed the
-  *wrong* way: it agreed with offline nDCG in only 19 of 27 real-pair cells and 29 of 45
+  *wrong* way: it agreed with offline nDCG in only 36 of 54 real-pair cells and 29 of 45
   synthetic ones. Under cascade/DBN users a better ranking satisfies users sooner and so
-  produces *fewer* clicks. Clicks@1, MRR of first click and abandonment agreed in 27 of 27
-  and 45 of 45 cells; every interleaving method agreed in all cells.
+  produces *fewer* clicks. Clicks@1 and MRR of first click agreed in all 99 cells,
+  abandonment in 97 of 99, and every interleaving method in all 99.
 * **Pairs with no known ordering.** Anserini BM25 vs HybridSearch's own BM25 (identical top
   10 on 95 of 97 topics) and Lucene-length vs textbook-length BM25 (offline p = 0.3) are in
   the tables but are not evidence either way. Online methods still "detect" a difference
@@ -248,3 +262,67 @@ band for a true 5% is about 0.037–0.064), with one exception: abandonment unde
 cascade-informational at 0.002. Under that model almost every page gets a click, so
 abandonment is nearly constant and the normal-approximation test is very conservative.
 The sign test is discrete, so its p-values are conservative rather than uniform.
+
+## 9. Results: counterfactual LTR (simulated users)
+
+Source: `results/m9/ltr.{md,json}`, `ltr_learning_curve.png` (5 seeds, mean ± sd).
+Command: `.venv/bin/python scripts/m9_ltr.py` (seed 20260923). **Simulated users**: PBM
+navigational, η_r = 1/r. Clicks come from MS MARCO train labels on 200 train_tune
+queries. Evaluation is on the held-out DL19+DL20 topics with graded qrels, reranking
+Anserini BM25's top 20.
+
+| model | nDCG@10 (DL19+DL20) |
+|---|---|
+| logging ranker (BM25) | 0.4912 |
+| naive, click = relevant (3M sessions) | 0.5598 ± 0.0000 |
+| IPS, true η (3M sessions) | 0.6012 ± 0.0005 |
+| IPS, η from swap(1,k) interventions (3M) | 0.6010 ± 0.0013 |
+| IPS, η from RandTop-10 (3M) | 0.5938 ± 0.0003 |
+| IPS, η harvested from 2 production rankers (3M) | 0.6010 ± 0.0005 |
+| skyline: labels α(grade), the IPS limit | 0.6014 |
+| oracle: trained on true grades | 0.6089 |
+| best possible reordering of the 20 candidates | 0.7104 |
+
+* **Naive learning is biased toward the logging policy.** More clicks do not help it
+  (0.5566 at 1k sessions, 0.5598 at 3M). Its largest weight is on BM25 reciprocal rank,
+  i.e. the logging ranker's own position (0.50, against 0.05 for IPS and 0.15 for the
+  oracle; `theta_at_max_n` in `ltr.json`).
+* **IPS recovers 84% of the naive-to-oracle gap** ((0.6012 − 0.5598) / (0.6089 − 0.5598)),
+  and reaches the α-label skyline, which is its theoretical limit (the rest of the gap is
+  the click model's α mapping and the sparse train labels, not bias). With the true η it
+  gets there by about 10k sessions. With estimated η it needs the estimate to be good first:
+  swap interventions catch up at about 300k sessions, harvesting at about 30k.
+* **Position-bias estimation.** Mean absolute error of η_r/η_1 over ranks 1–10 at 3M sessions:
+  swap 0.016, RandTop-10 0.004, harvesting 0.001 (the harvesting log is a *separate*
+  simulated log in which BM25 and BGE orderings of the same candidates split traffic, so
+  it has two production rankers where the others have one ranker plus 5% interventions).
+  RandTop-10 is accurate on ranks 1–10 but *cannot identify ranks 11–20*, which are
+  carried flat. That overstates deep-rank examination, and IPS with it plateaus at 0.594,
+  below the others. A randomisation window must cover every rank you learn from.
+* **Misestimation** (1M sessions): assuming severity p × true gives 0.5596 (p = 0,
+  naive), 0.5685 (0.5), 0.5840 (0.75), **0.6020 (1, correct)**, 0.5955 (1.25), 0.5081 (1.5),
+  0.3975 (2.0). Underestimating the bias degrades gracefully toward naive.
+  Overestimating it is worse than not correcting at all: at p ≥ 1.5 the model falls to or
+  below the logging ranker, because a few deep clicks get huge weights.
+* **Clipping** min(1/η, τ) trades bias for variance. Here variance is not the problem (20
+  ranks, η ≥ 0.05), so every clip costs quality: τ = 1.5 → 0.564, 2 → 0.570,
+  5 → 0.584, 10 → 0.594, none → 0.602 (1M sessions; the same ordering at 10k).
+* **Ablations.** With BM25-only features (`ltr_bm25only.md`) there is nothing to learn:
+  every method, including the oracle (0.4889), stays at the logging ranker's 0.49. The
+  gain above comes from the dense feature. On the synthetic stand-in (`ltr_synthetic.md`)
+  the same pattern holds: naive 0.8165, IPS 0.8632, oracle 0.8599.
+
+## 10. What is not done
+
+* Real traffic: the analyser (`python -m hybridsearch.clicks.analyze_events`) is ready for
+  `data/events/*.jsonl`. It has only been run on the simulated log
+  (`results/m9/events_report_simulated.md`).
+* Session-level (cluster) bootstrap for A/B on real logs, where impressions within a
+  session are correlated. The simulation draws independent impressions.
+* Dense retrieval pairs in the sensitivity study are in the 1M-subset world (the dense
+  flat run covers the subset only); a full-collection dense run (DiskANN) can be added by
+  dropping its DL19/DL20 run files into data/runs/ and rerunning the script (cells are
+  cached, only new pairs are simulated). The M5 cross-encoder reranker's runs are not
+  included (not on disk when this ran).
+* The broker's C# team-draft implementation should run `tests/golden/interleaving.json`
+  (the fixture exists; wiring it into the xUnit tests is the broker owner's job).

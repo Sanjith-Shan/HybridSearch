@@ -65,6 +65,7 @@ class TrainConfig:
     queries: str = "data/subset/train50k/queries.tsv"
     qrels: str = "data/subset/train50k/qrels.tsv"
     n_queries: int | None = None    # use only the first n mined queries (small runs)
+    pool_depth: int = 50            # sample negatives from the top-N of each filtered mined pool
     val_run: str = "data/runs/reference/anserini-bm25-default.train_tune.trec"
     val_queries: str = "data/subset/train_tune/queries.tsv"
     val_qrels: str = "data/subset/train_tune/qrels.tsv"
@@ -237,6 +238,8 @@ def train(cfg: TrainConfig, resume: bool = False, wait_lock: bool = False) -> di
     # data
     t0 = time.time()
     mined = read_mined(resolve(cfg.mined), cfg.n_queries)
+    for m in mined:
+        m.bm25, m.dense, m.random = m.bm25[:cfg.pool_depth], m.dense[:cfg.pool_depth], m.random[:cfg.pool_depth]
     queries = read_queries(resolve(cfg.queries))
     judged = {q: set(d) for q, d in read_qrels(resolve(cfg.qrels)).items()}
     val, val_need = build_val(cfg, tok) if cfg.val_n else ({}, set())

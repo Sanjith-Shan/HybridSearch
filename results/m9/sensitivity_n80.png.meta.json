@@ -1,6 +1,6 @@
 {
   "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/m9/sensitivity_n80.png",
-  "date": "2026-09-24T16:33:09-07:00",
+  "date": "2026-09-24T17:03:01-07:00",
   "command": "python scripts/m9_sensitivity.py --pool 2e6 --trials 1000",
   "hardware": {
     "cpu": "Apple M3 Pro",
@@ -9,9 +9,9 @@
     "python": "3.12.7",
     "pinned_threads": false,
     "loadavg_1_5_15": [
-      98.36,
-      83.26,
-      62.72
+      48.4,
+      54.92,
+      56.37
     ],
     "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
     "mem_bytes": 19327352832
@@ -24,7 +24,7 @@
     "onnxruntime": "1.30.0",
     "numpy": "2.5.3"
   },
-  "git_sha": "d1abd38",
+  "git_sha": "aa4d5e1",
   "seed": 20260923,
   "pool_impressions_per_arm_or_method": 2000000,
   "trials_per_grid_point": 1000,
@@ -224,9 +224,11 @@
     "anserini-bm25-default": "run file anserini-bm25-default.{dl19,dl20}.trec under data/runs/",
     "anserini-bm25-default-1m": "run file anserini-bm25-default-1m.{dl19,dl20}.trec under data/runs/",
     "bm25-bge-rerank100": "run built by scripts/m9_make_runs.py (data/runs/m9/); BGE vectors encoded by M9 for BM25 top-100 only",
+    "dense-flat-1m": "run file dense-flat-1m.{dl19,dl20}.trec under data/runs/",
     "hs-bm25-lucene": "HybridSearch's own BM25 engine run (data/runs/lexical/)",
     "hs-bm25-textbook": "HybridSearch's own BM25 engine run (data/runs/lexical/)",
     "rrf-bm25-bge100": "run built by scripts/m9_make_runs.py (data/runs/m9/); BGE vectors encoded by M9 for BM25 top-100 only",
+    "rrf(anserini-bm25-default-1m,dense-flat-1m)": "reciprocal rank fusion k=60 of the two runs, built here",
     "synthetic-oracle-sigma1.0": "SYNTHETIC: DL grade + 1.0*N(0,1), shared noise seed 1000",
     "synthetic-oracle-sigma1.03": "SYNTHETIC: DL grade + 1.03*N(0,1), shared noise seed 1000",
     "synthetic-oracle-sigma1.1": "SYNTHETIC: DL grade + 1.1*N(0,1), shared noise seed 1000",
@@ -236,5 +238,5 @@
   },
   "topics": 97,
   "label": "SIMULATED users; relevance from TREC DL 2019+2020 graded qrels; not user traffic",
-  "runtime_s": 3.6
+  "runtime_s": 1009.0
 }

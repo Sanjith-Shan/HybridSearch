@@ -10,6 +10,7 @@ weight_decay: 0.01
 warmup_frac: 0.1
 max_steps: 2000
 max_len: 256
+pool_depth: 20       # negatives sampled from the top-20 of each filtered pool (memory: the laptop is swapping)
 seed: 20260923
 device: mps
 amp: none             # fp32 on MPS

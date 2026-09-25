@@ -37,3 +37,32 @@ index's statistics also have to exist before the shards are built (a full pass o
 
 Build: `scripts/build_serving_indexes.sh` (bp128 postings + doc store, 250,000 docs and ~7.4–7.7M postings
 per shard, 57–59 MB per shard on disk). Per-shard build reports: `results/lexical/build_1m_shard{0..3}.json`.
+
+## Range vs mod partitioning (added 2026-09-24)
+
+MS MARCO passage IDs are clustered by source split, so contiguous ID ranges are badly skewed.
+Chaos testing on the live cluster found that losing range slice 3 leaves dev MRR@10 at 8% of its
+healthy value, and that slice is also the load hot-spot. `hs_index_build --shard i/N --partition mod`
+builds shard i from exactly the passages with `global id % N == i`. It still uses the global BM25
+statistics, so merged top-k equals single-index top-k under either scheme.
+
+Distinct dev-relevant passages (qrels.dev.small, 7,433 passages, all in the 1M subset) per shard of the 1M subset:
+
+| scheme | shard 0 | shard 1 | shard 2 | shard 3 | largest share |
+|---|---|---|---|---|---|
+| range (`1m-4shards`, lines [i·n/4, (i+1)·n/4)) | 466 | 344 | 222 | **6,401** | 86.1% |
+| mod (`1m-4shards-mod`, id % 4) | 1,876 | 1,809 | 1,877 | 1,871 | 25.3% |
+
+Mod shard sizes: 249,357 / 250,329 / 250,189 / 250,125 documents (57–59 MB each, bp128 + doc store).
+The union of the mod shards' docids equals `data/subset/1m/docids.u64bin`.
+
+| check | result |
+|---|---|
+| ctest `Sharding.ModPartitionGlobalStatsMergedTopKEqualsSingleIndex` (test corpus, N ∈ {2,3,4}, every shard doc has id % N == i) | pass, all comparisons identical |
+| ctest `Sharding.RealData1mFourShardsMod` (500 dev queries × {exhaustive, MaxScore, WAND, BMW}, k=100) | **0 mismatches in 2,000 comparisons** |
+| ctest `Sharding.RealData1mFourShards` (range, kept for comparison) | 0 mismatches in 2,000 comparisons |
+
+Tradeoff: mod partitioning loses the "shard = contiguous ID range" property (so `HealthResponse.first/last_doc_id`
+no longer describe a shard's contents, and ID-range routing for Fetch must become `id % N`). In exchange,
+losing any one shard costs roughly a quarter of the relevant passages instead of up to 86%, and the query
+load is spread evenly.

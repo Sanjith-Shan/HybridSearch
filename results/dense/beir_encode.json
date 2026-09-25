@@ -1,0 +1,30 @@
+{
+  "model": "BAAI/bge-base-en-v1.5",
+  "device": "mps",
+  "datasets": {
+    "scifact": {
+      "corpus": 5183,
+      "test_queries": 300,
+      "missing_query_text": 0,
+      "corpus_encode_seconds": 127.4,
+      "passages_per_sec": 40.7,
+      "query_encode_seconds": 1.0
+    },
+    "nfcorpus": {
+      "corpus": 3633,
+      "test_queries": 323,
+      "missing_query_text": 0,
+      "corpus_encode_seconds": 101.1,
+      "passages_per_sec": 35.9,
+      "query_encode_seconds": 3.85
+    },
+    "fiqa": {
+      "corpus": 57638,
+      "test_queries": 648,
+      "missing_query_text": 0,
+      "corpus_encode_seconds": 786.1,
+      "passages_per_sec": 73.3,
+      "query_encode_seconds": 4.12
+    }
+  }
+}
