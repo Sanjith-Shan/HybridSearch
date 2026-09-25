@@ -1,0 +1,32 @@
+{
+  "fp32": {
+    "n_pairs": 500,
+    "n_queries": 100,
+    "pairs": "dev.small first 100 judged queries x (1 judged passage + 4 random pids, seed 0)",
+    "reference": "transformers data/rerank/runs/mps_bm25/best torch CPU fp32 logits",
+    "candidate": "data/models/reranker/model.onnx",
+    "max_abs_diff": 6.4373016357421875e-06,
+    "mean_abs_diff": 1.169259235211939e-06,
+    "score_range": [
+      -3.9669671058654785,
+      4.237375259399414
+    ],
+    "groups_same_order": 100,
+    "tolerance": 0.001,
+    "pass": true
+  },
+  "int8": {
+    "n_pairs": 500,
+    "n_queries": 100,
+    "pairs": "dev.small first 100 judged queries x (1 judged passage + 4 random pids, seed 0)",
+    "reference": "transformers data/rerank/runs/mps_bm25/best torch CPU fp32 logits",
+    "candidate": "data/models/reranker/model.int8.onnx",
+    "max_abs_diff": 0.8960487842559814,
+    "mean_abs_diff": 0.08634976297616959,
+    "score_range": [
+      -3.9669671058654785,
+      4.237375259399414
+    ],
+    "groups_same_order": 79
+  }
+}

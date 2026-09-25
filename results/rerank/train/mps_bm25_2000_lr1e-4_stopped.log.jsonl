@@ -1,0 +1,21 @@
+{"step": 0, "val": {"RR@10": 0.04288809523809524, "nDCG@10": 0.06778977064546882}, "train_seconds": 0.0}
+{"step": 50, "loss": 2.06289, "lr": 2.5e-05, "pairs_per_s": 76.3, "topups": 0, "loadavg_1m": 15.6, "mps_driver_gb": 3.09}
+{"step": 100, "loss": 1.9233, "lr": 5e-05, "pairs_per_s": 106.7, "topups": 0, "loadavg_1m": 14.3, "mps_driver_gb": 3.08}
+{"step": 150, "loss": 1.61278, "lr": 7.500000000000001e-05, "pairs_per_s": 105.2, "topups": 0, "loadavg_1m": 11.6, "mps_driver_gb": 3.09}
+{"step": 200, "loss": 1.86434, "lr": 0.0001, "pairs_per_s": 106.1, "topups": 0, "loadavg_1m": 9.8, "mps_driver_gb": 3.09}
+{"step": 250, "loss": 1.37553, "lr": 9.722222222222223e-05, "pairs_per_s": 118.8, "topups": 0, "loadavg_1m": 8.3, "mps_driver_gb": 3.08}
+{"step": 300, "loss": 1.67909, "lr": 9.444444444444444e-05, "pairs_per_s": 106.4, "topups": 0, "loadavg_1m": 15.6, "mps_driver_gb": 3.09}
+{"step": 350, "loss": 1.26754, "lr": 9.166666666666667e-05, "pairs_per_s": 107.9, "topups": 0, "loadavg_1m": 16.6, "mps_driver_gb": 3.08}
+{"step": 400, "loss": 1.10488, "lr": 8.888888888888889e-05, "pairs_per_s": 107.9, "topups": 0, "loadavg_1m": 14.1, "mps_driver_gb": 3.09}
+{"step": 450, "loss": 1.59704, "lr": 8.611111111111112e-05, "pairs_per_s": 78.6, "topups": 0, "loadavg_1m": 22.0, "mps_driver_gb": 3.08}
+{"step": 500, "loss": 1.43003, "lr": 8.333333333333334e-05, "pairs_per_s": 88.7, "topups": 0, "loadavg_1m": 27.6, "mps_driver_gb": 3.09}
+{"step": 500, "val": {"RR@10": 0.14100079365079363, "nDCG@10": 0.184147780532294}, "train_seconds": 625.8}
+{"step": 550, "loss": 1.46344, "lr": 8.055555555555556e-05, "pairs_per_s": 57.3, "topups": 0, "loadavg_1m": 21.2, "mps_driver_gb": 3.09}
+{"step": 600, "loss": 1.85156, "lr": 7.777777777777778e-05, "pairs_per_s": 107.8, "topups": 0, "loadavg_1m": 13.7, "mps_driver_gb": 3.09}
+{"step": 650, "loss": 1.47303, "lr": 7.500000000000001e-05, "pairs_per_s": 115.0, "topups": 0, "loadavg_1m": 10.0, "mps_driver_gb": 3.08}
+{"step": 700, "loss": 1.16644, "lr": 7.222222222222222e-05, "pairs_per_s": 119.7, "topups": 0, "loadavg_1m": 6.9, "mps_driver_gb": 3.09}
+{"step": 750, "loss": 1.30667, "lr": 6.944444444444444e-05, "pairs_per_s": 118.6, "topups": 0, "loadavg_1m": 7.2, "mps_driver_gb": 3.09}
+{"step": 800, "loss": 1.40155, "lr": 6.666666666666667e-05, "pairs_per_s": 109.9, "topups": 0, "loadavg_1m": 7.1, "mps_driver_gb": 3.08}
+{"step": 850, "loss": 2.25293, "lr": 6.388888888888888e-05, "pairs_per_s": 109.4, "topups": 0, "loadavg_1m": 13.1, "mps_driver_gb": 3.09}
+{"step": 900, "loss": 1.06512, "lr": 6.111111111111112e-05, "pairs_per_s": 100.0, "topups": 0, "loadavg_1m": 17.1, "mps_driver_gb": 3.09}
+{"step": 950, "loss": 1.34461, "lr": 5.833333333333334e-05, "pairs_per_s": 105.2, "topups": 0, "loadavg_1m": 17.7, "mps_driver_gb": 3.09}

@@ -1,0 +1,30 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/rerank/eval/public.bm25full.dl20.json",
+  "date": "2026-09-24T18:46:51-07:00",
+  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/rerank/rerank_run.py --name public.bm25full --split dl20 --candidates data/runs/reference/anserini-bm25-default.dl20.trec --depth 100 --model cross-encoder/ms-marco-MiniLM-L6-v2 --backend torch --candidate-label Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      22.75,
+      18.95,
+      16.73
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "a744118",
+  "pairs_scored": 5400,
+  "note": "pairs_per_s is throughput on this laptop, dev-signal-only"
+}

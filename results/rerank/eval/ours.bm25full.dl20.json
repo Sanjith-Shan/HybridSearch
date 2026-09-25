@@ -1,0 +1,28 @@
+{
+  "name": "ours.bm25full",
+  "split": "dl20",
+  "model": "data/rerank/runs/mps_bm25/best",
+  "backend": "torch",
+  "device": "mps",
+  "candidates": "data/runs/reference/anserini-bm25-default.dl20.trec",
+  "candidate_label": "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
+  "depth": 100,
+  "n_queries_qrels": 54,
+  "max_queries": null,
+  "n_queries_with_candidates": 54,
+  "n_pairs": 5400,
+  "metrics": {
+    "nDCG@10": 0.2902,
+    "RR(rel=2)@10": 0.3587,
+    "R(rel=2)@100": 0.5599
+  },
+  "first_stage_metrics_at_depth": {
+    "nDCG@10": 0.4796,
+    "RR(rel=2)@10": 0.6533,
+    "R(rel=2)@100": 0.5599
+  },
+  "score_seconds": 7.4,
+  "pairs_per_s": 731.5,
+  "load_seconds": 8.6,
+  "max_length": 512
+}

@@ -1,7 +1,7 @@
 {
   "experiment": "replica-hung",
-  "fault_start": "kill -STOP 22949",
-  "fault_stop": "kill -CONT 22949",
+  "fault_start": "kill -STOP 27885",
+  "fault_stop": "kill -CONT 27885",
   "rate_per_s": 20.0,
   "phase_seconds": 20.0,
   "params": {
@@ -13,42 +13,42 @@
   "phases": {
     "baseline": {
       "requests": 400,
-      "error_rate": 0.0,
-      "p50_ms": 34.353854499386216,
-      "p99_ms": 164.56015574873143,
-      "p999_ms": 249.51497375816575,
-      "degraded_rate": 0.0,
-      "partial_rate": 0.0,
+      "error_rate": 0.022499999999999964,
+      "p50_ms": 63.83608350006398,
+      "p99_ms": 400.85835624991864,
+      "p999_ms": 473.4294918750131,
+      "degraded_rate": 0.0225,
+      "partial_rate": 0.0075,
       "failed_shard_rate": 0.0,
-      "hedged_rate": 0.0,
-      "mrr_at_10": 0.6438382936507935
+      "hedged_rate": 0.005,
+      "mrr_at_10": 0.6202202380952381
     },
     "fault": {
       "requests": 400,
-      "error_rate": 0.0,
-      "p50_ms": 37.10085449984035,
-      "p99_ms": 325.00487415933094,
-      "p999_ms": 339.128274374673,
-      "degraded_rate": 0.0,
-      "partial_rate": 0.0,
-      "failed_shard_rate": 0.0,
-      "hedged_rate": 0.04,
-      "mrr_at_10": 0.6438382936507935
+      "error_rate": 0.03500000000000003,
+      "p50_ms": 58.86045799979911,
+      "p99_ms": 564.1016018397929,
+      "p999_ms": 742.1933797499909,
+      "degraded_rate": 0.0725,
+      "partial_rate": 0.01,
+      "failed_shard_rate": 0.015,
+      "hedged_rate": 0.0275,
+      "mrr_at_10": 0.5859285714285715
     },
     "recovery": {
       "requests": 400,
       "error_rate": 0.0,
-      "p50_ms": 34.722687000794394,
-      "p99_ms": 188.4264890805023,
-      "p999_ms": 297.7269438600972,
-      "degraded_rate": 0.0,
+      "p50_ms": 47.611832998882164,
+      "p99_ms": 222.39859842155016,
+      "p999_ms": 324.1139523751594,
+      "degraded_rate": 0.005,
       "partial_rate": 0.0,
       "failed_shard_rate": 0.0,
-      "hedged_rate": 0.03,
+      "hedged_rate": 0.055,
       "mrr_at_10": 0.6438382936507935
     }
   },
-  "mrr_retained_under_fault": 1.0,
+  "mrr_retained_under_fault": 0.9447105003023121,
   "hardware": {
     "machine": "arm64",
     "system": "macOS-26.5.1-arm64-arm-64bit",

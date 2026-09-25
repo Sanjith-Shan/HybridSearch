@@ -14,41 +14,41 @@
     "baseline": {
       "requests": 400,
       "error_rate": 0.0,
-      "p50_ms": 16.0296459989695,
-      "p99_ms": 98.18674925048971,
-      "p999_ms": 204.12166923422842,
-      "degraded_rate": 1.0,
+      "p50_ms": 34.477354000046034,
+      "p99_ms": 161.58183949906743,
+      "p999_ms": 227.0785210091779,
+      "degraded_rate": 0.0,
       "partial_rate": 0.0,
       "failed_shard_rate": 0.0,
       "hedged_rate": 0.0,
-      "mrr_at_10": 0.4118888888888889
+      "mrr_at_10": 0.6438382936507935
     },
     "fault": {
       "requests": 400,
-      "error_rate": 0.01749999999999996,
-      "p50_ms": 36.930624999513384,
-      "p99_ms": 362.005350420768,
-      "p999_ms": 426.6684552585358,
-      "degraded_rate": 0.8025,
-      "partial_rate": 0.01,
-      "failed_shard_rate": 0.0325,
+      "error_rate": 0.0,
+      "p50_ms": 44.837354000264895,
+      "p99_ms": 224.9135204996127,
+      "p999_ms": 253.09405999224577,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
+      "failed_shard_rate": 0.0,
       "hedged_rate": 0.0,
-      "mrr_at_10": 0.48339682539682544
+      "mrr_at_10": 0.6438382936507935
     },
     "recovery": {
       "requests": 400,
-      "error_rate": 0.007499999999999951,
-      "p50_ms": 58.33079199965141,
-      "p99_ms": 323.16042042040846,
-      "p999_ms": 384.074957257892,
-      "degraded_rate": 0.1075,
+      "error_rate": 0.01749999999999996,
+      "p50_ms": 42.583875499076385,
+      "p99_ms": 425.70710883996065,
+      "p999_ms": 464.77092660855834,
+      "degraded_rate": 0.005,
       "partial_rate": 0.0075,
-      "failed_shard_rate": 0.0025,
+      "failed_shard_rate": 0.005,
       "hedged_rate": 0.0,
-      "mrr_at_10": 0.6319007936507937
+      "mrr_at_10": 0.6274841269841269
     }
   },
-  "mrr_retained_under_fault": 1.1736097730163013,
+  "mrr_retained_under_fault": 1.0,
   "hardware": {
     "machine": "arm64",
     "system": "macOS-26.5.1-arm64-arm-64bit",

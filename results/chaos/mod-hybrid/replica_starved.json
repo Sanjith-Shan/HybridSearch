@@ -1,7 +1,7 @@
 {
   "experiment": "replica-starved",
-  "fault_start": "taskpolicy -b -p 22953",
-  "fault_stop": "taskpolicy -B -p 22953",
+  "fault_start": "taskpolicy -b -p 27889",
+  "fault_stop": "taskpolicy -B -p 27889",
   "rate_per_s": 20.0,
   "phase_seconds": 20.0,
   "params": {
@@ -13,42 +13,42 @@
   "phases": {
     "baseline": {
       "requests": 400,
+      "error_rate": 0.0625,
+      "p50_ms": 57.520292000845075,
+      "p99_ms": 568.0011496699988,
+      "p999_ms": 712.0539471498871,
+      "degraded_rate": 0.01,
+      "partial_rate": 0.015,
+      "failed_shard_rate": 0.015,
+      "hedged_rate": 0.02,
+      "mrr_at_10": 0.5931617063492064
+    },
+    "fault": {
+      "requests": 400,
+      "error_rate": 0.0024999999999999467,
+      "p50_ms": 57.102311999187805,
+      "p99_ms": 358.5754700791581,
+      "p999_ms": 542.7572663908572,
+      "degraded_rate": 0.0025,
+      "partial_rate": 0.025,
+      "failed_shard_rate": 0.04,
+      "hedged_rate": 0.0675,
+      "mrr_at_10": 0.6384871031746031
+    },
+    "recovery": {
+      "requests": 400,
       "error_rate": 0.0,
-      "p50_ms": 35.69460400012758,
-      "p99_ms": 136.07232666059636,
-      "p999_ms": 177.42749848417114,
+      "p50_ms": 29.179500000282133,
+      "p99_ms": 108.44149365944754,
+      "p999_ms": 147.25909661728687,
       "degraded_rate": 0.0,
       "partial_rate": 0.0,
       "failed_shard_rate": 0.0,
       "hedged_rate": 0.0125,
       "mrr_at_10": 0.6438382936507935
-    },
-    "fault": {
-      "requests": 400,
-      "error_rate": 0.0,
-      "p50_ms": 41.18237500097166,
-      "p99_ms": 316.7177204208747,
-      "p999_ms": 356.6445687254723,
-      "degraded_rate": 0.0,
-      "partial_rate": 0.01,
-      "failed_shard_rate": 0.01,
-      "hedged_rate": 0.06,
-      "mrr_at_10": 0.6388382936507937
-    },
-    "recovery": {
-      "requests": 400,
-      "error_rate": 0.020000000000000018,
-      "p50_ms": 80.05943749958533,
-      "p99_ms": 397.62155333080943,
-      "p999_ms": 443.2559219997168,
-      "degraded_rate": 0.025,
-      "partial_rate": 0.025,
-      "failed_shard_rate": 0.0175,
-      "hedged_rate": 0.035,
-      "mrr_at_10": 0.6184563492063492
     }
   },
-  "mrr_retained_under_fault": 0.9922340748456449,
+  "mrr_retained_under_fault": 1.0764132214541724,
   "hardware": {
     "machine": "arm64",
     "system": "macOS-26.5.1-arm64-arm-64bit",

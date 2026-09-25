@@ -1,7 +1,7 @@
 {
-  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/rerank/eval/public-ort-fp32.bm25full.dl19.json",
-  "date": "2026-09-23T18:06:25-07:00",
-  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/rerank/rerank_run.py --model data/models/reranker-public/model.onnx --backend ort --threads 4 --split dl19 --candidates data/runs/reference/anserini-bm25-default.dl19.trec --candidate-label Anserini BM25 default, full 8.8M --depth 100 --name public-ort-fp32.bm25full --batch 64",
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/results/rerank/eval/ours-ort-fp32.bm25full.dl19.json",
+  "date": "2026-09-24T18:50:21-07:00",
+  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/rerank/rerank_run.py --name ours-ort-fp32.bm25full --split dl19 --candidates data/runs/reference/anserini-bm25-default.dl19.trec --depth 100 --model data/models/reranker/model.onnx --backend ort --batch 64 --candidate-label Anserini BM25 default (k1=0.9,b=0.4), full 8.8M",
   "hardware": {
     "cpu": "Apple M3 Pro",
     "logical_cores": 12,
@@ -9,9 +9,9 @@
     "python": "3.12.7",
     "pinned_threads": false,
     "loadavg_1_5_15": [
-      91.35,
-      66.12,
-      54.14
+      12.95,
+      14.75,
+      15.36
     ],
     "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
     "mem_bytes": 19327352832
@@ -24,7 +24,7 @@
     "onnxruntime": "1.30.0",
     "numpy": "2.5.3"
   },
-  "git_sha": "c32dba1",
+  "git_sha": "a744118",
   "pairs_scored": 4300,
   "note": "pairs_per_s is throughput on this laptop, dev-signal-only"
 }

@@ -119,11 +119,15 @@ def save_tokenizer(tok, model_id: str, out_dir: Path) -> None:
     vocab = out_dir / "vocab.txt"
     if not vocab.exists():
         src = Path(model_id) / "vocab.txt"
-        if not src.exists():
-            from huggingface_hub import hf_hub_download
-
-            src = Path(hf_hub_download(model_id, "vocab.txt"))
-        vocab.write_bytes(src.read_bytes())
+        if src.exists():
+            vocab.write_bytes(src.read_bytes())
+        else:  # local checkpoint without vocab.txt, or a hub id: rebuild from the tokenizer
+            v = tok.get_vocab()
+            ids = sorted(v.values())
+            if ids != list(range(len(ids))):
+                raise ValueError("tokenizer vocab ids are not contiguous; cannot write vocab.txt")
+            inv = {i: t for t, i in v.items()}
+            vocab.write_text("".join(inv[i] + "\n" for i in ids), encoding="utf-8")
 
 
 def ort_session(path: Path, threads: int | None = None):
