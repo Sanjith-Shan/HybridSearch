@@ -277,3 +277,28 @@ scheme. The range shards are kept as the comparison point, and results/chaos/ ha
   training max_len 192 (eval stays 512), padding to multiples of 32 so MPS caches few graph
   shapes, `torch.mps.empty_cache()` at log steps, and MPS driver memory logged every
   `log_every` steps (steady at 3.1 GB).
+
+## 2026-09-24 — The slice-down chaos run exposed two broker problems and one harness bug
+
+1. **A dead slice burned the whole request budget.** When health checks had marked both replicas of a
+   slice unhealthy, `PickPrimary` still fell back to one of them, and every request waited the full
+   300 ms deadline for a reply that was never coming. The degradation planner then took that lost
+   budget out of the dense path and the reranker. So slice-down cost 42% of MRR@10 instead of the
+   ~25% that losing a quarter of the documents should cost, and p50 was 310 ms. The fix is to fail
+   fast when every replica of a slice is known unhealthy (`Hedging:FailFastWhenSliceDown`, default
+   on; recovery comes through the next successful health probe). Result on the 4×2 modulo cluster:
+   MRR retained went from 0.576 to 0.770, and fault-phase p50 from 310 ms to 36 ms.
+2. **The first baseline was taken before the planner had any latency samples.** It degraded 95% of
+   those requests to lexical-only from its conservative priors. The chaos harness now warms up
+   before measuring anything.
+3. **`run_cluster.sh stop` returned before the processes had exited.** A restarted shard could lose
+   the race for its port and exit, silently leaving its slice with one replica. The symptom: the
+   "slow replica, no hedging" experiment showed no latency change, because the 50 ms had been
+   injected into a replica that no longer existed. Stop now waits for exit, and start verifies that
+   every shard logs "listening".
+4. **The degradation planner could lock itself into lexical-only.** Stage costs are p90 over a
+   60-second window. Once one slow window made dense look over budget, the planner skipped dense.
+   A skipped stage records no new samples, so the estimate never recovered, and once the window
+   emptied the conservative priors kept it tripped. One chaos baseline ran 100% lexical-only because
+   of this. The fix is exploration: 5% of requests (`Degradation:ProbeFraction`) run the full plan
+   regardless of estimates, and stage deadlines still bound them.

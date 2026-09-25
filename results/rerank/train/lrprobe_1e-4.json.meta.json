@@ -1,0 +1,33 @@
+{
+  "result": "/Users/sanjithshanmugavel/Documents/HybridSearch/data/rerank/runs/lrprobe_1e-4/train_summary.json",
+  "date": "2026-09-24T18:22:43-07:00",
+  "command": "python /Users/sanjithshanmugavel/Documents/HybridSearch/py/hybridsearch/rerank/train.py --config py/hybridsearch/rerank/configs/mps_bm25.yaml --set max_steps=500 lr=1.0e-4 eval_every=250 out_dir=data/rerank/runs/lrprobe_1e-4 label=LR probe on train_tune --wait-lock --drop-optimizer",
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      8.68,
+      13.98,
+      16.03
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  },
+  "git_sha": "05df008",
+  "steps": 500,
+  "examples_seen": 64000,
+  "groups_seen": 8000,
+  "device": "mps",
+  "label": "LR probe on train_tune"
+}

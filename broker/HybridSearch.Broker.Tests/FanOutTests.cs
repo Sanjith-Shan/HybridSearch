@@ -87,6 +87,40 @@ public class FanOutTests
     }
 
     [Fact]
+    public async Task Slice_with_every_replica_unhealthy_fails_fast_instead_of_burning_the_deadline()
+    {
+        // Slice 1 is "hung": it would answer only after 2 s. Once health checks have marked both of
+        // its replicas unhealthy, the fan-out must not spend the request's budget waiting on it.
+        await using var h = await FanOutHarness.StartAsync(2, 2, (s, _, f) => { if (s == 1) f.LatencyMs = 2000; });
+        foreach (var r in h.Topology.Slices[1].Replicas) r.MarkUnhealthy();
+
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var outcomes = await h.FanOut.SearchAsync(Req(), Deadline.FromNow(TimeSpan.FromMilliseconds(800)), CancellationToken.None);
+        sw.Stop();
+        Assert.Equal(SliceStatus.Ok, outcomes[0].Status);
+        Assert.Equal(SliceStatus.Failed, outcomes[1].Status);
+        Assert.Equal("slice_down", outcomes[1].FailureReason);
+        Assert.True(sw.ElapsedMilliseconds < 400, $"took {sw.ElapsedMilliseconds} ms; should not wait for the dead slice");
+        Assert.Equal(0L, h.Servers[1][0].Seen.SearchCalls + h.Servers[1][1].Seen.SearchCalls);
+
+        // A successful health probe brings the slice back: it is queried again, not skipped.
+        h.Topology.Slices[1].Replicas[0].MarkHealthy(new HybridSearch.Proto.V1.HealthResponse());
+        outcomes = await h.FanOut.SearchAsync(Req(), Deadline.FromNow(TimeSpan.FromMilliseconds(300)), CancellationToken.None);
+        Assert.NotEqual("slice_down", outcomes[1].FailureReason);
+        Assert.True(h.Servers[1][0].Seen.SearchCalls + h.Servers[1][1].Seen.SearchCalls >= 1);
+    }
+
+    [Fact]
+    public async Task Fail_fast_can_be_disabled()
+    {
+        await using var h = await FanOutHarness.StartAsync(1, 1, (_, _, f) => f.LatencyMs = 2000, o => o.Hedging.FailFastWhenSliceDown = false);
+        h.Topology.Slices[0].Replicas[0].MarkUnhealthy();
+        var outcomes = await h.FanOut.SearchAsync(Req(), Deadline.FromNow(TimeSpan.FromMilliseconds(300)), CancellationToken.None);
+        Assert.NotEqual("slice_down", outcomes[0].FailureReason);
+        Assert.Equal(1L, h.Servers[0][0].Seen.SearchCalls);
+    }
+
+    [Fact]
     public async Task Unavailable_replica_fails_over_to_the_other_replica()
     {
         await using var h = await FanOutHarness.StartAsync(1, 2, (_, r, f) => { if (r == 0) f.FailRate = 1; });

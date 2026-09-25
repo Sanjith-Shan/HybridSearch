@@ -69,6 +69,12 @@ public sealed class SearchOptions
 
 public sealed class HedgingOptions
 {
+    /// <summary>
+    /// Skip a slice immediately when health checks have marked all of its replicas unhealthy,
+    /// instead of waiting out the request deadline on it. The slice is reported in failedShards.
+    /// </summary>
+    public bool FailFastWhenSliceDown { get; set; } = true;
+
     public bool Enabled { get; set; } = true;
     /// <summary>Hedge when the primary has not answered by this latency quantile of the slice.</summary>
     public double Quantile { get; set; } = 0.95;
@@ -89,6 +95,8 @@ public sealed class DegradationOptions
     /// <summary>Quantile of recorded stage latencies used to plan whether a stage fits the remaining budget.</summary>
     public double PlanningQuantile { get; set; } = 0.9;
     public int MinSamples { get; set; } = 20;
+    /// <summary>Fraction of requests that run the full plan regardless of estimates, keeping skipped stages' estimates fresh.</summary>
+    public double ProbeFraction { get; set; } = 0.05;
     /// <summary>Prior cost estimates used until enough samples exist.</summary>
     public double DefaultEncodeMs { get; set; } = 15;
     public double DefaultShardFullMs { get; set; } = 40;

@@ -88,7 +88,7 @@ def main() -> None:
     ap.add_argument("--model-dir", type=Path, required=True)
     ap.add_argument("--name", required=True)
     ap.add_argument("--batches", type=int, nargs="+", default=DEFAULT_BATCHES)
-    ap.add_argument("--threads", type=int, nargs="+", default=[4, 1])
+    ap.add_argument("--threads", type=int, nargs="+", default=[7, 1])
     ap.add_argument("--iters", type=int, default=50, help="requests (distinct queries) per batch size")
     args = ap.parse_args()
     md = args.model_dir if args.model_dir.is_absolute() else REPO_ROOT / args.model_dir

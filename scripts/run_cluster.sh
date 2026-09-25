@@ -29,7 +29,18 @@ base_port=50051
 
 stop() {
   if [ -f "$dir/pids" ]; then
-    while read -r pid; do kill "$pid" 2>/dev/null || true; done <"$dir/pids"
+    pids=$(cat "$dir/pids")
+    for pid in $pids; do kill "$pid" 2>/dev/null || true; done
+    # Wait for every process to exit (and release its port) before anything restarts.
+    # Returning early let a restarted shard lose the port race and exit, which silently
+    # left its slice on one replica (see docs/BUG_LOG.md 2026-09-24, chaos harness).
+    for _ in $(seq 1 100); do
+      alive=0
+      for pid in $pids; do kill -0 "$pid" 2>/dev/null && alive=1; done
+      [ "$alive" = 0 ] && break
+      sleep 0.1
+    done
+    for pid in $pids; do kill -9 "$pid" 2>/dev/null || true; done
     rm -f "$dir/pids"
   fi
 }
@@ -76,6 +87,16 @@ reranker="models/reranker"
   --Broker:Models:RerankerDir="$reranker" --Broker:Hedging:Enabled="$hedge" --Broker:Topology:Partitioning="$broker_partitioning" --Broker:Otel:Exporter=none) \
   >"$dir/logs/broker.log" 2>&1 &
 echo $! >>"$dir/pids"
+
+# Every shard must be serving before the cluster counts as up.
+for s in 0 1 2 3; do for r in a b; do
+  ok=0
+  for _ in $(seq 1 100); do
+    grep -q "listening on" "$dir/logs/shard$s$r.log" 2>/dev/null && { ok=1; break; }
+    sleep 0.1
+  done
+  if [ "$ok" = 0 ]; then echo "shard$s$r did not start; see $dir/logs/shard$s$r.log" >&2; stop; exit 1; fi
+done; done
 
 for _ in $(seq 1 120); do
   if curl -sf "http://127.0.0.1:$broker_port/api/search?q=warmup&k=1&deadlineMs=5000" >/dev/null 2>&1; then

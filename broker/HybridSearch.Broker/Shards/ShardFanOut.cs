@@ -82,6 +82,17 @@ public sealed class ShardFanOut(
             return a;
         }
 
+        // Fail fast on a slice whose every replica the health checker has marked unhealthy.
+        // Waiting on it would spend the whole request budget for a reply that is not coming,
+        // and the budget it burns is what the degradation policy then takes from dense and the
+        // reranker (found by the slice-down chaos experiment, docs/BUG_LOG.md 2026-09-24).
+        // Recovery is automatic: the next successful health probe marks a replica healthy.
+        if (_hedging.FailFastWhenSliceDown && slice.Replicas.All(r => r.Health == ReplicaHealth.Unhealthy))
+        {
+            metrics.ShardFailures.WithLabels(slice.Label, "slice_down").Inc();
+            return new SliceOutcome(slice.Id, SliceStatus.Failed, null, false, "slice_down", TimeSpan.Zero, 0);
+        }
+
         slice.CountPrimary();
         metrics.ShardPrimaryRequests.WithLabels(slice.Label).Inc();
         Start(slice.PickPrimary(), AttemptKind.Primary);

@@ -48,7 +48,7 @@ def cascade_quality(npz: Path, qrels, depths, metrics) -> dict[int, dict]:
     return out
 
 
-def latency(bench: Path, variant: str, k: int, threads: int = 4) -> float | None:
+def latency(bench: Path, variant: str, k: int, threads: int = 7) -> float | None:
     if not bench.exists():
         return None
     rows = json.loads(bench.read_text())["results"].get(f"{variant}|threads={threads}", [])
@@ -105,7 +105,7 @@ def main() -> None:
     ap.add_argument("--int8-name", default=None, help="score cache name of the int8 model")
     ap.add_argument("--bench", required=True)
     ap.add_argument("--splits", nargs="+", default=["dev", "dl19", "dl20"])
-    ap.add_argument("--threads", type=int, default=4)
+    ap.add_argument("--threads", type=int, default=7)
     args = ap.parse_args()
     bench = RESULTS / f"bench_{args.bench}.json"
     table = []

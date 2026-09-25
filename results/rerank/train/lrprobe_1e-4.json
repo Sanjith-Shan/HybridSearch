@@ -1,0 +1,96 @@
+{
+  "label": "LR probe on train_tune",
+  "device": "mps",
+  "steps": 500,
+  "groups_seen": 8000,
+  "pairs_seen": 64000,
+  "unique_train_queries": 10000,
+  "epochs": 0.8,
+  "train_seconds": 605.0,
+  "wall_seconds_this_session": 683.6,
+  "best_val_RR@10": 0.12033174603174604,
+  "history": [
+    {
+      "step": 0,
+      "val": {
+        "RR@10": 0.04288809523809524,
+        "nDCG@10": 0.06778977064546882
+      },
+      "train_seconds": 0.0
+    },
+    {
+      "step": 250,
+      "val": {
+        "RR@10": 0.10416507936507936,
+        "nDCG@10": 0.1429170653603784
+      },
+      "train_seconds": 332.0
+    },
+    {
+      "step": 500,
+      "val": {
+        "RR@10": 0.12033174603174604,
+        "nDCG@10": 0.15986996926267763
+      },
+      "train_seconds": 605.0
+    }
+  ],
+  "negative_topups": 0,
+  "config": {
+    "base_model": "nreimers/MiniLM-L6-H384-uncased",
+    "strategy": "bm25-hard",
+    "loss": "listwise",
+    "n_neg": 7,
+    "mix_bm25": 0.5,
+    "batch_groups": 4,
+    "grad_accum": 4,
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_frac": 0.1,
+    "max_steps": 500,
+    "max_len": 192,
+    "seed": 20260923,
+    "device": "mps",
+    "amp": "none",
+    "mps_mem_fraction": 0.35,
+    "mined": "data/rerank/mined/train50k.jsonl",
+    "queries": "data/subset/train50k/queries.tsv",
+    "qrels": "data/subset/train50k/qrels.tsv",
+    "n_queries": null,
+    "pool_depth": 20,
+    "val_run": "data/runs/reference/anserini-bm25-default.train_tune.trec",
+    "val_queries": "data/subset/train_tune/queries.tsv",
+    "val_qrels": "data/subset/train_tune/qrels.tsv",
+    "val_n": 500,
+    "val_depth": 30,
+    "eval_every": 250,
+    "save_every": 250,
+    "log_every": 50,
+    "out_dir": "data/rerank/runs/lrprobe_1e-4",
+    "collection": "data/raw/msmarco/collection.tsv",
+    "label": "LR probe on train_tune",
+    "extra": {}
+  },
+  "hardware": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 12,
+    "os": "Darwin 25.5.0 (macOS-26.5.1-arm64-arm-64bit)",
+    "python": "3.12.7",
+    "pinned_threads": false,
+    "loadavg_1_5_15": [
+      9.09,
+      14.15,
+      16.1
+    ],
+    "timing_label": "dev-signal-only (macOS, threads cannot be pinned)",
+    "mem_bytes": 19327352832
+  },
+  "versions": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "sentence_transformers": "6.1.0",
+    "onnx": "1.23.0",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3"
+  }
+}

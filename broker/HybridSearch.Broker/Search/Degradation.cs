@@ -54,7 +54,14 @@ public sealed record ExecutionPlan(bool Lexical, bool Dense, bool ShrinkBeam, bo
 /// </summary>
 public static class DegradationPolicy
 {
-    public static ExecutionPlan Plan(RequestedPlan req, Capabilities caps, double remainingMs, CostEstimates est, int pressureLevel)
+    /// <param name="probe">
+    /// Exploration: plan as if every stage fits the budget (load shedding still applies). Without it
+    /// the policy can lock itself into lexical-only: a stage it skips records no new latency samples,
+    /// so its estimate never improves once one slow window has tripped it. A small fraction of
+    /// requests probe to keep every estimate fresh; stage deadlines still bound how late they run.
+    /// </param>
+    public static ExecutionPlan Plan(RequestedPlan req, Capabilities caps, double remainingMs, CostEstimates est, int pressureLevel,
+        bool probe = false)
     {
         var steps = new List<DegradationStep>();
         bool dense = req.Dense, rerank = req.Rerank, shrink = false;
@@ -81,7 +88,7 @@ public static class DegradationPolicy
         int chosen = 3;
         for (int level = floor; level <= 3; level++)
         {
-            if (level == 3 || Cost(level, dense, rerank, est) <= remainingMs) { chosen = level; break; }
+            if (level == 3 || probe || Cost(level, dense, rerank, est) <= remainingMs) { chosen = level; break; }
         }
         string ReasonFor(int level) => level <= floor ? "load" : "deadline";
 

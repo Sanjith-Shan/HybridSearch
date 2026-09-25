@@ -148,7 +148,8 @@ public sealed class SearchService(
         var caps = new Capabilities(models.Encoder.IsAvailable, VectorIndexReady(), models.Reranker.IsAvailable);
         var est = costs.Estimate(rerankDepth);
         int pressure = DegradationPolicy.PressureLevel(inFlight, _o.Degradation.InFlightThresholds);
-        var plan = DegradationPolicy.Plan(requested, caps, deadline.Remaining.TotalMilliseconds, est, pressure);
+        bool probe = Random.Shared.NextDouble() < _o.Degradation.ProbeFraction;
+        var plan = DegradationPolicy.Plan(requested, caps, deadline.Remaining.TotalMilliseconds, est, pressure, probe);
         var steps = new List<DegradationStep>(plan.Steps);
         bool dense = plan.Dense, rerank = plan.Rerank;
 

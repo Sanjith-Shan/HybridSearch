@@ -13,42 +13,42 @@
   "phases": {
     "baseline": {
       "requests": 400,
-      "error_rate": 0.0050000000000000044,
-      "p50_ms": 65.24997950054967,
-      "p99_ms": 344.3592787491798,
-      "p999_ms": 435.40679199093137,
-      "degraded_rate": 0.0075,
-      "partial_rate": 0.0025,
+      "error_rate": 0.0,
+      "p50_ms": 40.41660450002382,
+      "p99_ms": 135.0668602393125,
+      "p999_ms": 175.30126185077245,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
       "failed_shard_rate": 0.0,
-      "hedged_rate": 0.02,
-      "mrr_at_10": 0.6350882936507937
+      "hedged_rate": 0.015,
+      "mrr_at_10": 0.6438382936507935
     },
     "fault": {
       "requests": 400,
-      "error_rate": 0.015000000000000013,
-      "p50_ms": 107.8688539992072,
-      "p99_ms": 348.45990217050706,
-      "p999_ms": 383.69643401582414,
-      "degraded_rate": 0.0175,
-      "partial_rate": 0.02,
-      "failed_shard_rate": 0.0175,
-      "hedged_rate": 0.0175,
-      "mrr_at_10": 0.6216061507936508
+      "error_rate": 0.0,
+      "p50_ms": 42.312979000598716,
+      "p99_ms": 122.7345684194369,
+      "p999_ms": 150.52226661792406,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
+      "failed_shard_rate": 0.0,
+      "hedged_rate": 0.035,
+      "mrr_at_10": 0.6438382936507935
     },
     "recovery": {
       "requests": 400,
       "error_rate": 0.0,
-      "p50_ms": 48.76704200069071,
-      "p99_ms": 338.0526166708659,
-      "p999_ms": 397.39713114115386,
-      "degraded_rate": 0.005,
-      "partial_rate": 0.015,
-      "failed_shard_rate": 0.0125,
+      "p50_ms": 35.4685629999949,
+      "p99_ms": 344.59468732991786,
+      "p999_ms": 523.5408070008044,
+      "degraded_rate": 0.0,
+      "partial_rate": 0.0,
+      "failed_shard_rate": 0.0,
       "hedged_rate": 0.0175,
-      "mrr_at_10": 0.6432132936507936
+      "mrr_at_10": 0.6438382936507935
     }
   },
-  "mrr_retained_under_fault": 0.9787712307218874,
+  "mrr_retained_under_fault": 1.0,
   "hardware": {
     "machine": "arm64",
     "system": "macOS-26.5.1-arm64-arm-64bit",

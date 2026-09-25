@@ -1,0 +1,24 @@
+{"step": 0, "val": {"RR@10": 0.04288809523809524, "nDCG@10": 0.06778977064546882}, "train_seconds": 0.0}
+{"step": 50, "loss": 2.08074, "lr": 1.5e-05, "pairs_per_s": 69.1, "topups": 0, "loadavg_1m": 27.9, "mps_driver_gb": 3.1}
+{"step": 100, "loss": 1.92567, "lr": 3e-05, "pairs_per_s": 84.3, "topups": 0, "loadavg_1m": 25.8, "mps_driver_gb": 3.09}
+{"step": 150, "loss": 1.59633, "lr": 2.8333333333333332e-05, "pairs_per_s": 96.8, "topups": 0, "loadavg_1m": 28.7, "mps_driver_gb": 3.1}
+{"step": 200, "loss": 2.04307, "lr": 2.6666666666666667e-05, "pairs_per_s": 77.6, "topups": 0, "loadavg_1m": 33.7, "mps_driver_gb": 3.09}
+{"step": 250, "loss": 1.44658, "lr": 2.5e-05, "pairs_per_s": 86.8, "topups": 0, "loadavg_1m": 26.4, "mps_driver_gb": 3.1}
+{"step": 300, "loss": 1.76864, "lr": 2.3333333333333336e-05, "pairs_per_s": 83.5, "topups": 0, "loadavg_1m": 26.6, "mps_driver_gb": 3.1}
+{"step": 300, "loss": 1.76864, "lr": 2.3333333333333336e-05, "pairs_per_s": 115.7, "topups": 0, "loadavg_1m": 6.5, "mps_driver_gb": 3.07}
+{"step": 350, "loss": 1.5051, "lr": 2.1666666666666667e-05, "pairs_per_s": 116.2, "topups": 0, "loadavg_1m": 9.2, "mps_driver_gb": 2.08}
+{"step": 400, "loss": 1.24745, "lr": 1.9999999999999998e-05, "pairs_per_s": 116.7, "topups": 0, "loadavg_1m": 11.0, "mps_driver_gb": 3.07}
+{"step": 450, "loss": 1.63836, "lr": 1.8333333333333336e-05, "pairs_per_s": 121.8, "topups": 0, "loadavg_1m": 8.3, "mps_driver_gb": 3.07}
+{"step": 500, "loss": 1.58665, "lr": 1.6666666666666667e-05, "pairs_per_s": 114.2, "topups": 0, "loadavg_1m": 8.3, "mps_driver_gb": 3.08}
+{"step": 500, "val": {"RR@10": 0.1111920634920635, "nDCG@10": 0.1509417554511534}, "train_seconds": 636.6}
+{"step": 550, "loss": 1.7236, "lr": 1.5e-05, "pairs_per_s": 80.4, "topups": 0, "loadavg_1m": 9.1, "mps_driver_gb": 3.08}
+{"step": 600, "loss": 1.75918, "lr": 1.3333333333333333e-05, "pairs_per_s": 116.7, "topups": 0, "loadavg_1m": 8.6, "mps_driver_gb": 3.08}
+{"step": 650, "loss": 1.57338, "lr": 1.1666666666666668e-05, "pairs_per_s": 119.2, "topups": 0, "loadavg_1m": 8.2, "mps_driver_gb": 3.08}
+{"step": 700, "loss": 1.56552, "lr": 9.999999999999999e-06, "pairs_per_s": 118.8, "topups": 0, "loadavg_1m": 9.6, "mps_driver_gb": 3.08}
+{"step": 750, "loss": 1.48162, "lr": 8.333333333333334e-06, "pairs_per_s": 115.3, "topups": 0, "loadavg_1m": 17.7, "mps_driver_gb": 3.08}
+{"step": 800, "loss": 1.77877, "lr": 6.666666666666667e-06, "pairs_per_s": 80.7, "topups": 0, "loadavg_1m": 27.6, "mps_driver_gb": 3.07}
+{"step": 850, "loss": 2.46147, "lr": 4.9999999999999996e-06, "pairs_per_s": 101.4, "topups": 0, "loadavg_1m": 22.2, "mps_driver_gb": 3.08}
+{"step": 900, "loss": 1.26717, "lr": 3.3333333333333333e-06, "pairs_per_s": 109.3, "topups": 0, "loadavg_1m": 15.7, "mps_driver_gb": 3.08}
+{"step": 950, "loss": 1.74249, "lr": 1.6666666666666667e-06, "pairs_per_s": 106.1, "topups": 0, "loadavg_1m": 16.8, "mps_driver_gb": 3.08}
+{"step": 1000, "loss": 1.40302, "lr": 0.0, "pairs_per_s": 97.3, "topups": 0, "loadavg_1m": 17.2, "mps_driver_gb": 3.08}
+{"step": 1000, "val": {"RR@10": 0.1274611111111111, "nDCG@10": 0.17029441013828375}, "train_seconds": 1236.4}

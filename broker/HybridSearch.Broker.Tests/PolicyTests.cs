@@ -382,3 +382,39 @@ public class SearchQueryParserTests
         Assert.StartsWith("01", a);
     }
 }
+
+public class DegradationProbeTests
+{
+    private static readonly RequestedPlan Full = new(true, true, true);
+    private static readonly Capabilities All = new(true, true, true);
+    // Estimates far over budget: without probing this must go lexical-only.
+    private static readonly CostEstimates Slow = new(500, 500, 400, 10, 900, 5);
+
+    [Fact]
+    public void Without_probe_an_over_budget_plan_degrades_to_lexical_only()
+    {
+        var plan = DegradationPolicy.Plan(Full, All, 300, Slow, 0);
+        Assert.False(plan.Dense);
+        Assert.Equal(3, plan.Level);
+    }
+
+    [Fact]
+    public void A_probe_runs_the_full_plan_so_skipped_stages_get_fresh_estimates()
+    {
+        var plan = DegradationPolicy.Plan(Full, All, 300, Slow, 0, probe: true);
+        Assert.True(plan.Dense);
+        Assert.True(plan.Rerank);
+        Assert.Equal(0, plan.Level);
+    }
+
+    [Fact]
+    public void A_probe_still_respects_load_shedding_and_missing_models()
+    {
+        var plan = DegradationPolicy.Plan(Full, All, 300, Slow, 2, probe: true);
+        Assert.False(plan.Rerank);
+        Assert.True(plan.ShrinkBeam);
+        var noEncoder = DegradationPolicy.Plan(Full, new Capabilities(false, true, true), 300, Slow, 0, probe: true);
+        Assert.False(noEncoder.Dense);
+    }
+}
+

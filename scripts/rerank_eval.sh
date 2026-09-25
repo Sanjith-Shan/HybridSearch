@@ -1,53 +1,52 @@
 #!/usr/bin/env bash
-# M5 evaluation: rerank first-stage top-100 with every model through the project harness.
-#   scripts/rerank_eval.sh quality          # all models x {full-collection BM25, 1M BM25, 1M hybrid if present}
-#   CHOSEN=mps_bm25 scripts/rerank_eval.sh export   # ONNX fp32+int8 of the chosen model -> data/models/reranker
-#   CHOSEN=mps_bm25 scripts/rerank_eval.sh int8     # ORT CPU fp32 vs int8 quality (dl19, dl20[, dev])
-#   CHOSEN=mps_bm25 scripts/rerank_eval.sh cascade  # depth-200 scores + bench + cascade curve
+# M5 evaluation. Every rerank goes through hybridsearch.eval (the project's trec_eval-parity harness).
+#   scripts/rerank_eval.sh quality            # public + ablations: BM25 (Anserini, full 8.8M) top-100, dl19 dl20 dev
+#   CHOSEN=mps_bm25 scripts/rerank_eval.sh subset1m  # chosen + public on the engine's own BM25 over the 1M subset
+#   CHOSEN=mps_bm25 scripts/rerank_eval.sh export    # ONNX fp32 + int8 -> data/models/reranker
+#   CHOSEN=mps_bm25 scripts/rerank_eval.sh int8      # ORT CPU fp32 vs int8 quality: dl19, dl20, first 1000 dev queries
+#   CHOSEN=mps_bm25 scripts/rerank_eval.sh cascade   # depth-200 scores (torch MPS; ORT int8 on dl19/dl20) + bench + curve
+# CHOSEN is picked by train_tune validation RR@10 (results/rerank/train/*.json), never by dev.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 PY=.venv/bin/python
 R=data/runs/reference
-MODELS=${MODELS:-"public mps_random mps_bm25 mps_dense mps_mixed"}
+MODELS=${MODELS:-"public mps_bm25 mps_dense mps_random"}
 model_path() { [ "$1" = public ] && echo cross-encoder/ms-marco-MiniLM-L6-v2 || echo data/rerank/runs/$1/best; }
-rr() {  # name split candidates depth model [backend] [label]
-  local out=results/rerank/eval/$1.$2.json
+rr() {  # name split candidates depth model backend label [extra args...]
+  local name=$1 split=$2 cand=$3 depth=$4 model=$5 backend=$6 label=$7; shift 7
+  local out=results/rerank/eval/$name.$split.json
   [ -s "$out" ] && { echo "exists: $out"; return; }
-  $PY -m hybridsearch.rerank.rerank_run --name "$1" --split "$2" --candidates "$3" --depth "$4" \
-     --model "$5" --backend "${6:-torch}" --candidate-label "${7:-}" ${EXTRA:-} 2>&1 \
-     | grep -v -i -E "warn|Loading weights" | grep -E '^\{|"(RR@10|nDCG@10)"|pairs/s' | tail -4
+  $PY -m hybridsearch.rerank.rerank_run --name "$name" --split "$split" --candidates "$cand" --depth "$depth" \
+     --model "$model" --backend "$backend" --candidate-label "$label" "$@" 2>&1 \
+     | grep -v -i -E "warn|Loading weights" | grep -E '"(RR@10|nDCG@10)"|Error|Traceback' | head -4
 }
+FULL="Anserini BM25 default (k1=0.9,b=0.4), full 8.8M"
 case "${1:-quality}" in
 quality)
   for m in $MODELS; do
     mp=$(model_path $m)
     [ "$m" != public ] && [ ! -d "$mp" ] && { echo "skip $m (no checkpoint)"; continue; }
+    for s in dl19 dl20 dev; do rr "$m.bm25full" $s $R/anserini-bm25-default.$s.trec 100 "$mp" torch "$FULL"; done
+  done ;;
+subset1m)
+  for m in public $CHOSEN; do
     for s in dl19 dl20 dev; do
-      rr "$m.bm25full" $s $R/anserini-bm25-default.$s.trec 100 "$mp" torch "Anserini BM25 default (k1=0.9,b=0.4), full 8.8M"
-    done
-    for s in dev dl19 dl20; do
-      f=$R/anserini-bm25-default-1m.$s.trec
-      [ -f "$f" ] && rr "$m.bm25-1m" ${s/dev/dev1m}$( [ $s != dev ] && echo _1m ) $f 100 "$mp" torch "Anserini BM25 default over the 1M subset"
-      h=$(ls data/runs/hybrid/*1m*.$s.trec 2>/dev/null | head -1 || true)
-      [ -n "$h" ] && rr "$m.hybrid-1m" ${s/dev/dev1m}$( [ $s != dev ] && echo _1m ) "$h" 100 "$mp" torch "hybrid 1M: $h"
+      sp=$( [ $s = dev ] && echo dev1m || echo ${s}_1m )
+      rr "$m.hsbm25-1m" $sp data/runs/m4/hs-bm25-1m.$s.trec 100 "$(model_path $m)" torch "HybridSearch engine BM25 over the 1M subset"
     done
   done ;;
 export)
   $PY -m hybridsearch.rerank.export --model data/rerank/runs/$CHOSEN/best --out data/models/reranker --int8 --tag reranker ;;
 int8)
-  for v in model.onnx model.int8.onnx; do
-    n=$CHOSEN-ort-$( [ $v = model.onnx ] && echo fp32 || echo int8 )
-    for s in ${INT8_SPLITS:-dl19 dl20}; do
-      EXTRA="--threads 4 --batch 64" rr "$n.bm25full" $s $R/anserini-bm25-default.$s.trec 100 data/models/reranker/$v ort "Anserini BM25 default, full 8.8M"
-    done
+  for v in fp32 int8; do
+    f=data/models/reranker/$( [ $v = fp32 ] && echo model.onnx || echo model.int8.onnx )
+    for s in dl19 dl20; do rr "$CHOSEN-ort-$v.bm25full" $s $R/anserini-bm25-default.$s.trec 100 $f ort "$FULL" --batch 64; done
+    rr "$CHOSEN-ort-$v.bm25full-q1000" dev $R/anserini-bm25-default.dev.trec 100 $f ort "$FULL" --batch 64 --max-queries 1000
   done ;;
 cascade)
-  for s in dl19 dl20 dev; do
-    rr "$CHOSEN-d200.bm25full" $s $R/anserini-bm25-default.$s.trec 200 data/rerank/runs/$CHOSEN/best torch "Anserini BM25 default, full 8.8M"
-  done
-  for s in ${INT8_SPLITS:-dl19 dl20}; do
-    EXTRA="--threads 4 --batch 64" rr "$CHOSEN-int8-d200.bm25full" $s $R/anserini-bm25-default.$s.trec 200 data/models/reranker/model.int8.onnx ort "Anserini BM25 default, full 8.8M"
-  done
+  for s in dl19 dl20 dev; do rr "$CHOSEN-d200.bm25full" $s $R/anserini-bm25-default.$s.trec 200 "$(model_path $CHOSEN)" torch "$FULL"; done
+  for s in dl19 dl20; do rr "$CHOSEN-int8-d200.bm25full" $s $R/anserini-bm25-default.$s.trec 200 data/models/reranker/model.int8.onnx ort "$FULL" --batch 64; done
   $PY -m hybridsearch.rerank.bench --model-dir data/models/reranker --name reranker
   $PY -m hybridsearch.rerank.cascade --name $CHOSEN-d200.bm25full --int8-name $CHOSEN-int8-d200.bm25full --bench reranker ;;
 esac
+$PY -m hybridsearch.rerank.report > /dev/null

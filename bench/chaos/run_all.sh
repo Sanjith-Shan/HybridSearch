@@ -28,10 +28,19 @@ run() {
     --queries data/raw/msmarco/queries.dev.small.tsv --qrels data/subset/1m/qrels.dev.tsv \
     --rate "$rate" --phase-seconds "$secs" --mode "$mode" --rerank "$rerank" --deadline-ms 300 "$@" >/dev/null
 }
+# Warm the broker before measuring: its degradation planner starts from conservative stage-cost
+# priors, and until it has latency samples it may shed the dense path. A baseline taken during
+# that window is not a baseline (found in the first hybrid run: 95% of baseline requests degraded).
+warm() {
+  .venv/bin/python -m hybridsearch.serving.chaos --name warmup \
+    --queries data/raw/msmarco/queries.dev.small.tsv --qrels data/subset/1m/qrels.dev.tsv \
+    --rate "$rate" --phase-seconds 5 --mode "$mode" --rerank "$rerank" --deadline-ms 300 --seed 1 >/dev/null
+}
 record_load() { printf '{"load_avg": "%s", "host": "%s"}\n' "$(sysctl -n vm.loadavg 2>/dev/null || cat /proc/loadavg)" "$(uname -m) $(uname -s)" >"$out/$1.load.json"; }
 
 scripts/run_cluster.sh start $cluster_args >/dev/null
 pids
+warm
 # Slot order in the pid file: shard0a shard0b shard1a shard1b shard2a shard2b shard3a shard3b broker
 record_load replica_hung
 run --name replica-hung --fault-start "kill -STOP ${P[2]}" --fault-stop "kill -CONT ${P[2]}" --out "$out/replica_hung.json"
@@ -44,6 +53,7 @@ run --name slice-down --fault-start "kill -STOP ${P[6]} ${P[7]}" --fault-stop "k
 
 scripts/run_cluster.sh start --no-hedge $cluster_args >/dev/null
 pids
+warm
 record_load replica_slow50_nohedge
 run --name replica-slow50-no-hedging --fault-start "echo latency_ms=50 > $chaos/shard2a" --fault-stop ": > $chaos/shard2a" --out "$out/replica_slow50_nohedge.json"
 scripts/run_cluster.sh start $cluster_args >/dev/null
