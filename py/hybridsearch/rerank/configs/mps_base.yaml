@@ -3,13 +3,13 @@
 base_model: nreimers/MiniLM-L6-H384-uncased
 loss: listwise
 n_neg: 7              # group = 1 positive + 7 negatives = 8 pairs
-batch_groups: 8       # micro-batch 64 pairs (MPS memory: attention for 128x256 pairs is GBs)
-grad_accum: 2         # effective 16 groups = 128 pairs per optimizer step
+batch_groups: 4       # micro-batch 32 pairs (MPS memory: attention activations scale with pairs x len^2)
+grad_accum: 4         # effective 16 groups = 128 pairs per optimizer step
 lr: 3.0e-5
 weight_decay: 0.01
 warmup_frac: 0.1
 max_steps: 2000
-max_len: 256
+max_len: 192          # training only (eval 512): attention activations on MPS ~ pairs x len^2, measured 3.25 GB at 32x256
 pool_depth: 20       # negatives sampled from the top-20 of each filtered pool (memory: the laptop is swapping)
 seed: 20260923
 device: mps

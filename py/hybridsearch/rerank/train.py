@@ -61,7 +61,7 @@ class TrainConfig:
     seed: int = 20260923
     device: str = "auto"
     amp: str = "none"               # none | bf16 | fp16 (fp16/bf16 on CUDA; MPS stays fp32)
-    mps_mem_fraction: float = 0.3   # hard cap on MPS memory (fraction of recommended max): OOM, not swap
+    mps_mem_fraction: float = 0.35  # hard cap (~4.7 GB of 18 GB) on MPS memory (fraction of recommended max): OOM, not swap
     mined: str = "data/rerank/mined/train50k.jsonl"
     queries: str = "data/subset/train50k/queries.tsv"
     qrels: str = "data/subset/train50k/qrels.tsv"
@@ -355,6 +355,7 @@ def train(cfg: TrainConfig, resume: bool = False, wait_lock: bool = False) -> di
             step += 1
             if device == "mps":
                 torch.mps.synchronize()
+                torch.mps.empty_cache()  # return cached blocks each step: long batches OOM otherwise
             train_seconds += time.time() - t_step
             if not math.isfinite(loss_acc):
                 raise FloatingPointError(f"non-finite loss at step {step}")

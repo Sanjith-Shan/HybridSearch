@@ -114,3 +114,56 @@ not been run against the real archive** (it was never downloaded here).
 
 Only the full-scale numbers from that box, pinned and labelled, go on a resume; every
 laptop number in `results/vector/` is `dev-signal-only`.
+
+## Results on the laptop (dev-signal-only)
+
+All timings: M3 Pro laptop, macOS, threads unpinned, machine shared with other projects
+(load average 25-140 during these runs; each sidecar records it). Treat QPS and latency as
+development signals; hops, distance computations, SSD reads, recall and MRR do not depend
+on load. Recall is always against brute force (`hs_vec_groundtruth`, which matches the data
+module's FAISS IndexFlatIP run exactly on dev: overlap@10 1.0000, `gt_crosscheck_dev_1m.json`).
+Recall/QPS sweeps use the 2,000 `train_tune` queries (no tuning on dev); dev is used only for
+MRR at the operating points.
+
+**Build parameters (100K real vectors, `build_sweep_100000.*`).** Cost at matched recall@10
+(`build_sweep_100000.matched_recall.json`), hops / distance computations per query:
+
+| config | @0.95 | @0.98 | @0.99 |
+|---|---|---|---|
+| R=64, L=100, alpha=1.2 (default) | 28.6 / 1,074 | 62.1 / 1,945 | 116 / 3,159 |
+| R=32 | 62.3 / 1,098 | 161 / 2,354 | not reached by L=240 |
+| R=16 | 198 / 1,547 | not reached | not reached |
+| R=96 | 22.1 / 1,086 | 46.4 / 1,884 | 79 / 2,836 |
+| L_build=50 | 36.9 / 1,084 | 90.8 / 2,194 | 172 / 3,664 |
+| L_build=200 | 26.8 / 1,080 | 58.4 / 1,938 | 107 / 3,082 |
+| alpha=1.0 | 47.5 / 954 | 111 / 1,892 | 189 / 2,943 |
+| alpha=1.4 | 33.5 / 1,177 | 81.8 / 2,305 | 159 / 3,854 |
+| one pass at alpha=1.2 | 29.1 / 1,260 | 62.4 / 2,327 | 119 / 3,922 |
+
+Reading: alpha=1 builds a sparse graph (average degree 22.8 of 64) that needs ~1.7x the
+hops of alpha=1.2 at equal recall, while each hop is cheaper (fewer neighbours), so it wins
+on distance computations in RAM but loses badly on disk, where a hop is a 4 KB read. That
+is exactly why DiskANN uses alpha > 1. The second pass (alpha=1 then 1.2) saves ~15-20%
+of distance computations over a single alpha=1.2 pass at the same hops.
+
+**SSD index, one 250K shard (`shard0_250k.sweep.jsonl`, cold = F_NOCACHE + evicted).**
+recall@10 0.90 at L=20 (W=4: 34.8 reads, 10 I/O rounds per query), 0.965 at L=50 (63 reads,
+17 rounds), 0.984 at L=100 (112 reads, 29 rounds), 0.993 at L=200 (211 reads). Beam width
+trades reads for rounds: at L=100, W=1 needs 105 rounds of 1 read, W=8 needs 17 rounds
+and 122 reads. A 10,000-node BFS cache (33 MB) removes 10-12 reads/query at identical recall.
+Sequential preads (no pool) at W=4 cost ~2.5 ms per round against ~0.35-0.6 ms with the
+pool. RAM per shard: PQ codes 24.0 MB + pivots 0.8 MB (+ docids 2 MB); `disk.index` 1.02 GB.
+
+**Serving shards, 1M (`shards_mod_1m.*`, `mrr_dev_1m_mod_shards.json`).** 4 modulo shards
+(`docid % 4`), each built with 5 overlapping partitions under a 0.4 GB budget (6-20 min
+per shard, 1.1-1.7 GB peak RSS). Exact check: merged exact top-10 == global exact top-10
+for 2,000/2,000 queries (ranked lists identical), no row missing or duplicated; the same
+holds for the range shards. Merged approximate recall@10 (train_tune, W=4): 0.930 / 0.957 /
+0.978 / 0.987 / 0.992 at L = 10 / 20 / 50 / 100 / 200, with 103 / 138 / 251 / 447 / 842 SSD
+reads per query summed over the 4 shards. RAM for the whole 1M: 96 MB PQ codes + 3.2 MB pivots.
+
+**Dev MRR@10 cost (6,980 dev queries, the 1M subset).** Exact flat search: 0.6538. Merged
+4-shard DiskANN: L=20 0.6347 (-0.0191), L=50 0.6449 (-0.0089), L=100 0.6487 (-0.0052),
+L=200 0.6511 (-0.0027); all p=0.0001 (paired randomization). The 1M subset holds every
+judged passage plus a random sample, so its absolute MRR is far above the 8.8M figure
+(0.3583); only the delta transfers.

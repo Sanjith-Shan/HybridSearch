@@ -1,0 +1,140 @@
+{
+  "qrels": "data/subset/1m/qrels.dev.tsv",
+  "reference": "data/runs/reference/dense-flat-1m.dev.trec",
+  "n_queries": 6980,
+  "reference_metrics": {
+    "RR@10": 0.65381,
+    "R@10": 0.86984,
+    "nDCG@10": 0.70313
+  },
+  "runs": [
+    {
+      "run": "results/vector/runs/shards_mod_1m.dev.W4.L100.trec",
+      "tag": "mod4-dev-W4-L100",
+      "metrics": {
+        "RR@10": 0.64865,
+        "R@10": 0.86189,
+        "nDCG@10": 0.69724
+      },
+      "delta_mrr10_vs_exact": -0.00516,
+      "delta_ci95": [
+        -0.00695,
+        -0.00346
+      ],
+      "p_value_randomization": 9.999000099990002e-05,
+      "overlap10_with_exact": 0.98428,
+      "operating_point": {
+        "system": "mod4-dev",
+        "shards": 4,
+        "n": 1000000,
+        "nq": 6980,
+        "k": 10,
+        "L": 100,
+        "W": 4,
+        "mode": "warm",
+        "cache_nodes": 0,
+        "recall": 0.98428,
+        "ssd_reads_per_query_all_shards": 446.5,
+        "cpu_us_per_query_all_shards": 6328.5,
+        "wall_us_per_query_sequential": 27235.8,
+        "wall_us_per_query_max_shard": 7906.6
+      }
+    },
+    {
+      "run": "results/vector/runs/shards_mod_1m.dev.W4.L20.trec",
+      "tag": "mod4-dev-W4-L20",
+      "metrics": {
+        "RR@10": 0.63474,
+        "R@10": 0.84093,
+        "nDCG@10": 0.68144
+      },
+      "delta_mrr10_vs_exact": -0.01907,
+      "delta_ci95": [
+        -0.02239,
+        -0.01583
+      ],
+      "p_value_randomization": 9.999000099990002e-05,
+      "overlap10_with_exact": 0.94908,
+      "operating_point": {
+        "system": "mod4-dev",
+        "shards": 4,
+        "n": 1000000,
+        "nq": 6980,
+        "k": 10,
+        "L": 20,
+        "W": 4,
+        "mode": "warm",
+        "cache_nodes": 0,
+        "recall": 0.94908,
+        "ssd_reads_per_query_all_shards": 138.4,
+        "cpu_us_per_query_all_shards": 2670.3,
+        "wall_us_per_query_sequential": 9250.6,
+        "wall_us_per_query_max_shard": 2900.8
+      }
+    },
+    {
+      "run": "results/vector/runs/shards_mod_1m.dev.W4.L200.trec",
+      "tag": "mod4-dev-W4-L200",
+      "metrics": {
+        "RR@10": 0.65115,
+        "R@10": 0.86547,
+        "nDCG@10": 0.70003
+      },
+      "delta_mrr10_vs_exact": -0.00266,
+      "delta_ci95": [
+        -0.00395,
+        -0.0015
+      ],
+      "p_value_randomization": 9.999000099990002e-05,
+      "overlap10_with_exact": 0.99129,
+      "operating_point": {
+        "system": "mod4-dev",
+        "shards": 4,
+        "n": 1000000,
+        "nq": 6980,
+        "k": 10,
+        "L": 200,
+        "W": 4,
+        "mode": "warm",
+        "cache_nodes": 0,
+        "recall": 0.99129,
+        "ssd_reads_per_query_all_shards": 841.7,
+        "cpu_us_per_query_all_shards": 13308.2,
+        "wall_us_per_query_sequential": 56259.2,
+        "wall_us_per_query_max_shard": 16102.6
+      }
+    },
+    {
+      "run": "results/vector/runs/shards_mod_1m.dev.W4.L50.trec",
+      "tag": "mod4-dev-W4-L50",
+      "metrics": {
+        "RR@10": 0.6449,
+        "R@10": 0.85626,
+        "nDCG@10": 0.69301
+      },
+      "delta_mrr10_vs_exact": -0.00892,
+      "delta_ci95": [
+        -0.01129,
+        -0.00664
+      ],
+      "p_value_randomization": 9.999000099990002e-05,
+      "overlap10_with_exact": 0.97298,
+      "operating_point": {
+        "system": "mod4-dev",
+        "shards": 4,
+        "n": 1000000,
+        "nq": 6980,
+        "k": 10,
+        "L": 50,
+        "W": 4,
+        "mode": "warm",
+        "cache_nodes": 0,
+        "recall": 0.97298,
+        "ssd_reads_per_query_all_shards": 251.4,
+        "cpu_us_per_query_all_shards": 3877.2,
+        "wall_us_per_query_sequential": 15019.4,
+        "wall_us_per_query_max_shard": 4391.1
+      }
+    }
+  ]
+}

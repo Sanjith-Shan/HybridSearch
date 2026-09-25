@@ -1,0 +1,29 @@
+{
+  "qrels": "data/subset/1m/qrels.dev.tsv",
+  "reference": "data/runs/reference/dense-flat-1m.dev.trec",
+  "n_queries": 6980,
+  "reference_metrics": {
+    "RR@10": 0.65381,
+    "R@10": 0.86984,
+    "nDCG@10": 0.70313
+  },
+  "runs": [
+    {
+      "run": "results/vector/runs/exact_bruteforce_1m.dev.trec",
+      "tag": "hs-bruteforce",
+      "metrics": {
+        "RR@10": 0.65381,
+        "R@10": 0.86984,
+        "nDCG@10": 0.70313
+      },
+      "delta_mrr10_vs_exact": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "p_value_randomization": 1.0,
+      "overlap10_with_exact": 1.0,
+      "operating_point": null
+    }
+  ]
+}

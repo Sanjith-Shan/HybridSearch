@@ -134,8 +134,10 @@ Append only. Real entries only — this is where "tell me about a hard bug" answ
   saved graph (a 10-line numpy script).
 - **Fix / lesson.** Not a code bug; it is a data regime where Vamana degrades. The
   build tool now reports `reachable_from_medoid` after every build, and the unit test
-  `Vamana.EveryNodeReachableFromMedoid` checks it. On real BGE embeddings every node
-  is reachable (20K and 100K subsets: 100%). Synthetic data for development must have
+  `Vamana.EveryNodeReachableFromMedoid` checks it. On real BGE embeddings the default build
+  (R=64, L=100, alpha=1.2) reaches every node (20K and 100K subsets: 100%); smaller
+  degrees leave a few stragglers at 100K (R=32: 99.95%, R=16: 99.53%;
+  results/vector/build_sweep_100000.build.jsonl). Synthetic data for development must have
   low intrinsic dimension within clusters; isotropic 768-d blobs do not look like text
   embeddings.
 
@@ -259,3 +261,19 @@ of both replicas of one.
 `Topology:Partitioning=modulo` option so the rare lookup that is not tied to a search reply routes
 correctly. Global BM25 statistics keep the merged top-k identical to the single index under either
 scheme. The range shards are kept as the comparison point, and results/chaos/ has both.
+
+## 2026-09-24 — reranker training on MPS grew to 15 GB and pushed the laptop into swap (M5, rerank agent)
+- **Symptom:** a 40-step throughput probe made no progress for 10 minutes; `top` showed the
+  training process at 15 GB, system swap at 18 of 18.4 GB, the process in state `U` (paging).
+- **Cause:** two effects stacked. (1) Activation memory: MiniLM-L6 on MPS runs SDPA through
+  the math path and keeps the full attention matrices for backward. Measured with
+  `torch.mps.current_allocated_memory()`: one forward of 32 pairs × 256 tokens holds 3.25 GB,
+  so the configured 128-pair batch needed >10 GB. (2) No cap: MPS's default high-watermark lets
+  one process take most of unified memory, so it swapped instead of failing.
+- **Found:** `top -o mem` showed the hog was this process, not another agent's; then a
+  forward/backward memory probe at fixed shapes.
+- **Fix:** `torch.mps.set_per_process_memory_fraction(0.3)` (about 4 GB: OOM instead of swap),
+  32-pair micro-batches with 4-step gradient accumulation (same 128-pair effective batch),
+  training max_len 192 (eval stays 512), padding to multiples of 32 so MPS caches few graph
+  shapes, `torch.mps.empty_cache()` at log steps, and MPS driver memory logged every
+  `log_every` steps (steady at 3.1 GB).

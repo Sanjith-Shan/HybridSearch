@@ -74,6 +74,9 @@ class Scorer:
             from hybridsearch.rerank.model import load_cross_encoder
 
             self.device = pick_device(device)
+            if self.device == "mps":
+                torch_mod = __import__("torch")
+                torch_mod.mps.set_per_process_memory_fraction(0.3)
             self.tok, self.model = load_cross_encoder(model, self.device)
 
     def score(self, Q: list[str], P: list[str], batch: int = 128, progress: bool = False) -> np.ndarray:
@@ -93,9 +96,12 @@ class Scorer:
                 out[idx] = ort_score(self.sess, self.tok, q, p, self.max_length, batch)
             else:
                 with torch.no_grad():
-                    enc = encode_pairs(self.tok, q, p, self.max_length)
+                    enc = encode_pairs(self.tok, q, p, self.max_length,
+                                       pad_multiple=32 if self.device == "mps" else None)
                     enc = {k: v.to(self.device) for k, v in enc.items()}
                     out[idx] = self.model(**enc).logits[:, 0].float().cpu().numpy()
+            if self.backend == "torch" and self.device == "mps" and n % 100 == 0:
+                torch.mps.empty_cache()
             if progress and n % 200 == 0:
                 print(f"  {s}/{len(Q)} pairs, {s / max(time.time() - t, 1e-9):.0f} pairs/s", flush=True)
         return out
@@ -103,7 +109,7 @@ class Scorer:
 
 def rerank(name: str, split: str, candidates: Path, depth: int, model: str, backend: str,
            device: str = "auto", threads: int | None = None, collection: Path = FULL_COLLECTION,
-           batch: int = 128, candidate_label: str = "") -> dict:
+           batch: int = 128, candidate_label: str = "", max_queries: int | None = None) -> dict:
     from hybridsearch.rerank import cap_threads
 
     cap_threads()
@@ -111,6 +117,9 @@ def rerank(name: str, split: str, candidates: Path, depth: int, model: str, back
     queries = read_queries(REPO_ROOT / qpath)
     qrels = read_qrels(REPO_ROOT / qrels_path)
     qids = {q for q in queries if q in qrels}
+    if max_queries:  # first N judged queries by qid; qrels restricted so the mean is over N
+        qids = set(sorted(qids, key=int)[:max_queries])
+        qrels = {q: qrels[q] for q in qids}
     cands = load_candidates(candidates, qids, depth)
     t0 = time.time()
     need = {p for hits in cands.values() for p, _ in hits}
@@ -151,7 +160,7 @@ def rerank(name: str, split: str, candidates: Path, depth: int, model: str, back
         "name": name, "split": split, "model": model, "backend": backend, "device": scorer.device,
         "candidates": str(candidates.relative_to(REPO_ROOT)) if candidates.is_absolute() else str(candidates),
         "candidate_label": candidate_label, "depth": depth,
-        "n_queries_qrels": len(qrels), "n_queries_with_candidates": len(cands),
+        "n_queries_qrels": len(qrels), "max_queries": max_queries, "n_queries_with_candidates": len(cands),
         "n_pairs": len(keys), "metrics": {k: round(v, 4) for k, v in agg.items()},
         "first_stage_metrics_at_depth": {k: round(v, 4) for k, v in base.items()},
         "score_seconds": round(score_seconds, 1), "pairs_per_s": round(len(keys) / score_seconds, 1),
@@ -178,10 +187,12 @@ def main() -> None:
     ap.add_argument("--name", required=True)
     ap.add_argument("--batch", type=int, default=128)
     ap.add_argument("--collection", type=Path, default=FULL_COLLECTION)
+    ap.add_argument("--max-queries", type=int, default=None,
+                    help="evaluate only the first N judged queries (by qid)")
     args = ap.parse_args()
     cand = args.candidates if args.candidates.is_absolute() else REPO_ROOT / args.candidates
     rerank(args.name, args.split, cand, args.depth, args.model, args.backend, args.device,
-           args.threads, args.collection, args.batch, args.candidate_label)
+           args.threads, args.collection, args.batch, args.candidate_label, args.max_queries)
 
 
 if __name__ == "__main__":

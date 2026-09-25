@@ -34,7 +34,8 @@ Code: `py/hybridsearch/rerank/` (training, mining, scoring, export, bench, casca
 - **Groups:** 1 positive + n negatives, one query per group. Loss `listwise` (softmax CE over the
   group, default) or `bce` (pointwise). Config key `loss`.
 - **Negative strategies** (`strategy`): `random`, `bm25-hard`, `dense-hard`, `mixed`. Negatives
-  are sampled uniformly from the filtered top-50 pool of the source, not "always the top n".
+  are sampled uniformly from the top-`pool_depth` of the source's filtered pool (mined to 50;
+  the MPS runs use 20 to keep the text cache small), not "always the top n".
 - **No positive leaks:** every judged pid of the query is removed from every pool, and a passage
   with the same normalised text as a positive (MS MARCO has exact duplicates) is never a negative.
   Both are tested.
@@ -68,10 +69,12 @@ Script: `scripts/full_scale/train_reranker_a100.sh <strategy>`; config:
 | Setting | MPS ablation (measured here) | A100 run (prepared) |
 |---|---|---|
 | group | 1 + 7 | 1 + 15 |
-| groups per step | 16 (128 pairs) | 64 (1,024 pairs) |
+| groups per step | 16 (128 pairs = 4 micro-batches of 32) | 64 (1,024 pairs) |
 | precision | fp32 | bf16 autocast |
-| max_len | 256 | 256 |
-| steps | see results | 5,000 (320k groups, 6.4 passes over 50k mined queries) |
+| max_len (train) | 192 (MPS memory, see BUG_LOG 2026-09-24) | 256 |
+| negative pool | top-20 of each filtered pool | top-50 |
+| mined queries | first 10k of train50k | all 50k (re-mine with the full `bm25.train50k.trec`) |
+| steps | 1,000 | 5,000 (320k groups, 6.4 passes over 50k mined queries) |
 | LR / warmup | 3e-5 / 10% | 5e-5 / 5% |
 
 Memory: MiniLM-L6 at 1,024 pairs × 256 tokens in bf16 is far inside 80 GB; if a smaller
