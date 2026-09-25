@@ -1,0 +1,39 @@
+{
+  "cpu": "Apple M3 Pro",
+  "cores": 12,
+  "mem_bytes": 19327352832,
+  "os": "Darwin 25.5.0 (macOS 26.5.1)",
+  "python": "3.12.7",
+  "date": "2026-09-24T18:15:13-07:00",
+  "git_sha": "4c09d61d20eaca1f1ff482946747348079278379",
+  "git_dirty": true,
+  "load_avg_1_5_15": [
+    24.52,
+    22.19,
+    17.9
+  ],
+  "pinned": false,
+  "timing_label": "dev-signal-only (macOS, threads not pinned; machine shared with other jobs, load avg 24.5 on 12 cores at write time; see memory_at_write_time for swap: page-ins inflate latency of RAM-resident indexes)",
+  "command": "engine/build-vec/hs_vec_groundtruth --base data/embeddings/1m/passages.fbin --queries queries.train_tune.fbin --k 100 --out data/indexes/vector/1m-4shards/gt.train_tune.1m.bin",
+  "cache": "n/a",
+  "threads": 8,
+  "compiler": {
+    "build_dir": "engine/build-vec",
+    "cxx": "/usr/bin/c++",
+    "build_type": "Release",
+    "cxx_flags_release": "-O3 -DNDEBUG",
+    "native_flag": "-mcpu=native",
+    "cxx_version": "Apple clang version 17.0.0 (clang-1700.6.3.2)",
+    "simd": "neon"
+  },
+  "load_average_1_5_15": [
+    24.52,
+    22.19,
+    17.9
+  ],
+  "memory_at_write_time": {
+    "swapusage": "total = 11264.00M  used = 9630.38M  free = 1633.62M  (encrypted)",
+    "memory_pressure": "System-wide memory free percentage: 28%"
+  },
+  "note": "load average at run time was 40-85 (overlapping builds); timing is dev-signal-only"
+}

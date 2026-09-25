@@ -1,0 +1,1 @@
+{"simd": "neon", "dim": 768, "ip_simd_l1_ns": 89.84, "ip_scalar_l1_ns": 664.27, "l2_simd_l1_ns": 57.35, "l2_scalar_l1_ns": 654.75, "l2_simd_random_row_ns": 692.15, "pq_table_build_ns": 48491.5, "pq_adc_M96_random_code_ns": 51.45}

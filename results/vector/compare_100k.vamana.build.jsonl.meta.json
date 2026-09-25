@@ -1,0 +1,41 @@
+{
+  "cpu": "Apple M3 Pro",
+  "cores": 12,
+  "mem_bytes": 19327352832,
+  "os": "Darwin 25.5.0 (macOS 26.5.1)",
+  "python": "3.12.7",
+  "date": "2026-09-24T18:14:29-07:00",
+  "git_sha": "4c09d61d20eaca1f1ff482946747348079278379",
+  "git_dirty": true,
+  "load_avg_1_5_15": [
+    34.78,
+    23.28,
+    18.03
+  ],
+  "pinned": false,
+  "timing_label": "dev-signal-only (macOS, threads not pinned; machine shared with other jobs, load avg 34.8 on 12 cores at write time; see memory_at_write_time for swap: page-ins inflate latency of RAM-resident indexes)",
+  "command": "scripts/vector/compare_100k.sh /private/tmp/claude-501/-Users-sanjithshanmugavel-Documents-HybridSearch/b42d0aca-fb5d-4f74-8dad-7b8c38040113/scratchpad/vec/real100k.fbin /private/tmp/claude-501/-Users-sanjithshanmugavel-Documents-HybridSearch/b42d0aca-fb5d-4f74-8dad-7b8c38040113/scratchpad/vec/sweep100k",
+  "cache": "warm",
+  "threads": 7,
+  "compiler": {
+    "build_dir": "engine/build-vec",
+    "cxx": "/usr/bin/c++",
+    "build_type": "Release",
+    "cxx_flags_release": "-O3 -DNDEBUG",
+    "native_flag": "-mcpu=native",
+    "cxx_version": "Apple clang version 17.0.0 (clang-1700.6.3.2)",
+    "simd": "neon"
+  },
+  "load_average_1_5_15": [
+    34.78,
+    23.28,
+    18.03
+  ],
+  "memory_at_write_time": {
+    "swapusage": "total = 11264.00M  used = 10125.75M  free = 1138.25M  (encrypted)",
+    "memory_pressure": "System-wide memory free percentage: 32%"
+  },
+  "queries": "train_tune (2000)",
+  "search_threads": "1",
+  "base": "first 100000 rows of the 1M BGE subset"
+}

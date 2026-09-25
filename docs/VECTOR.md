@@ -167,3 +167,43 @@ reads per query summed over the 4 shards. RAM for the whole 1M: 96 MB PQ codes +
 L=200 0.6511 (-0.0027); all p=0.0001 (paired randomization). The 1M subset holds every
 judged passage plus a random sample, so its absolute MRR is far above the 8.8M figure
 (0.3583); only the delta transfers.
+
+**Against hnswlib and FAISS (100K real vectors, same queries and ground truth, one search
+thread, `compare_100k.*`; load average ~18-35).** Queries per CPU-second at matched recall@10:
+
+| system | @0.90 | @0.95 | @0.98 | @0.99 | build (s, 7 threads) |
+|---|---|---|---|---|---|
+| this Vamana, R=64 L=100 alpha=1.2 | 5,191 | 3,136 | 1,639 | 984 | 59 |
+| FAISS HNSW M=16 (efC=200) | 5,661 | 3,380 | 1,577 | 879 | 36 |
+| FAISS HNSW M=32 | 4,237 | 2,771 | 1,460 | 911 | 56 |
+| hnswlib M=16 | 1,446 | 872 | 461 | 280 | 62 |
+| hnswlib M=32 | 1,136 | 750 | 488 | 334 | 88 |
+| FAISS IVF-PQ (nlist 1024, PQ96) + exact refine x10 | 2,309 | 1,287 | - | - | 25 |
+| FAISS IVF-PQ alone | tops out at recall 0.69 | | | | |
+| FAISS IndexFlatIP (exact, batched GEMM) | 4,041 at recall 1.0 | | | | |
+
+Reading: this Vamana is level with FAISS HNSW, about 8% behind at recall 0.90-0.95 and
+about 8-12% ahead at 0.98-0.99. hnswlib is 3-4x slower than both. At equal M/ef it reaches the same
+recall as FAISS HNSW, so the gap is per-distance cost: hnswlib's hand-written SIMD kernels are
+x86-only (SSE/AVX), so on this arm64 laptop it most likely runs a scalar loop. That is an
+inference, not profiled; expect the ranking to change on the x86 box. At 100K, batched exact
+search (a BLAS matrix multiply over all queries) beats every graph index above recall ~0.93, because the
+collection is too small for graph search to pay off against GEMM. That is why the 1M and 8.8M
+numbers matter. PQ with 96 bytes caps recall at 0.69 without the full-precision rerank, which
+is the reason DiskANN re-scores expanded nodes with their full vectors.
+
+**Beam width on this laptop.** Wider beams cut I/O rounds as designed (L=100: 105 rounds at
+W=1, 29 at W=4, 17 at W=8), but they did not raise cold single-query QPS here (L=100: 61 q/s
+at W=1, 45 at W=4, 94 at W=8, with non-monotone curves). The runs overlapped other jobs
+(load 12-60) and the cause is not isolated. This needs the pinned Linux NVMe box.
+
+**Why modulo sharding, not ranges.** MS MARCO passage ids are grouped by source, and the
+1M subset keeps every judged passage, so under range sharding 86.1% of the dev-relevant
+passages sit in the top id quarter (shard 3). Under `docid % 4` each shard holds 24.3-25.3%
+(computed from `data/subset/1m/qrels.dev.tsv` and `docids.u64bin`). Merged exact results are
+identical either way (2,000/2,000 on both). Merged approximate recall is also close
+(L=20 warm: range 0.960, modulo 0.957).
+
+**Not done on the laptop.** The in-memory Vamana and hnswlib/FAISS comparison at 1M (done at
+100K). io_uring (the Linux path uses a pread pool with O_DIRECT). The 8.8M build (script
+ready, not run; the parquet converter has never seen the real archive).
