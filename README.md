@@ -5,7 +5,7 @@ Lucene-exact BM25 engine with block-max WAND and a DiskANN-style vector index on
 C++20. It fuses them, with the fusion weights tuned on training queries and every gain
 significance-tested, then reranks with a cross-encoder served through ONNX Runtime. A C# broker
 fans each query out to sharded gRPC servers with deadlines, hedged requests and a visible
-degradation policy. The React front end meets WCAG 2.2 AA. There is also a feedback loop: click
+degradation policy. The React front end is accessibility-tested: axe-core WCAG 2.2 AA rules, 0 violations, plus a keyboard-only end-to-end test. There is also a feedback loop: click
 logging, team-draft interleaving, and counterfactual learning-to-rank.
 
 Every number below links to the results file it came from. Every latency figure is labelled with
@@ -154,9 +154,9 @@ Prometheus metrics, a Grafana dashboard, and a written SLO with a burn-rate erro
 - **"Why this result" panel:** per-term BM25 contributions, dense similarity, and the result's rank
   at each stage.
 - **Experiments dashboard.**
-- **WCAG 2.2 AA:** axe-core finds zero violations on every page and state, in light and dark mode.
+- **Accessibility, tested against WCAG 2.2 AA rules:** axe-core finds zero violations on every page and state, in light and dark mode.
   There is a keyboard-only end-to-end test, and a live region announces results. A manual VoiceOver
-  pass is still to do ([`web/ACCESSIBILITY.md`](web/ACCESSIBILITY.md)).
+  pass has not been done, so this is not a full conformance claim ([`web/ACCESSIBILITY.md`](web/ACCESSIBILITY.md)).
 
 ### The feedback loop (M9)
 The users here are **simulated**: click models (PBM, Cascade, DBN) whose relevance comes from real
