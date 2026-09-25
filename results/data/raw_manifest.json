@@ -1,0 +1,92 @@
+{
+  "files": [
+    {
+      "url": "https://msmarco.z22.web.core.windows.net/msmarcoranking/collectionandqueries.tar.gz",
+      "file": "collectionandqueries.tar.gz",
+      "md5": "31644046b18952c1386cd4564ba2ae69",
+      "expected_md5_source": "ir_datasets downloads.json; Anserini docs"
+    },
+    {
+      "url": "https://msmarco.z22.web.core.windows.net/msmarcoranking/msmarco-test2019-queries.tsv.gz",
+      "file": "msmarco-test2019-queries.tsv.gz",
+      "md5": "eda71eccbe4d251af83150abe065368c",
+      "expected_md5_source": "ir_datasets downloads.json; server Content-MD5"
+    },
+    {
+      "url": "https://msmarco.z22.web.core.windows.net/msmarcoranking/msmarco-test2020-queries.tsv.gz",
+      "file": "msmarco-test2020-queries.tsv.gz",
+      "md5": "00a406fb0d14ed3752d70d1e4eb98600",
+      "expected_md5_source": "ir_datasets downloads.json; server Content-MD5"
+    },
+    {
+      "url": "https://trec.nist.gov/data/deep/2019qrels-pass.txt",
+      "file": "2019qrels-pass.txt",
+      "md5": "2f4be390198da108f6845c822e5ada14",
+      "expected_md5_source": "ir_datasets downloads.json"
+    },
+    {
+      "url": "https://trec.nist.gov/data/deep/2020qrels-pass.txt",
+      "file": "2020qrels-pass.txt",
+      "md5": "0355ccee7509ac0463e8278186cdd8d1",
+      "expected_md5_source": "ir_datasets downloads.json"
+    }
+  ],
+  "extracted": {
+    "raw/msmarco/collection.tsv": {
+      "lines": 8841823,
+      "md5": "31e42eeac3a3ea1b75c689c483be4484"
+    },
+    "raw/msmarco/qrels.dev.small.tsv": {
+      "lines": 7437,
+      "md5": "38a80559a561707ac2ec0f150ecd1e8a"
+    },
+    "raw/msmarco/qrels.train.tsv": {
+      "lines": 532761,
+      "md5": "733fb9fe12d93e497f7289409316eccf"
+    },
+    "raw/msmarco/queries.dev.small.tsv": {
+      "lines": 6980,
+      "md5": "4621c583f1089d223db228a4f95a05d1"
+    },
+    "raw/msmarco/queries.dev.tsv": {
+      "lines": 101093,
+      "md5": "46fff95f0f8b30bdbe5fc26b994bbfdb"
+    },
+    "raw/msmarco/queries.eval.small.tsv": {
+      "lines": 6837,
+      "md5": "bafaf0b9eb23503d2a5948709f34fc3a"
+    },
+    "raw/msmarco/queries.eval.tsv": {
+      "lines": 101092,
+      "md5": "f971ee70fb6257e5e8d4f55facf3ce03"
+    },
+    "raw/msmarco/queries.train.tsv": {
+      "lines": 808731,
+      "md5": "33c9e2a484f1f5a8cc041f05497e639e"
+    },
+    "raw/trec-dl/dl19.queries.tsv": {
+      "lines": 43,
+      "md5": "c83e3dda130c7a191357b0287d854ddb"
+    },
+    "raw/trec-dl/dl19.qrels": {
+      "lines": 9260,
+      "md5": "2f4be390198da108f6845c822e5ada14"
+    },
+    "raw/trec-dl/dl19.queries.all.tsv": {
+      "lines": 200,
+      "md5": "95dc6a37c49e8817dd1922e91aaea476"
+    },
+    "raw/trec-dl/dl20.queries.tsv": {
+      "lines": 54,
+      "md5": "19773395d1d74b86a14f447bc5efecf3"
+    },
+    "raw/trec-dl/dl20.qrels": {
+      "lines": 11386,
+      "md5": "0355ccee7509ac0463e8278186cdd8d1"
+    },
+    "raw/trec-dl/dl20.queries.all.tsv": {
+      "lines": 200,
+      "md5": "ff5cd7698563e02d62b4442060290154"
+    }
+  }
+}

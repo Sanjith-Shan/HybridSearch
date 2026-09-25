@@ -2,6 +2,7 @@
 // Lucene StandardTokenizer (UAX#29 word boundaries) as a longest-match DFA.
 
 #include <cstdint>
+#include <string>
 #include <string_view>
 #include <vector>
 

@@ -1,0 +1,47 @@
+{
+  "seed": 20260923,
+  "subset_size": 1000000,
+  "relevant_pids_forced": 15127,
+  "sampled_pids": 984873,
+  "min_pid": 0,
+  "max_pid": 8841814,
+  "docids_sha256": "f68ed924d610763552abca14093b9c6db51965d9acd0b2c9625773ad8cc9f6a4",
+  "collection_md5": "d7cf59404eab9b2d17c23b64a8eec260",
+  "qrels": {
+    "dev": {
+      "topics": 6980,
+      "topics_in_subset_qrels": 6980,
+      "judgments_full": 7437,
+      "judgments_in_subset": 7437,
+      "relevant_full": 7437,
+      "relevant_in_subset": 7437
+    },
+    "dl19": {
+      "topics": 43,
+      "topics_in_subset_qrels": 43,
+      "judgments_full": 9260,
+      "judgments_in_subset": 4691,
+      "relevant_full": 4102,
+      "relevant_in_subset": 4102
+    },
+    "dl20": {
+      "topics": 54,
+      "topics_in_subset_qrels": 54,
+      "judgments_full": 11386,
+      "judgments_in_subset": 4487,
+      "relevant_full": 3606,
+      "relevant_in_subset": 3606
+    }
+  },
+  "train_judged_queries": 502939,
+  "train_tune": {
+    "eligible": 54502,
+    "picked": 2000
+  },
+  "train50k": {
+    "pool": 500939,
+    "picked": 50000,
+    "seed": 20260924
+  },
+  "seconds": 22.1
+}
