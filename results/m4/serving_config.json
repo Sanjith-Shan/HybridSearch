@@ -1,0 +1,22 @@
+{
+  "purpose": "Fusion configuration the broker serves with, tuned on train_tune ONLY at the serving candidate depth (100), because z-score statistics depend on list depth and the M4 study tuned at depth 1000.",
+  "tuning_queries": "data/subset/train_tune (2,000 MS MARCO train queries)",
+  "candidate_depth": 100,
+  "train_tune_mrr_at_10": {
+    "weighted zscore alpha=0.8": 0.6428,
+    "weighted zscore alpha=0.9": 0.6414,
+    "weighted minmax alpha=0.8": 0.6410,
+    "weighted minmax alpha=0.9": 0.6394,
+    "weighted minmax alpha=0.7": 0.6367,
+    "weighted zscore alpha=0.7": 0.6361,
+    "dense alone": 0.6320,
+    "weighted minmax alpha=0.6": 0.6252,
+    "weighted zscore alpha=0.6": 0.6242,
+    "rrf k=10": 0.5719,
+    "rrf k=60": 0.5526
+  },
+  "chosen": {"fusion": "weighted", "normalization": "zscore", "alpha_on_dense": 0.8, "candidate_depth": 100},
+  "note": "Equal-weight RRF (the broker's previous default, k=60) is far below dense alone on this data; see results/m4/fusion.md.",
+  "command": "inline check in the lead session using py/hybridsearch/fusion (weighted, rrf) over data/runs/m4/hs-bm25-1m.train_tune.trec and data/runs/reference/dense-flat-1m.train_tune.trec",
+  "date": "2026-09-24"
+}

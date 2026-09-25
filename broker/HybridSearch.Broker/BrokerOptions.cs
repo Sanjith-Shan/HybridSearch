@@ -51,10 +51,11 @@ public sealed class SearchOptions
     /// <summary>Per-retriever candidates requested from every slice (and kept after the merge).</summary>
     public int CandidateDepth { get; set; } = 100;
     public int RerankDepth { get; set; } = 50;
-    public string Fusion { get; set; } = "rrf";
+    /// <summary>Defaults come from results/m4/serving_config.json (tuned on train queries at depth 100).</summary>
+    public string Fusion { get; set; } = "weighted";
     public int RrfK { get; set; } = 60;
-    public double Alpha { get; set; } = 0.5;
-    public string Normalization { get; set; } = "minmax";
+    public double Alpha { get; set; } = 0.8;
+    public string Normalization { get; set; } = "zscore";
     public int SnippetChars { get; set; } = 240;
     /// <summary>Dense beam width (L_search) sent to shards; 0 = shard default.</summary>
     public uint DenseBeamWidth { get; set; }

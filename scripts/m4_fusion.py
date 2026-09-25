@@ -251,7 +251,7 @@ def main(argv=None) -> int:
             "missing_doc_rule": "a doc absent from one retriever's top-depth list gets that list's minimum normalised score (RRF: no contribution)",
             "fused_tie_break": "lower doc id",
             "bm25": "HybridSearch engine, hs_lex_search --algo exhaustive --model lucene (k1=0.9 b=0.4), top-1000",
-            "dense": "exact inner-product search (FAISS flat) over Waterloo's precomputed BGE-base-en-v1.5 vectors (MS MARCO); BEIR encoded locally with BGE-base on MPS",
+            "dense": "exact inner-product search (FAISS flat) over BGE-base-en-v1.5 vectors that HybridSearch encoded itself for the 1M subset (M3 Pro GPU, MPS, fp32; parity vs sentence-transformers cosine >= 0.9999998, results/dense/parity.json). NOT Waterloo's precomputed vectors; BEIR encoded locally with BGE-base on MPS",
             "significance": {"test": "paired randomization (sign flip), two-sided", "n_perm": a.n_perm,
                              "bootstrap": "paired percentile bootstrap 95% CI", "n_boot": a.n_boot, "seed": SEED,
                              "correction": "Holm-Bonferroni within each family"},
