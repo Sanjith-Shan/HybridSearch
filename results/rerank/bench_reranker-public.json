@@ -1,0 +1,120 @@
+{
+  "name": "reranker-public",
+  "model_dir": "data/models/reranker-public",
+  "results": {
+    "model.onnx|threads=4": [
+      {
+        "batch": 10,
+        "requests": 10,
+        "mean_ms": 288.304,
+        "p50_ms": 224.635,
+        "p90_ms": 484.88,
+        "p99_ms": 736.563,
+        "pairs_per_s": 34.7,
+        "mean_seq_len": 145.2,
+        "py_tokenize_mean_ms": 2.746
+      },
+      {
+        "batch": 20,
+        "requests": 10,
+        "mean_ms": 373.905,
+        "p50_ms": 357.583,
+        "p90_ms": 453.893,
+        "p99_ms": 510.378,
+        "pairs_per_s": 53.5,
+        "mean_seq_len": 160.5,
+        "py_tokenize_mean_ms": 3.034
+      },
+      {
+        "batch": 50,
+        "requests": 10,
+        "mean_ms": 1202.862,
+        "p50_ms": 1032.782,
+        "p90_ms": 1660.081,
+        "p99_ms": 1664.019,
+        "pairs_per_s": 41.6,
+        "mean_seq_len": 187.1,
+        "py_tokenize_mean_ms": 6.35
+      },
+      {
+        "batch": 100,
+        "requests": 10,
+        "mean_ms": 3818.171,
+        "p50_ms": 3785.906,
+        "p90_ms": 5031.45,
+        "p99_ms": 5346.463,
+        "pairs_per_s": 26.2,
+        "mean_seq_len": 192.1,
+        "py_tokenize_mean_ms": 10.967
+      },
+      {
+        "batch": 200,
+        "requests": 10,
+        "mean_ms": 13676.864,
+        "p50_ms": 13034.173,
+        "p90_ms": 21211.483,
+        "p99_ms": 24314.627,
+        "pairs_per_s": 14.6,
+        "mean_seq_len": 215.1,
+        "py_tokenize_mean_ms": 38.882
+      }
+    ],
+    "model.int8.onnx|threads=4": [
+      {
+        "batch": 10,
+        "requests": 10,
+        "mean_ms": 90.123,
+        "p50_ms": 90.229,
+        "p90_ms": 126.0,
+        "p99_ms": 137.402,
+        "pairs_per_s": 111.0,
+        "mean_seq_len": 145.2,
+        "py_tokenize_mean_ms": 9.478
+      },
+      {
+        "batch": 20,
+        "requests": 10,
+        "mean_ms": 203.451,
+        "p50_ms": 189.031,
+        "p90_ms": 263.924,
+        "p99_ms": 272.253,
+        "pairs_per_s": 98.3,
+        "mean_seq_len": 160.5,
+        "py_tokenize_mean_ms": 3.416
+      },
+      {
+        "batch": 50,
+        "requests": 10,
+        "mean_ms": 633.818,
+        "p50_ms": 664.722,
+        "p90_ms": 763.736,
+        "p99_ms": 776.1,
+        "pairs_per_s": 78.9,
+        "mean_seq_len": 187.1,
+        "py_tokenize_mean_ms": 6.768
+      },
+      {
+        "batch": 100,
+        "requests": 10,
+        "mean_ms": 1392.723,
+        "p50_ms": 1393.23,
+        "p90_ms": 1705.195,
+        "p99_ms": 1714.135,
+        "pairs_per_s": 71.8,
+        "mean_seq_len": 192.1,
+        "py_tokenize_mean_ms": 16.35
+      },
+      {
+        "batch": 200,
+        "requests": 10,
+        "mean_ms": 8686.073,
+        "p50_ms": 5933.138,
+        "p90_ms": 14446.737,
+        "p99_ms": 20779.204,
+        "pairs_per_s": 23.0,
+        "mean_seq_len": 215.1,
+        "py_tokenize_mean_ms": 27.633
+      }
+    ]
+  }
+}

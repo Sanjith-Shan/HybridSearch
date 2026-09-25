@@ -1,0 +1,28 @@
+{
+  "name": "public-d200.bm25full",
+  "split": "dl19",
+  "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "backend": "torch",
+  "device": "mps",
+  "candidates": "data/runs/reference/anserini-bm25-default.dl19.trec",
+  "candidate_label": "Anserini",
+  "depth": 200,
+  "n_queries_qrels": 43,
+  "max_queries": null,
+  "n_queries_with_candidates": 43,
+  "n_pairs": 8600,
+  "metrics": {
+    "nDCG@10": 0.7407,
+    "RR(rel=2)@10": 0.8651,
+    "R(rel=2)@100": 0.5663
+  },
+  "first_stage_metrics_at_depth": {
+    "nDCG@10": 0.5058,
+    "RR(rel=2)@10": 0.7024,
+    "R(rel=2)@100": 0.491
+  },
+  "score_seconds": 15.8,
+  "pairs_per_s": 546.0,
+  "load_seconds": 13.5,
+  "max_length": 512
+}

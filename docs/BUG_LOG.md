@@ -302,3 +302,12 @@ scheme. The range shards are kept as the comparison point, and results/chaos/ ha
    emptied the conservative priors kept it tripped. One chaos baseline ran 100% lexical-only because
    of this. The fix is exploration: 5% of requests (`Degradation:ProbeFraction`) run the full plan
    regardless of estimates, and stage deadlines still bound them.
+
+## 2026-09-24 — The full pytest run deadlocked in torch after the FAISS tests
+
+**Symptom.** `pytest` (the whole suite) sat at 0% CPU for 52 minutes. With a thread timeout, the
+stack showed `test_export_parity` stuck inside `torch.layer_norm`. The test passes when run alone.
+**Cause.** FAISS (libomp) and torch (its own OpenMP) were both loaded into one pytest process, each
+with a multi-threaded pool. The same conflict aborted a process during reranker mining earlier.
+**Fix.** `py/tests/conftest.py` sets OMP/MKL to one thread before any library loads. The suite now
+passes: 190 passed, 1 skipped, in 54 s.

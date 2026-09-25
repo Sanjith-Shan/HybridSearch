@@ -91,8 +91,28 @@ Tuned **only on 2,000 MS MARCO train queries**. Holm correction runs over a 36-c
   that reason.
 
 ### Reranker (M5)
-See [`results/rerank/`](results/rerank/). This section is filled in from the reranker report once
-training finishes; the numbers stay out until they exist.
+The cross-encoder is served through ONNX Runtime on CPU; ONNX output matches PyTorch to a max
+logit difference of 7.6e-6. BM25 candidates come from the full 8.8M collection.
+[`results/rerank/`](results/rerank/)
+
+| DL19 / DL20 nDCG@10 | BM25 | + public MiniLM-L6 reranker | + HybridSearch's own MiniLM |
+|---|---|---|---|
+| rerank BM25 top-100 | 0.5058 / 0.4796 | **0.7267 / 0.6747** | 0.3950 / — |
+| rerank BM25 top-200 | | **0.7407 / 0.7006** (model card: 0.7430 on DL19) | |
+
+- **The cascade curve picks the operating point.** Reranking the top k gives DL19 nDCG@10 of
+  0.554 / 0.643 / 0.698 / 0.727 / 0.741 at k = 10 / 20 / 50 / 100 / 200. On this laptop the added
+  CPU time is 0.22 / 0.36 / 1.0 / 3.8 / 13 s. The broker serves **k=20**, which captures 58% of the
+  full gain at 3% of the cost.
+- **Our own reranker lost, and badly.** MiniLM trained from scratch on hard negatives mined from
+  HybridSearch's own BM25, but for only 500 steps (64K pairs) on the laptop GPU. It scores
+  **below BM25** (DL19 0.395), so the broker serves the public model. The training pipeline is done:
+  hard-negative mining with leak and false-negative filters, a listwise loss, resumable
+  checkpoints, and int8 export with a quality delta of −0.003. The full run and the
+  random / BM25-hard / dense-hard ablation are scripted for a rented A100
+  (`scripts/full_scale/train_reranker_a100.sh`) and not yet run.
+- **int8 vs fp32:** quality changes by −0.0028 nDCG@10 and the model shrinks from 91 MB to 59 MB.
+  Batch-16 latency drops from 311 ms to 98 ms (dev-signal only).
 
 ### Serving under failure (M6)
 Every chaos experiment replays the **same** dev queries in its baseline, fault and recovery phases,

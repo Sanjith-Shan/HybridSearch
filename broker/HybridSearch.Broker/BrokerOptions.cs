@@ -50,7 +50,8 @@ public sealed class SearchOptions
     public int MaxDeadlineMs { get; set; } = 10_000;
     /// <summary>Per-retriever candidates requested from every slice (and kept after the merge).</summary>
     public int CandidateDepth { get; set; } = 100;
-    public int RerankDepth { get; set; } = 50;
+    /// <summary>From the cascade curve (results/rerank/cascade.md): k=20 buys most of the gain.</summary>
+    public int RerankDepth { get; set; } = 20;
     /// <summary>Defaults come from results/m4/serving_config.json (tuned on train queries at depth 100).</summary>
     public string Fusion { get; set; } = "weighted";
     public int RrfK { get; set; } = 60;
