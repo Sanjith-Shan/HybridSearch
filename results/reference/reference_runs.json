@@ -81,6 +81,34 @@
       "gates": {}
     },
     {
+      "run": "data/runs/reference/bm25.train50k.trec",
+      "qrels": "data/subset/train50k/qrels.tsv",
+      "corpus": "full 8.8M",
+      "queries_in_qrels": 50000,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.1649,
+        "nDCG@10": 0.2065,
+        "R@100": 0.6412,
+        "R@1000": 0.8487
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/bm25.train50k.first10k.trec",
+      "qrels": "data/subset/train50k/qrels.first10k.tsv",
+      "corpus": "full 8.8M",
+      "queries_in_qrels": 10000,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.1792,
+        "nDCG@10": 0.2222,
+        "R@100": 0.6615,
+        "R@1000": 0.8649
+      },
+      "gates": {}
+    },
+    {
       "run": "data/runs/reference/anserini-bm25-default-1m.dev.trec",
       "qrels": "data/subset/1m/qrels.dev.tsv",
       "corpus": "1M subset",
@@ -133,6 +161,98 @@
         "nDCG@10": 0.4574,
         "R@100": 0.833,
         "R@1000": 0.9403
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat-1m.dev.trec",
+      "qrels": "data/subset/1m/qrels.dev.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 6980,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.6538,
+        "nDCG@10": 0.7031,
+        "R@100": 0.973,
+        "R@1000": 0.996
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat-1m.dl19.trec",
+      "qrels": "data/subset/1m/qrels.dl19.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 43,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.7955,
+        "RR(rel=2)@10": 0.9341,
+        "R(rel=2)@100": 0.7484,
+        "R(rel=2)@1000": 0.9399
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat-1m.dl20.trec",
+      "qrels": "data/subset/1m/qrels.dl20.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 54,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.7949,
+        "RR(rel=2)@10": 0.8613,
+        "R(rel=2)@100": 0.8129,
+        "R(rel=2)@1000": 0.9353
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat-1m.train_tune.trec",
+      "qrels": "data/subset/train_tune/qrels.tsv",
+      "corpus": "1M subset",
+      "queries_in_qrels": 2000,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "RR@10": 0.632,
+        "nDCG@10": 0.6922,
+        "R@100": 0.9778,
+        "R@1000": 0.996
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat.beir-scifact.test.trec",
+      "qrels": "data/raw/beir/scifact/qrels/test.trec",
+      "corpus": "BEIR scifact",
+      "queries_in_qrels": 300,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.7404,
+        "R@100": 0.9667
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat.beir-nfcorpus.test.trec",
+      "qrels": "data/raw/beir/nfcorpus/qrels/test.trec",
+      "corpus": "BEIR nfcorpus",
+      "queries_in_qrels": 323,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.3735,
+        "R@100": 0.3367
+      },
+      "gates": {}
+    },
+    {
+      "run": "data/runs/reference/dense-flat.beir-fiqa.test.trec",
+      "qrels": "data/raw/beir/fiqa/qrels/test.trec",
+      "corpus": "BEIR fiqa",
+      "queries_in_qrels": 648,
+      "queries_missing_from_run": 0,
+      "metrics": {
+        "nDCG@10": 0.4062,
+        "R@100": 0.7415
       },
       "gates": {}
     }

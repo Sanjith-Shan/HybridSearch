@@ -19,6 +19,8 @@ public static class TestPaths
     }
 
     public static string BrokerProjectDir => Path.Combine(BrokerDir, "HybridSearch.Broker");
+
+    public static string RepoRoot => Path.GetDirectoryName(BrokerDir)!;
 }
 
 /// <summary>Builds a ShardFanOut against in-process FakeShards (real gRPC over loopback h2c).</summary>

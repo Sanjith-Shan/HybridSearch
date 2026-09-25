@@ -1,0 +1,47 @@
+{
+ "description": "Experiment assignment vectors produced by py/hybridsearch/clicks/events.py (assign/bucket). The broker's ExperimentAssigner must agree.",
+ "vectors": [
+  {
+   "salt": "2026-09-23-a",
+   "sessionId": "b2c4f1",
+   "allocation": 0.2,
+   "bucket": 9691,
+   "assignment": null
+  },
+  {
+   "salt": "2026-09-23-a",
+   "sessionId": "",
+   "allocation": 1.0,
+   "bucket": 7469,
+   "assignment": "treatment"
+  },
+  {
+   "salt": "x",
+   "sessionId": "session-42",
+   "allocation": 0.5,
+   "bucket": 5048,
+   "assignment": null
+  },
+  {
+   "salt": "hybrid-vs-lexical",
+   "sessionId": "7f3e9a0c-11aa-4c3b-9d2e-000000000001",
+   "allocation": 0.2,
+   "bucket": 8844,
+   "assignment": null
+  },
+  {
+   "salt": "s",
+   "sessionId": "\u00fcmlaut-\u20ac",
+   "allocation": 1.0,
+   "bucket": 9819,
+   "assignment": "control"
+  },
+  {
+   "salt": "2026-09-24",
+   "sessionId": "abc",
+   "allocation": 0.9999,
+   "bucket": 4120,
+   "assignment": "treatment"
+  }
+ ]
+}

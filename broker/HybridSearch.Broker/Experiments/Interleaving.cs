@@ -48,8 +48,19 @@ public static class TeamDraftInterleaver
 {
     public static List<InterleavedDoc> Interleave(IReadOnlyList<ulong> rankingA, IReadOnlyList<ulong> rankingB, int k, ulong seed)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(k);
         var rng = new SplitMix64(seed);
+        return Interleave(rankingA, rankingB, k, () => rng.NextBool());
+    }
+
+    /// <summary>
+    /// Same algorithm with an explicit coin source (true = A picks). A coin is drawn exactly when
+    /// the team sizes are equal, even if one team has run out and the other must pick anyway; this
+    /// is the contract in tests/golden/interleaving.json that the Python simulator shares, so both
+    /// implementations consume a seed's coins identically.
+    /// </summary>
+    public static List<InterleavedDoc> Interleave(IReadOnlyList<ulong> rankingA, IReadOnlyList<ulong> rankingB, int k, Func<bool> coin)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(k);
         var result = new List<InterleavedDoc>(k);
         var used = new HashSet<ulong>();
         int ia = 0, ib = 0, sizeA = 0, sizeB = 0;
@@ -61,17 +72,10 @@ public static class TeamDraftInterleaver
             bool aHas = ia < rankingA.Count, bHas = ib < rankingB.Count;
             if (!aHas && !bHas) break;
 
-            Team pick;
-            if (aHas && bHas)
-            {
-                // The coin is drawn only on ties so the RNG stream is consumed identically for
-                // identical inputs, which is what makes the result deterministic under the seed.
-                pick = sizeA < sizeB ? Team.A : sizeB < sizeA ? Team.B : (rng.NextBool() ? Team.A : Team.B);
-            }
-            else
-            {
-                pick = aHas ? Team.A : Team.B;
-            }
+            Team pick = sizeA < sizeB ? Team.A : sizeB < sizeA ? Team.B : (coin() ? Team.A : Team.B);
+            // A team with nothing left cedes the position to the other; the coin is not re-flipped.
+            if (pick == Team.A && !aHas) pick = Team.B;
+            else if (pick == Team.B && !bHas) pick = Team.A;
 
             if (pick == Team.A)
             {
